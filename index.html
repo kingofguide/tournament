@@ -239,6 +239,14 @@
                         <div class="relative h-4 mx-[11px] mt-1.5 text-[10px] font-bold text-slate-500"><span class="absolute -translate-x-1/2" style="left:0.00%">5m</span><span class="absolute -translate-x-1/2" style="left:18.18%">15m</span><span class="absolute -translate-x-1/2" style="left:45.45%">30m</span><span class="absolute -translate-x-1/2" style="left:72.73%">45m</span><span class="absolute -translate-x-1/2" style="left:100.00%">60m</span></div>
                     </div>
 
+                    <!-- Tournament Overview -->
+                    <div id="tournament-overview" class="rounded-xl border border-slate-800 bg-slate-950 p-3" title="Estimate: a typical King of Tokyo game runs about 30 minutes and roughly 30 turns at the table (reviewers report 20 to 40 minutes, longer with Power Up). Allows about 5 minutes between games for re-seating and setup.">
+                        <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-clipboard-list text-amber-500"></i> Tournament Overview
+                        </div>
+                        <p id="tournament-overview-text" class="text-xs text-slate-300 leading-relaxed"></p>
+                    </div>
+
                 </div>
             </div>
 
@@ -909,6 +917,50 @@
             return Math.max(lim.min, Math.min(lim.max, v));
         }
 
+        // Planning estimates for the Tournament Overview sentence.
+        // A typical King of Tokyo game is about 30 minutes (publisher time) with a turn roughly every minute at the table,
+        // so about 30 turns per game. Between games we allow ~5 minutes for re-seating, drafting and setup.
+        const TURNS_PER_GAME = 30;
+        const CHANGEOVER_MINUTES = 5;
+
+        function formatDuration(totalMinutes) {
+            const m = Math.round(totalMinutes / 5) * 5;
+            const h = Math.floor(m / 60), r = m % 60;
+            if (h === 0) return `${r} min`;
+            return r === 0 ? `${h} hr` : `${h} hr ${r} min`;
+        }
+
+        function formatTurnTime(seconds) {
+            const secs = Math.max(5, Math.round(seconds / 5) * 5);
+            const mins = Math.floor(secs / 60), rem = secs % 60;
+            if (mins === 0) return `${rem} sec`;
+            return rem === 0 ? `${mins} min` : `${mins} min ${rem} sec`;
+        }
+
+        function renderTournamentOverview() {
+            const el = document.getElementById('tournament-overview-text');
+            if (!el) return;
+            const players = readSetting('setting-table-size');
+            const gamesPerRound = readSetting('setting-games-per-round');
+            const prelimRounds = readSetting('setting-prelim-rounds');
+            const timer = readSetting('setting-round-timer');
+
+            const prelimGames = gamesPerRound * prelimRounds;
+            const totalGames = prelimGames + 1; // plus the finals
+            const totalMinutes = totalGames * (timer + CHANGEOVER_MINUTES);
+            const secondsPerTurn = (timer * 60) / TURNS_PER_GAME;
+            const turnsEach = Math.max(1, Math.round(TURNS_PER_GAME / players));
+
+            let pace = '';
+            if (secondsPerTurn < 45) pace = ', a fast pace';
+            else if (secondsPerTurn > 90) pace = ', a relaxed pace';
+
+            const strong = (t) => `<strong class="text-amber-400">${t}</strong>`;
+            el.innerHTML = `Your tournament will include ${strong(totalGames + ' total games')} (${prelimGames} in the prelims and 1 finals), ` +
+                `taking roughly ${strong(formatDuration(totalMinutes))} in total, ` +
+                `with about ${strong(formatTurnTime(secondsPerTurn))} per turn (around ${turnsEach} turns each${pace}).`;
+        }
+
         // Keeps slider fill, value badges and the option buttons in step with the inputs
         window.syncSettingsUI = function() {
             ['setting-table-size', 'setting-round-timer'].forEach(id => {
@@ -924,6 +976,8 @@
             const prelims = readSetting('setting-prelim-rounds');
             document.getElementById('badge-games-per-round').textContent = games + (games === 1 ? ' game' : ' games');
             document.getElementById('badge-prelim-rounds').textContent = prelims + (prelims === 1 ? ' round' : ' rounds');
+
+            renderTournamentOverview();
 
             const current = { games, prelim: prelims };
             document.querySelectorAll('.opt-btn').forEach(btn => {
