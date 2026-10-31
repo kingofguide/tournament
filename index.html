@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>King of Tokyo - Tournament Manager</title>
     
+    <!-- Apply the saved theme before first paint so there is no flash -->
+    <script>try { if (localStorage.getItem('kot_theme') === 'light') document.documentElement.classList.add('light'); } catch (e) {}</script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,6 +59,8 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
+        .tpl-tip { visibility: hidden; opacity: 0; transition: opacity .12s ease; }
+        .tpl-wrap:hover .tpl-tip, .tpl-wrap:focus-within .tpl-tip { visibility: visible; opacity: 1; }
         .kot-range {
             -webkit-appearance: none; appearance: none;
             width: 100%; height: 8px; border-radius: 9999px; outline: none; cursor: pointer;
@@ -80,6 +85,75 @@
         .dragging {
             opacity: 0.4;
         }
+
+        /* ===== Light mode (toggle in the header). Remaps the dark slate palette; amber/emerald accents are kept. ===== */
+        html { color-scheme: dark; }
+        html.light { color-scheme: light; }
+        html.light body, html.light body.bg-slate-950 { background-color: #e9eef5; }
+        html.light .custom-scrollbar::-webkit-scrollbar-track { background: #e2e8f0; }
+        html.light .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; }
+        html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        html.light .kot-range { background: linear-gradient(to right, #f59e0b 0%, #f59e0b var(--pct, 50%), #e2e8f0 var(--pct, 50%), #e2e8f0 100%); border-color: #cbd5e1; }
+        html.light .kot-range::-webkit-slider-thumb { border-color: #ffffff; box-shadow: 0 0 0 2px #f59e0b, 0 2px 6px rgba(15,23,42,.25); }
+        html.light .kot-range::-moz-range-thumb { border-color: #ffffff; box-shadow: 0 0 0 2px #f59e0b; }
+        html.light .text-white { color: #0f172a; }
+        html.light .hover\:text-white:hover { color: #0f172a; }
+        html.light .text-white[class*="from-emerald-600"], html.light .text-white[class*="from-purple-600"],
+        html.light .text-white.bg-emerald-600, html.light .text-white.bg-rose-600 { color: #ffffff; }
+        html.light .bg-slate-950{background-color:rgb(255 255 255)}
+        html.light .text-slate-100{color:rgb(15 23 42)}
+        html.light .bg-slate-900{background-color:rgb(248 250 252)}
+        html.light .border-slate-800{border-color:rgb(226 232 240)}
+        html.light .bg-slate-800{background-color:rgb(238 242 247)}
+        html.light .hover\:bg-slate-700:hover{background-color:rgb(221 227 236)}
+        html.light .border-slate-700{border-color:rgb(203 213 225)}
+        html.light .text-slate-300{color:rgb(51 65 85)}
+        html.light .text-slate-400{color:rgb(71 85 105)}
+        html.light .divide-slate-800 > :not([hidden]) ~ :not([hidden]){border-color:rgb(226 232 240)}
+        html.light .hover\:bg-slate-800:hover{background-color:rgb(238 242 247)}
+        html.light .text-slate-200{color:rgb(30 41 59)}
+        html.light .text-slate-500{color:rgb(100 116 139)}
+        html.light .hover\:border-slate-700:hover{border-color:rgb(203 213 225)}
+        html.light .placeholder-slate-500::placeholder{color:rgb(148 163 184)}
+        html.light .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]){border-color:rgb(226 232 240 / 0.6)}
+        html.light .bg-slate-950\/80{background-color:rgb(15 23 42 / 0.45)}
+        html.light .bg-slate-900\/80{background-color:rgb(248 250 252 / 0.8)}
+        html.light .bg-slate-950\/70{background-color:rgb(15 23 42 / 0.45)}
+        html.light .bg-slate-300\/20{background-color:rgb(100 116 139 / 0.2)}
+        html.light .border-slate-400\/30{border-color:rgb(100 116 139 / 0.3)}
+        html.light .hover\:bg-slate-800\/40:hover{background-color:rgb(238 242 247 / 0.4)}
+        html.light .text-slate-600{color:rgb(148 163 184)}
+        html.light .border-slate-900{border-color:rgb(241 245 249)}
+        html.light .bg-slate-700{background-color:rgb(221 227 236)}
+        html.light .border-slate-600{border-color:rgb(182 192 206)}
+        html.light .ring-offset-slate-900{--tw-ring-offset-color:rgb(255 255 255)}
+        html.light .text-slate-700{color:rgb(148 163 184)}
+        html.light .bg-slate-900\/40{background-color:rgb(248 250 252 / 0.4)}
+        html.light .text-amber-400{color:rgb(180 83 9)}
+        html.light .text-blue-400{color:rgb(37 99 235)}
+        html.light .text-emerald-400{color:rgb(4 120 87)}
+        html.light .text-rose-400{color:rgb(225 29 72)}
+        html.light .text-amber-500{color:rgb(217 119 6)}
+        html.light .hover\:text-amber-300:hover{color:rgb(180 83 9)}
+        html.light .text-purple-400{color:rgb(126 34 206)}
+        html.light .text-cyan-400{color:rgb(14 116 144)}
+        html.light .text-rose-500{color:rgb(225 29 72)}
+        html.light .text-emerald-300{color:rgb(4 120 87)}
+        html.light .text-rose-300{color:rgb(225 29 72)}
+        html.light .text-amber-300{color:rgb(180 83 9)}
+        html.light .text-cyan-300{color:rgb(14 116 144)}
+        html.light .text-purple-300{color:rgb(126 34 206)}
+        html.light .text-blue-300{color:rgb(37 99 235)}
+        html.light .text-indigo-300{color:rgb(79 70 229)}
+        html.light .text-indigo-400{color:rgb(79 70 229)}
+        html.light .text-red-300{color:rgb(220 38 38)}
+        html.light .text-red-400{color:rgb(220 38 38)}
+        html.light .text-teal-300{color:rgb(15 118 110)}
+        html.light .text-teal-400{color:rgb(15 118 110)}
+        html.light .text-pink-300{color:rgb(219 39 119)}
+        html.light .text-pink-400{color:rgb(219 39 119)}
+        html.light .text-emerald-500{color:rgb(5 150 105)}
+        html.light .hover\:text-rose-400:hover{color:rgb(225 29 72)}
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
@@ -104,7 +178,12 @@
             </div>
 
             <!-- Desktop Actions -->
-            <div class="flex items-center shrink-0">
+            <div class="flex items-center gap-2 shrink-0">
+
+                <!-- Light / Dark mode toggle -->
+                <button id="theme-toggle" type="button" onclick="window.toggleTheme()" aria-label="Switch to light mode" title="Switch to light mode" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 flex items-center justify-center transition-colors cursor-pointer">
+                    <i id="theme-toggle-icon" class="fa-solid fa-sun"></i>
+                </button>
 
                 <!-- Action Buttons Dropdown (Single unified menu trigger) -->
                 <div class="relative">
@@ -162,7 +241,7 @@
                     <!-- Quick Start Templates -->
                     <div>
                         <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-bolt text-slate-500 mr-1"></i> Quick Start</div>
-                        <div id="template-buttons" class="grid grid-cols-2 gap-2"></div>
+                        <div id="template-buttons" class="grid grid-cols-4 gap-1.5"></div>
                     </div>
 
                     <div>
@@ -180,7 +259,7 @@
                             <span id="badge-games-per-round" class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">2 games</span>
                         </div>
                         <input type="hidden" id="setting-games-per-round" value="2">
-                        <div class="grid grid-cols-5 gap-2">
+                        <div class="grid grid-cols-3 gap-2">
                             <button type="button" data-group="games" data-val="1" onclick="window.setGamesPerRound(1)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
                                 <span class="text-base font-black leading-none">1</span>
                                 <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i></span>
@@ -193,14 +272,6 @@
                                 <span class="text-base font-black leading-none">3</span>
                                 <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i></span>
                             </button>
-                            <button type="button" data-group="games" data-val="4" onclick="window.setGamesPerRound(4)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
-                                <span class="text-base font-black leading-none">4</span>
-                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i></span>
-                            </button>
-                            <button type="button" data-group="games" data-val="5" onclick="window.setGamesPerRound(5)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
-                                <span class="text-base font-black leading-none">5</span>
-                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i></span>
-                            </button>
                         </div>
                         <p class="text-[10px] text-slate-500 mt-1.5 leading-snug">Players stay at the same table for every game in a round.</p>
                     </div>
@@ -211,7 +282,7 @@
                             <span id="badge-prelim-rounds" class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">3 rounds</span>
                         </div>
                         <input type="hidden" id="setting-prelim-rounds" value="3">
-                        <div class="grid grid-cols-5 gap-2">
+                        <div class="grid grid-cols-3 gap-2">
                             <button type="button" data-group="prelim" data-val="1" onclick="window.setPrelimRounds(1)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
                                 <span class="text-base font-black leading-none">1</span>
                                 <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-flag"></i></span>
@@ -223,14 +294,6 @@
                             <button type="button" data-group="prelim" data-val="3" onclick="window.setPrelimRounds(3)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
                                 <span class="text-base font-black leading-none">3</span>
                                 <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i></span>
-                            </button>
-                            <button type="button" data-group="prelim" data-val="4" onclick="window.setPrelimRounds(4)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
-                                <span class="text-base font-black leading-none">4</span>
-                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i></span>
-                            </button>
-                            <button type="button" data-group="prelim" data-val="5" onclick="window.setPrelimRounds(5)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
-                                <span class="text-base font-black leading-none">5</span>
-                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i></span>
                             </button>
                         </div>
                         <p class="text-[10px] text-slate-500 mt-1.5 leading-snug">Rounds played before the finals. You can add extra rounds any time.</p>
@@ -244,6 +307,15 @@
                         <input type="range" id="setting-round-timer" class="kot-range" min="5" max="60" step="5" value="30" oninput="window.updateSettings()">
                         <div class="relative h-4 mx-[11px] mt-1.5 text-[10px] font-bold text-slate-500"><span class="absolute -translate-x-1/2" style="left:0.00%">5m</span><span class="absolute -translate-x-1/2" style="left:18.18%">15m</span><span class="absolute -translate-x-1/2" style="left:45.45%">30m</span><span class="absolute -translate-x-1/2" style="left:72.73%">45m</span><span class="absolute -translate-x-1/2" style="left:100.00%">60m</span></div>
                     </div>
+
+                    <!-- Bonuses toggle -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                        <input type="checkbox" id="setting-bonuses" checked onchange="window.updateSettings()" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
+                        <span class="min-w-0">
+                            <span class="block text-xs font-bold text-slate-200">🎖️ Include Bonuses</span>
+                            <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">Smasher, Tanker, Collector and Harvester each add +1 point. Turn off to play with places only.</span>
+                        </span>
+                    </label>
 
                     <!-- Tournament Overview -->
                     <div id="tournament-overview" class="rounded-xl border border-slate-800 bg-slate-950 p-3" title="Estimate only. The Game Timer is the ideal time for a 4 player table (about 10 turns each). Bigger tables take longer and smaller tables finish sooner. Allows about 5 minutes between games for re-seating and setup.">
@@ -413,7 +485,7 @@
                             <div class="font-bold text-amber-400 mb-1 flex items-center gap-1">
                                 <i class="fa-solid fa-trophy"></i> Leaderboard Ranking Rules
                             </div>
-                            <p class="leading-relaxed">
+                            <p id="standings-rules-text" class="leading-relaxed">
                                 Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs and HP tiebreakers.
                             </p>
                         </div>
@@ -429,7 +501,7 @@
                                 <th class="py-3 px-4 text-center">Played</th>
                                 <th class="py-3 px-4 text-center">Wins</th>
                                 <th class="py-3 px-4 text-center">Points</th>
-                                <th class="py-3 px-4 text-center" title="Bonus Points">🎖️</th>
+                                <th id="th-bonus" class="py-3 px-4 text-center" title="Bonus Points">🎖️</th>
                                 <th class="py-3 px-4 text-center" title="Total Victory Points">⭐</th>
                                 <th class="py-3 px-4 text-center" title="Total Health Points">❤️</th>
                             </tr>
@@ -521,7 +593,7 @@
                     <i class="fa-solid fa-trophy text-2xl text-amber-400 shrink-0"></i>
                     <div>
                         <span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span>
-                        <p class="font-bold text-white text-sm">Battle and evolve to claim 1st place podium.</p>
+                        <p class="font-bold text-white text-sm">Power up to claim first place podium.</p>
                     </div>
                 </div>
 
@@ -538,34 +610,9 @@
                                 <i class="fa-solid fa-dragon text-amber-400"></i> Drafting:
                             </h5>
                             <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                                <li>To begin, players select a monster from the pool.</li>
+                                <li>Players select one monster from the pool.</li>
                                 <li>After each round, players may draft a different monster from the pool.</li>
                                 <li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li>
-                            </ul>
-                        </div>
-
-                        <!-- Modes -->
-                        <div>
-                            <h5 class="font-bold text-slate-100 text-xs mb-1.5 flex items-center gap-1.5">
-                                <i class="fa-solid fa-flag-checkered text-amber-400"></i> Modes:
-                            </h5>
-                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                                <li>Select one of the modes for the tournament.
-                                    <ul class="list-circle list-inside space-y-1 text-slate-400 pl-4 mt-1">
-                                        <li><strong class="text-slate-200">Survival Mode:</strong>
-                                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-4 mt-1">
-                                                <li>Once a player wins, they finish their turn, claim first place and stop playing.</li>
-                                                <li>Repeat until second and third places are claimed, then the game is over.</li>
-                                            </ul>
-                                        </li>
-                                        <li><strong class="text-slate-200">Standard Mode:</strong>
-                                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-4 mt-1">
-                                                <li>Once a player wins, they finish their turn, claim first place and the game is over.</li>
-                                                <li>Second and third places are determined by VPs + Health, highest wins. In case of ties, the closest player in turn order to the winner wins.</li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
                             </ul>
                         </div>
 
@@ -576,7 +623,7 @@
                             </h5>
                             <p class="mb-1 text-slate-400">Play each game as per normal rules except the following:</p>
                             <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                                <li>Must be played with the Power Up expansion.</li>
+                                <li>The Power Up expansion must be used.</li>
                                 <li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li>
                             </ul>
                         </div>
@@ -587,37 +634,42 @@
                                 <i class="fa-solid fa-route text-amber-400"></i> Rounds:
                             </h5>
                             <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                                <li>Set the number of games per round, the recommended is 2.</li>
-                                <li>Set the number of total rounds in the tournament.</li>
+                                <li>Set the number of games per round, the recommended is 1-2.</li>
+                                <li>Set the number of total rounds in the tournament, recommended is 2-3.</li>
                                 <li>Once a round is complete, the top seed players will move to the same table. This is repeated for the low seed players.</li>
                             </ul>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Scoring -->
-                        <div>
-                            <h5 class="font-bold text-slate-100 text-xs mb-1.5 flex items-center gap-1.5">
-                                <i class="fa-solid fa-star text-amber-400"></i> Scoring:
-                            </h5>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-                                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                                    <span class="font-bold text-white block mb-1">Places</span>
-                                    <ul class="space-y-0.5 text-slate-400">
-                                        <li><strong class="text-amber-400">1st Place:</strong> 3 pts</li>
-                                        <li><strong class="text-slate-300">2nd Place:</strong> 2 pts</li>
-                                        <li><strong class="text-amber-600">3rd Place:</strong> 1 pt</li>
-                                        <li><strong class="text-slate-500">4th-6th Place:</strong> 0 pts</li>
-                                    </ul>
-                                </div>
-                                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                                    <span class="font-bold text-white block mb-1">Bonuses</span>
-                                    <ul class="space-y-0.5 text-slate-400">
-                                        <li><strong class="text-rose-400">Smasher:</strong> 1 pt (most kills)</li>
-                                        <li><strong class="text-emerald-400">Tanker:</strong> 1 pt (most health)</li>
-                                        <li><strong class="text-purple-400">Collector:</strong> 1 pt (most cards)</li>
-                                        <li><strong class="text-cyan-400">Harvester:</strong> 1 pt (most energy)</li>
-                                    </ul>
-                                </div>
-                            </div>
+                <!-- Scoring Section -->
+                <div>
+                    <h4 class="text-sm font-extrabold text-white mb-3 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                        <i class="fa-solid fa-star text-amber-400"></i> Scoring
+                    </h4>
+                    <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
+                        <li>Once a player wins, they finish their turn, claim first place and the game is over.</li>
+                        <li>Second and third places are determined by VPs + Health, highest wins. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li>
+                        <li>All the players' places, VPs and HPs should be entered into the Manager App.</li>
+                    </ul>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                            <span class="font-bold text-white block mb-1">Places</span>
+                            <ul class="space-y-0.5 text-slate-400">
+                                <li><strong class="text-amber-400">1st Place:</strong> 3 pts</li>
+                                <li><strong class="text-slate-300">2nd Place:</strong> 2 pts</li>
+                                <li><strong class="text-amber-600">3rd Place:</strong> 1 pt</li>
+                                <li><strong class="text-slate-500">4th-6th Place:</strong> 0 pts</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                            <span class="font-bold text-white block mb-1">Bonuses <span class="text-slate-500 font-semibold">(optional)</span></span>
+                            <ul class="space-y-0.5 text-slate-400">
+                                <li><strong class="text-rose-400">Smasher:</strong> 1 pt (most kills)</li>
+                                <li><strong class="text-emerald-400">Tanker:</strong> 1 pt (most health)</li>
+                                <li><strong class="text-purple-400">Collector:</strong> 1 pt (most cards)</li>
+                                <li><strong class="text-cyan-400">Harvester:</strong> 1 pt (most energy)</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -643,12 +695,39 @@
                             </ul>
                         </div>
                         <div>
-                            <strong class="text-slate-200">Expansions:</strong> The Power Up must be used, all other expansions are up to the tables.
+                            <strong class="text-slate-200">Expansions:</strong> The Power Up must be used, all other expansions are up to the Tournament Managers.
                         </div>
                         <div>
                             <strong class="text-slate-200">Cards:</strong>
                             <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2 mt-1">
-                                <li>It's recommended to have a unique deck of Power cards per table. If this isn't possible, simply divide the single deck evenly between tables.</li>
+                                <li>It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- General Section -->
+                <div>
+                    <h4 class="text-sm font-extrabold text-white mb-3 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                        <i class="fa-solid fa-handshake text-emerald-400"></i> General
+                    </h4>
+
+                    <div class="space-y-3 text-slate-400">
+                        <div>
+                            <strong class="text-slate-200">Rules:</strong> Players should always follow the rules to their utmost ability.
+                        </div>
+                        <div>
+                            <strong class="text-slate-200">Missed abilities:</strong> In case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible, as a fun atmosphere should be the priority over simply gaining an edge.
+                        </div>
+                        <div>
+                            <strong class="text-slate-200">Cheating:</strong> In cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.
+                        </div>
+                        <div>
+                            <strong class="text-slate-200">Tips and Tricks:</strong>
+                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2 mt-1">
+                                <li>Follow the dice, let your first roll guide your turn.</li>
+                                <li>Follow your first Power Up, let it guide your play style.</li>
+                                <li>Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li>
                             </ul>
                         </div>
                     </div>
@@ -685,6 +764,22 @@
                     Yes, Reset Everything
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Number Picker (VP / HP) -->
+    <div id="number-picker" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeNumberPicker()">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl p-4 shadow-2xl">
+            <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="min-w-0">
+                    <h3 id="number-picker-title" class="font-extrabold text-white text-sm"></h3>
+                    <p id="number-picker-sub" class="text-[11px] text-slate-400 truncate"></p>
+                </div>
+                <button type="button" onclick="window.closeNumberPicker()" aria-label="Close" class="w-8 h-8 shrink-0 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="number-picker-grid" class="grid grid-cols-7 gap-1.5"></div>
         </div>
     </div>
 
@@ -797,7 +892,8 @@
                 tableSize: 5,
                 gamesPerRound: 2,
                 prelimRounds: 3,
-                roundTimerMinutes: 30
+                roundTimerMinutes: 30,
+                bonusesEnabled: true
             },
             players: [],
             rounds: [],
@@ -825,6 +921,7 @@
             if (st.gamesPerRound === undefined) st.gamesPerRound = 1;
             if (st.prelimRounds === undefined) st.prelimRounds = st.maxRounds || 3;
             delete st.maxRounds;
+            if (st.bonusesEnabled === undefined) st.bonusesEnabled = true;
             if (!st.tableSize) st.tableSize = 5;
             if (!st.roundTimerMinutes) st.roundTimerMinutes = 30;
             if (!Array.isArray(t.rounds)) t.rounds = [];
@@ -893,7 +990,8 @@
                     tableSize: parseInt(document.getElementById('setting-table-size').value) || 5,
                     gamesPerRound: parseInt(document.getElementById('setting-games-per-round').value) || 2,
                     prelimRounds: parseInt(document.getElementById('setting-prelim-rounds').value) || 3,
-                    roundTimerMinutes: parseInt(document.getElementById('setting-round-timer').value) || 30
+                    roundTimerMinutes: parseInt(document.getElementById('setting-round-timer').value) || 30,
+                    bonusesEnabled: document.getElementById('setting-bonuses').checked
                 },
                 players: [],
                 rounds: [],
@@ -910,8 +1008,8 @@
 
         const SETTING_LIMITS = {
             'setting-table-size': { min: 2, max: 6, def: 5 },
-            'setting-games-per-round': { min: 1, max: 5, def: 2 },
-            'setting-prelim-rounds': { min: 1, max: 5, def: 3 },
+            'setting-games-per-round': { min: 1, max: 3, def: 2 },
+            'setting-prelim-rounds': { min: 1, max: 3, def: 3 },
             'setting-round-timer': { min: 5, max: 60, def: 30 }
         };
 
@@ -957,10 +1055,10 @@
 
         // Quick start templates: scale from short 3 player tournaments up to long 6 player ones
         const TEMPLATES = [
-            { key: 'quick',  name: 'Quick Brawl',        icon: 'fa-bolt',     players: 3, games: 1, rounds: 2, timer: 15 },
-            { key: 'casual', name: 'Casual Night',       icon: 'fa-mug-hot',  players: 4, games: 2, rounds: 2, timer: 25 },
-            { key: 'cup',    name: 'Monster Cup',        icon: 'fa-trophy',   players: 5, games: 2, rounds: 3, timer: 25 },
-            { key: 'champ',  name: 'Grand Championship', icon: 'fa-crown',    players: 6, games: 3, rounds: 3, timer: 30 }
+            { key: 'brawl',    name: 'Brawl',    icon: 'fa-bolt',       players: 3, games: 1, rounds: 2, timer: 35 },
+            { key: 'melee',    name: 'Melee',    icon: 'fa-hand-fist',  players: 4, games: 2, rounds: 2, timer: 45 },
+            { key: 'clash',    name: 'Clash',    icon: 'fa-fire',       players: 5, games: 2, rounds: 3, timer: 50 },
+            { key: 'showdown', name: 'Showdown', icon: 'fa-crown',      players: 6, games: 3, rounds: 3, timer: 60 }
         ];
 
         function renderTemplateButtons() {
@@ -972,17 +1070,25 @@
                 rounds: readSetting('setting-prelim-rounds'),
                 timer: readSetting('setting-round-timer')
             };
-            host.innerHTML = TEMPLATES.map(t => {
+            host.innerHTML = TEMPLATES.map((t, i) => {
                 const active = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
                 const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + 1);
                 const cls = active
                     ? 'bg-amber-500/15 border-amber-400 text-amber-300 shadow-lg shadow-amber-500/10'
                     : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-500/50 hover:text-amber-300';
-                return `<button type="button" onclick="window.applyTemplate('${t.key}')" class="text-left p-2.5 rounded-xl border transition-colors cursor-pointer ${cls}">
-                    <span class="flex items-center gap-1.5 text-xs font-extrabold leading-tight"><i class="fa-solid ${t.icon} text-amber-500 text-[11px]"></i><span class="truncate">${t.name}</span></span>
-                    <span class="block text-[10px] text-slate-500 mt-1 leading-snug">${t.players} players · ${t.games} game${t.games === 1 ? '' : 's'} · ${t.rounds} rounds · ${t.timer} min</span>
-                    <span class="block text-[10px] font-bold text-amber-500/80 mt-0.5">about ${formatDuration(total)}</span>
-                </button>`;
+                const stats = `${t.players} player tables · ${t.games} game${t.games === 1 ? '' : 's'} per ${t.rounds} rounds · ${t.timer} min games · ~ ${formatDuration(total)}`;
+                // Tooltip lines up with the left edge, centre or right edge so it never spills out of the card
+                const tipPos = i === 0 ? 'left-0' : (i === TEMPLATES.length - 1 ? 'right-0' : 'left-1/2 -translate-x-1/2');
+                return `<div class="tpl-wrap relative">
+                    <button type="button" onclick="window.applyTemplate('${t.key}')" aria-label="${t.name}: ${stats}" class="w-full flex flex-col items-center gap-1 px-1 py-2 rounded-xl border transition-colors cursor-pointer ${cls}">
+                        <i class="fa-solid ${t.icon} text-amber-500 text-xs"></i>
+                        <span class="text-[11px] font-extrabold leading-none">${t.name}</span>
+                    </button>
+                    <span role="tooltip" class="tpl-tip absolute top-full mt-1.5 ${tipPos} z-30 w-52 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left pointer-events-none">
+                        <span class="block font-extrabold text-slate-100 text-xs mb-0.5">${t.name}</span>
+                        <span class="block">${stats}</span>
+                    </span>
+                </div>`;
             }).join('');
         }
 
@@ -1044,6 +1150,7 @@
             document.getElementById('setting-games-per-round').value = st.gamesPerRound || 2;
             document.getElementById('setting-prelim-rounds').value = st.prelimRounds || 3;
             document.getElementById('setting-round-timer').value = st.roundTimerMinutes || 30;
+            document.getElementById('setting-bonuses').checked = st.bonusesEnabled !== false;
             window.syncSettingsUI();
         };
 
@@ -1093,11 +1200,13 @@
             window.tournament.settings.gamesPerRound = readSetting('setting-games-per-round');
             window.tournament.settings.prelimRounds = readSetting('setting-prelim-rounds');
             window.tournament.settings.roundTimerMinutes = readSetting('setting-round-timer');
+            window.tournament.settings.bonusesEnabled = document.getElementById('setting-bonuses').checked;
+            if (!window.tournament.settings.bonusesEnabled && window.closeBonusModal) window.closeBonusModal();
             window.syncSettingsUI();
             syncPendingPlan();
             window.saveTournament();
-            // The timeline (and a not-yet-played Round 1) follows the settings in real time
-            window.renderRoundsUI();
+            // The timeline, table cards and standings follow the settings in real time
+            window.renderAll();
             if (silent === true) return;
             // Debounce the toast so dragging a slider only notifies once, after the last change
             clearTimeout(settingsToastTimer);
@@ -1599,8 +1708,12 @@
         ];
         let bonusModalCtx = null;
 
+        window.bonusesEnabled = function() {
+            return !window.tournament.settings || window.tournament.settings.bonusesEnabled !== false;
+        };
+
         window.getBonusCount = function(seat) {
-            if (!seat || !seat.bonuses) return 0;
+            if (!seat || !seat.bonuses || !window.bonusesEnabled()) return 0;
             return window.BONUS_TYPES.reduce((n, b) => n + (seat.bonuses[b.key] ? 1 : 0), 0);
         };
 
@@ -1717,9 +1830,14 @@
         window.renderStandings = function() {
             const standings = window.calculateStandings();
             const tbody = document.getElementById('standings-table-body');
+            const bonusesOn = window.bonusesEnabled();
+            document.getElementById('th-bonus').classList.toggle('hidden', !bonusesOn);
+            document.getElementById('standings-rules-text').textContent = bonusesOn
+                ? 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs and HP tiebreakers.'
+                : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs and HP tiebreakers.';
 
             if (standings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${bonusesOn ? 8 : 7}" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
                 return;
             }
 
@@ -1736,7 +1854,7 @@
                         <td class="py-3 px-4 text-center font-semibold text-slate-400">${s.gamesPlayed}</td>
                         <td class="py-3 px-4 text-center font-bold text-emerald-400">${s.wins}</td>
                         <td class="py-3 px-4 text-center font-extrabold text-amber-400 text-base">${s.pts}</td>
-                        <td class="py-3 px-4 text-center font-bold text-slate-300">${s.bonusTotal || 0}</td>
+                        ${bonusesOn ? `<td class="py-3 px-4 text-center font-bold text-slate-300">${s.bonusTotal || 0}</td>` : ''}
                         <td class="py-3 px-4 text-center font-bold text-blue-400">${s.vpTotal}</td>
                         <td class="py-3 px-4 text-center font-bold text-rose-400">${s.hpTotal}</td>
                     </tr>
@@ -1855,19 +1973,19 @@
                                 ${rankOptions}
                             </select>
                             
-                            <div title="Victory Points" class="flex items-center gap-1 bg-slate-950 border border-slate-700 rounded-lg px-1.5 py-0.5">
+                            <button type="button" title="Victory Points" aria-label="Victory Points, tap to change" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-amber-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors">
                                 <span class="text-[11px] leading-none">⭐</span>
-                                <input type="number" min="0" max="20" value="${seat.vp}" onchange="window.updateSeatScore('${table.id}', '${seat.playerId}', 'vp', this.value)" class="w-9 bg-transparent text-xs font-bold text-white text-center focus:outline-none">
-                            </div>
-
-                            <div title="Health Points" class="flex items-center gap-1 bg-slate-950 border border-slate-700 rounded-lg px-1.5 py-0.5">
-                                <span class="text-[11px] leading-none">❤️</span>
-                                <input type="number" min="0" max="12" value="${seat.hp}" onchange="window.updateSeatScore('${table.id}', '${seat.playerId}', 'hp', this.value)" class="w-9 bg-transparent text-xs font-bold text-white text-center focus:outline-none">
-                            </div>
-
-                            <button type="button" title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="ml-auto flex items-center gap-1 rounded-lg px-1.5 py-0.5 border text-xs font-bold transition-colors cursor-pointer ${bonusCount > 0 ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-950 border-slate-700 text-slate-400 hover:border-amber-500/50 hover:text-amber-300'}">
-                                <span class="text-[11px] leading-none">🎖️</span><span>Bonuses</span>${bonusCount > 0 ? `<span class="text-[10px] font-black">+${bonusCount}</span>` : ''}
+                                <span class="w-6 text-xs font-bold text-white text-center">${seat.vp}</span>
                             </button>
+
+                            <button type="button" title="Health Points" aria-label="Health Points, tap to change" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-rose-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors">
+                                <span class="text-[11px] leading-none">❤️</span>
+                                <span class="w-6 text-xs font-bold text-white text-center">${seat.hp}</span>
+                            </button>
+
+                            ${window.bonusesEnabled() ? `<button type="button" title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="ml-auto flex items-center gap-1 rounded-lg px-1.5 py-0.5 border text-xs font-bold transition-colors cursor-pointer ${bonusCount > 0 ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-950 border-slate-700 text-slate-400 hover:border-amber-500/50 hover:text-amber-300'}">
+                                <span class="text-[11px] leading-none">🎖️</span><span>Bonuses</span>${bonusCount > 0 ? `<span class="text-[10px] font-black">+${bonusCount}</span>` : ''}
+                            </button>` : ''}
                         </div>
                     </div>
                 `;
@@ -1968,6 +2086,49 @@
             const laterGames = round.games.length - gi > 1;
             window.showToast(`Moved ${name} to ${targetTable.tableName}${laterGames ? ' for the rest of this round' : ''}`, "success");
         };
+
+        // Tap a VP / HP field, tap a number, done: the picker closes itself and saves the value
+        let numberPickerCtx = null;
+
+        window.openNumberPicker = function(tableId, playerId, field) {
+            const game = window.getCurrentGame();
+            const table = game && game.tables.find(t => t.id === tableId);
+            const seat = table && table.seats.find(s => s.playerId === playerId);
+            if (!seat) return;
+
+            const max = field === 'vp' ? 20 : 12;
+            const current = Math.min(max, parseInt(seat[field]) || 0);
+            const player = window.tournament.players.find(p => p.id === playerId);
+            numberPickerCtx = { tableId, playerId, field };
+
+            document.getElementById('number-picker-title').textContent = field === 'vp' ? '⭐ Victory Points' : '❤️ Health Points';
+            document.getElementById('number-picker-sub').textContent = (player ? player.name : 'Player') + ' · 0 to ' + max;
+            let tiles = '';
+            for (let n = 0; n <= max; n++) {
+                const cls = n === current
+                    ? 'bg-amber-500 border-amber-400 text-slate-950'
+                    : 'bg-slate-950 border-slate-700 text-slate-200 hover:border-amber-500/60 hover:text-amber-300';
+                tiles += `<button type="button" onclick="window.pickNumber(${n})" class="h-11 rounded-xl border text-sm font-extrabold transition-colors cursor-pointer ${cls}">${n}</button>`;
+            }
+            document.getElementById('number-picker-grid').innerHTML = tiles;
+            document.getElementById('number-picker').classList.remove('hidden');
+        };
+
+        window.closeNumberPicker = function() {
+            document.getElementById('number-picker').classList.add('hidden');
+            numberPickerCtx = null;
+        };
+
+        window.pickNumber = function(n) {
+            if (!numberPickerCtx) return;
+            const ctx = numberPickerCtx;
+            window.closeNumberPicker();
+            window.updateSeatScore(ctx.tableId, ctx.playerId, ctx.field, n);
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && numberPickerCtx) window.closeNumberPicker();
+        });
 
         window.updateSeatScore = function(tableId, playerId, field, value) {
             const game = window.getCurrentGame();
@@ -2338,8 +2499,29 @@
             });
         };
 
+        // Light / Dark theme (saved separately from tournament data)
+        window.applyTheme = function(theme) {
+            const light = theme === 'light';
+            document.documentElement.classList.toggle('light', light);
+            const btn = document.getElementById('theme-toggle');
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) icon.className = light ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+            if (btn) {
+                const label = light ? 'Switch to dark mode' : 'Switch to light mode';
+                btn.title = label;
+                btn.setAttribute('aria-label', label);
+            }
+        };
+
+        window.toggleTheme = function() {
+            const next = document.documentElement.classList.contains('light') ? 'dark' : 'light';
+            window.applyTheme(next);
+            try { localStorage.setItem('kot_theme', next); } catch (e) {}
+        };
+
         // Application Initialization
         window.onload = function() {
+            window.applyTheme(document.documentElement.classList.contains('light') ? 'light' : 'dark');
             window.loadTournament();
             window.syncSettingsUI();
             window.renderAll();
