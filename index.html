@@ -159,6 +159,12 @@
                 </div>
 
                 <div class="space-y-5">
+                    <!-- Quick Start Templates -->
+                    <div>
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-bolt text-slate-500 mr-1"></i> Quick Start</div>
+                        <div id="template-buttons" class="grid grid-cols-2 gap-2"></div>
+                    </div>
+
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <label for="setting-table-size" class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-users text-slate-500 mr-1"></i> Players per Table</label>
@@ -201,7 +207,7 @@
 
                     <div>
                         <div class="flex items-center justify-between mb-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-flag-checkered text-slate-500 mr-1"></i> Prelim Rounds</label>
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-flag-checkered text-slate-500 mr-1"></i> Total Rounds</label>
                             <span id="badge-prelim-rounds" class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">3 rounds</span>
                         </div>
                         <input type="hidden" id="setting-prelim-rounds" value="3">
@@ -227,12 +233,12 @@
                                 <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i><i class="fa-solid fa-flag"></i></span>
                             </button>
                         </div>
-                        <p class="text-[10px] text-slate-500 mt-1.5 leading-snug">Goal before Grand Finals unlocks. You can add extra rounds any time.</p>
+                        <p class="text-[10px] text-slate-500 mt-1.5 leading-snug">Rounds played before the finals. You can add extra rounds any time.</p>
                     </div>
 
                     <div>
                         <div class="flex items-center justify-between mb-2">
-                            <label for="setting-round-timer" class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-stopwatch text-slate-500 mr-1"></i> Match Timer</label>
+                            <label for="setting-round-timer" class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-stopwatch text-slate-500 mr-1"></i> Game Timer</label>
                             <span id="badge-round-timer" class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">30 min</span>
                         </div>
                         <input type="range" id="setting-round-timer" class="kot-range" min="5" max="60" step="5" value="30" oninput="window.updateSettings()">
@@ -240,9 +246,9 @@
                     </div>
 
                     <!-- Tournament Overview -->
-                    <div id="tournament-overview" class="rounded-xl border border-slate-800 bg-slate-950 p-3" title="Estimate: a typical King of Tokyo game runs about 30 minutes and roughly 30 turns at the table (reviewers report 20 to 40 minutes, longer with Power Up). Allows about 5 minutes between games for re-seating and setup.">
+                    <div id="tournament-overview" class="rounded-xl border border-slate-800 bg-slate-950 p-3" title="Estimate only. The Game Timer is the ideal time for a 4 player table (about 10 turns each). Bigger tables take longer and smaller tables finish sooner. Allows about 5 minutes between games for re-seating and setup.">
                         <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1 flex items-center gap-1.5">
-                            <i class="fa-solid fa-clipboard-list text-amber-500"></i> Tournament Overview
+                            <i class="fa-solid fa-clipboard-list text-amber-500"></i> Overview
                         </div>
                         <p id="tournament-overview-text" class="text-xs text-slate-300 leading-relaxed"></p>
                     </div>
@@ -917,10 +923,12 @@
             return Math.max(lim.min, Math.min(lim.max, v));
         }
 
-        // Planning estimates for the Tournament Overview sentence.
-        // A typical King of Tokyo game is about 30 minutes (publisher time) with a turn roughly every minute at the table,
-        // so about 30 turns per game. Between games we allow ~5 minutes for re-seating, drafting and setup.
-        const TURNS_PER_GAME = 30;
+        // Planning estimates for the Overview sentence.
+        // The Game Timer is the ideal length of one game for a reference table of 4 players (about 10 turns each).
+        // Turn length is fixed, so a bigger table has more turns per round and takes longer; a smaller table finishes sooner.
+        // Between games we allow ~5 minutes for re-seating, drafting and setup.
+        const TURNS_EACH = 10;
+        const REFERENCE_TABLE_SIZE = 4;
         const CHANGEOVER_MINUTES = 5;
 
         function formatDuration(totalMinutes) {
@@ -937,28 +945,67 @@
             return rem === 0 ? `${mins} min` : `${mins} min ${rem} sec`;
         }
 
+        function estimateGameMinutes(players, timer) {
+            const secondsPerTurn = (timer * 60) / (REFERENCE_TABLE_SIZE * TURNS_EACH);
+            return (secondsPerTurn * players * TURNS_EACH) / 60;
+        }
+
+        // Estimated minutes for `games` games, including time between games
+        function estimateMinutes(players, timer, games) {
+            return games * (estimateGameMinutes(players, timer) + CHANGEOVER_MINUTES);
+        }
+
+        // Quick start templates: scale from short 3 player tournaments up to long 6 player ones
+        const TEMPLATES = [
+            { key: 'quick',  name: 'Quick Brawl',        icon: 'fa-bolt',     players: 3, games: 1, rounds: 2, timer: 15 },
+            { key: 'casual', name: 'Casual Night',       icon: 'fa-mug-hot',  players: 4, games: 2, rounds: 2, timer: 25 },
+            { key: 'cup',    name: 'Monster Cup',        icon: 'fa-trophy',   players: 5, games: 2, rounds: 3, timer: 25 },
+            { key: 'champ',  name: 'Grand Championship', icon: 'fa-crown',    players: 6, games: 3, rounds: 3, timer: 30 }
+        ];
+
+        function renderTemplateButtons() {
+            const host = document.getElementById('template-buttons');
+            if (!host) return;
+            const cur = {
+                players: readSetting('setting-table-size'),
+                games: readSetting('setting-games-per-round'),
+                rounds: readSetting('setting-prelim-rounds'),
+                timer: readSetting('setting-round-timer')
+            };
+            host.innerHTML = TEMPLATES.map(t => {
+                const active = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
+                const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + 1);
+                const cls = active
+                    ? 'bg-amber-500/15 border-amber-400 text-amber-300 shadow-lg shadow-amber-500/10'
+                    : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-500/50 hover:text-amber-300';
+                return `<button type="button" onclick="window.applyTemplate('${t.key}')" class="text-left p-2.5 rounded-xl border transition-colors cursor-pointer ${cls}">
+                    <span class="flex items-center gap-1.5 text-xs font-extrabold leading-tight"><i class="fa-solid ${t.icon} text-amber-500 text-[11px]"></i><span class="truncate">${t.name}</span></span>
+                    <span class="block text-[10px] text-slate-500 mt-1 leading-snug">${t.players} players · ${t.games} game${t.games === 1 ? '' : 's'} · ${t.rounds} rounds · ${t.timer} min</span>
+                    <span class="block text-[10px] font-bold text-amber-500/80 mt-0.5">about ${formatDuration(total)}</span>
+                </button>`;
+            }).join('');
+        }
+
         function renderTournamentOverview() {
             const el = document.getElementById('tournament-overview-text');
             if (!el) return;
             const players = readSetting('setting-table-size');
             const gamesPerRound = readSetting('setting-games-per-round');
-            const prelimRounds = readSetting('setting-prelim-rounds');
+            const rounds = readSetting('setting-prelim-rounds');
             const timer = readSetting('setting-round-timer');
 
-            const prelimGames = gamesPerRound * prelimRounds;
-            const totalGames = prelimGames + 1; // plus the finals
-            const totalMinutes = totalGames * (timer + CHANGEOVER_MINUTES);
-            const secondsPerTurn = (timer * 60) / TURNS_PER_GAME;
-            const turnsEach = Math.max(1, Math.round(TURNS_PER_GAME / players));
+            const roundGames = gamesPerRound * rounds;
+            const totalGames = roundGames + 1; // plus the finals
 
-            let pace = '';
-            if (secondsPerTurn < 45) pace = ', a fast pace';
-            else if (secondsPerTurn > 90) pace = ', a relaxed pace';
+            // Seconds per turn comes from the Game Timer at the reference table size; real game length grows with table size
+            const secondsPerTurn = (timer * 60) / (REFERENCE_TABLE_SIZE * TURNS_EACH);
+            const totalMinutes = estimateMinutes(players, timer, totalGames);
 
             const strong = (t) => `<strong class="text-amber-400">${t}</strong>`;
-            el.innerHTML = `Your tournament will include ${strong(totalGames + ' total games')} (${prelimGames} in the prelims and 1 finals), ` +
+            el.innerHTML = `Your tournament will include ${strong(totalGames + ' total games')} ` +
+                `(${roundGames} game${roundGames === 1 ? '' : 's'} in the rounds, plus 1 finals), ` +
                 `taking roughly ${strong(formatDuration(totalMinutes))} in total, ` +
-                `with about ${strong(formatTurnTime(secondsPerTurn))} per turn (around ${turnsEach} turns each${pace}).`;
+                `with about ${strong(formatTurnTime(secondsPerTurn))} per turn (around ${TURNS_EACH} turns each).`;
         }
 
         // Keeps slider fill, value badges and the option buttons in step with the inputs
@@ -978,6 +1025,7 @@
             document.getElementById('badge-prelim-rounds').textContent = prelims + (prelims === 1 ? ' round' : ' rounds');
 
             renderTournamentOverview();
+            renderTemplateButtons();
 
             const current = { games, prelim: prelims };
             document.querySelectorAll('.opt-btn').forEach(btn => {
@@ -999,29 +1047,84 @@
             window.syncSettingsUI();
         };
 
-        window.updateSettings = function() {
+        // A round is "pristine" until play begins: nothing started, scored, locked or bonus-tagged
+        function isRoundPristine(round) {
+            return round.games.every(g => !g.started && g.tables.every(t => !t.completed &&
+                t.seats.every(seat => !(parseInt(seat.rank) > 0) && !(parseInt(seat.vp) > 0) && !(parseInt(seat.hp) > 0) && window.getBonusCount(seat) === 0)));
+        }
+
+        // Keeps a not-yet-played Round 1 in step with the settings, so changing them rarely needs a re-generate
+        function syncPendingPlan() {
+            const t = window.tournament;
+            if (t.rounds.length !== 1) return;
+            const round = t.rounds[0];
+            if (round.isFinals || !isRoundPristine(round)) return;
+            const st = t.settings;
+
+            if (round.tableSize !== undefined && round.tableSize !== st.tableSize) {
+                // Table size changed: re-draw the seating with the new table size
+                t.rounds = [buildFirstRound()];
+                t.currentRound = 0;
+                t.currentGame = 0;
+                return;
+            }
+
+            // Add or remove games so the round matches Games per Round
+            while (round.games.length < st.gamesPerRound) {
+                const n = round.games.length + 1;
+                round.games.push({
+                    started: false,
+                    timerRemaining: st.roundTimerMinutes * 60,
+                    tables: round.games[0].tables.map(tbl => ({
+                        ...tbl,
+                        id: tbl.id.replace(/_g\d+$/, `_g${n}`),
+                        completed: false,
+                        seats: tbl.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: 0 }))
+                    }))
+                });
+            }
+            while (round.games.length > st.gamesPerRound && round.games.length > 1) round.games.pop();
+            round.games.forEach(g => { g.timerRemaining = st.roundTimerMinutes * 60; });
+            if (t.currentGame >= round.games.length) t.currentGame = round.games.length - 1;
+        }
+
+        window.updateSettings = function(silent) {
             window.tournament.settings.tableSize = readSetting('setting-table-size');
             window.tournament.settings.gamesPerRound = readSetting('setting-games-per-round');
             window.tournament.settings.prelimRounds = readSetting('setting-prelim-rounds');
             window.tournament.settings.roundTimerMinutes = readSetting('setting-round-timer');
             window.syncSettingsUI();
+            syncPendingPlan();
             window.saveTournament();
+            // The timeline (and a not-yet-played Round 1) follows the settings in real time
+            window.renderRoundsUI();
+            if (silent === true) return;
             // Debounce the toast so dragging a slider only notifies once, after the last change
             clearTimeout(settingsToastTimer);
             settingsToastTimer = setTimeout(() => window.showToast("Settings updated", "info"), 800);
         };
 
-        // Games per Round only affects rounds generated from now on; Prelim Rounds updates the timeline live
+        window.applyTemplate = function(key) {
+            const tpl = TEMPLATES.find(t => t.key === key);
+            if (!tpl) return;
+            document.getElementById('setting-table-size').value = tpl.players;
+            document.getElementById('setting-games-per-round').value = tpl.games;
+            document.getElementById('setting-prelim-rounds').value = tpl.rounds;
+            document.getElementById('setting-round-timer').value = tpl.timer;
+            clearTimeout(settingsToastTimer);
+            window.updateSettings(true);
+            window.showToast(`${tpl.name} template applied`, "success");
+        };
+
+        // Games per Round applies live to a not-yet-played round and to every round generated afterwards
         window.setGamesPerRound = function(n) {
             document.getElementById('setting-games-per-round').value = n;
             window.updateSettings();
-            window.renderRoundsUI();
         };
 
         window.setPrelimRounds = function(n) {
             document.getElementById('setting-prelim-rounds').value = n;
             window.updateSettings();
-            window.renderRoundsUI();
         };
 
         window.showToast = function(message, type = 'info') {
@@ -1263,7 +1366,17 @@
                     seats: t.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: 0 }))
                 }))
             }));
-            return { name, isFinals: !!isFinals, games };
+            return { name, isFinals: !!isFinals, games, tableSize: window.tournament.settings.tableSize };
+        }
+
+        // Round 1: a random draw split evenly across tables
+        function buildFirstRound() {
+            const shuffled = [...window.tournament.players].sort(() => 0.5 - Math.random());
+            const tableSize = window.tournament.settings.tableSize;
+            const tables = partitionPlayersEvenly(shuffled, tableSize);
+            const templates = tables.map((tblPlayers, idx) => createTableStructure(idx, tblPlayers, false));
+            const gamesPerRound = window.tournament.settings.gamesPerRound || 1;
+            return buildRound("Round 1", templates, gamesPerRound, false);
         }
 
         const GENERATE_BTN_PRIMARY = "px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg shadow-lg shadow-emerald-950/50 transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
@@ -1277,7 +1390,9 @@
         }
 
         window.requestGenerateTournament = function() {
-            if (window.tournament.rounds.length > 0) {
+            const rounds = window.tournament.rounds;
+            const nothingPlayed = rounds.length === 1 && !rounds[0].isFinals && isRoundPristine(rounds[0]);
+            if (rounds.length > 0 && !nothingPlayed) {
                 document.getElementById('generate-modal').classList.remove('hidden');
             } else {
                 window.generateRound1();
@@ -1310,14 +1425,10 @@
             }
             isRoundActive = false;
 
-            const shuffled = [...window.tournament.players].sort(() => 0.5 - Math.random());
-            const tableSize = window.tournament.settings.tableSize;
-            const tables = partitionPlayersEvenly(shuffled, tableSize);
-            const templates = tables.map((tblPlayers, idx) => createTableStructure(idx, tblPlayers, false));
             const gamesPerRound = window.tournament.settings.gamesPerRound || 1;
 
             // Reset rounds and start fresh with Round 1
-            window.tournament.rounds = [buildRound("Round 1", templates, gamesPerRound, false)];
+            window.tournament.rounds = [buildFirstRound()];
             window.tournament.currentRound = 0;
             window.tournament.currentGame = 0;
             window.saveTournament();
@@ -1963,10 +2074,6 @@
             const container = document.getElementById('timeline-container');
             const t = window.tournament;
 
-            if (t.rounds.length === 0) {
-                card.classList.add('hidden');
-                return;
-            }
             card.classList.remove('hidden');
 
             const goal = t.settings.prelimRounds || 3;
@@ -2041,11 +2148,15 @@
                     }).join('');
                 }
 
+                const gameCount = seg.real ? seg.round.games.length : seg.placeholderCount;
+                const groupMinutes = estimateMinutes(t.settings.tableSize || 5, t.settings.roundTimerMinutes || 30, gameCount);
+                const timeTag = segDone ? '' : `<span class="text-[10px] font-semibold text-slate-600 -mt-1 whitespace-nowrap">~${formatDuration(groupMinutes)}</span>`;
                 const extraTag = seg.extra ? '<span class="ml-1 px-1 rounded bg-slate-800 text-slate-500 normal-case font-bold">extra</span>' : '';
                 const labelIcon = seg.kind === 'finals' ? '<i class="fa-solid fa-crown mr-1"></i>' : '';
                 const group = `
                     <div class="flex flex-col items-center gap-1.5 px-3 py-2 rounded-xl border ${groupCls} shrink-0">
                         <span class="text-[10px] font-extrabold uppercase tracking-wider whitespace-nowrap ${labelCls}">${labelIcon}${escapeHtml(seg.label)}${extraTag}</span>
+                        ${timeTag}
                         <div class="flex items-center">${nodes}</div>
                     </div>`;
 
@@ -2066,9 +2177,12 @@
 
             const done = prelims.filter(e => isRoundComplete(e.round)).length;
             const summary = document.getElementById('timeline-summary');
-            summary.textContent = finals
+            const previewTotal = estimateMinutes(t.settings.tableSize || 5, t.settings.roundTimerMinutes || 30, prelimCount * gamesPerRound + 1);
+            summary.textContent = t.rounds.length === 0
+                ? `Live preview of your settings · about ${formatDuration(previewTotal)} in total`
+                : finals
                 ? 'Finals in progress'
-                : `${done} of ${goal} prelim round${goal === 1 ? '' : 's'} done · ${gamesPerRound} game${gamesPerRound === 1 ? '' : 's'} per round`;
+                : `${done} of ${goal} round${goal === 1 ? '' : 's'} done · ${gamesPerRound} game${gamesPerRound === 1 ? '' : 's'} per round`;
         }
 
         window.renderRoundsUI = function() {
@@ -2098,7 +2212,7 @@
                 container.innerHTML = `<div class="col-span-2 text-center py-16 text-slate-500 bg-slate-900/40 rounded-2xl border border-slate-800 border-dashed">
                     <i class="fa-solid fa-dice-d6 text-4xl mb-3 opacity-40 text-amber-500"></i>
                     <p class="text-base font-bold text-slate-300">No rounds generated yet.</p>
-                    <p class="text-xs text-slate-500 mt-1">Add your players on the left and click <strong>Generate Tournament</strong> to launch!</p>
+                    <p class="text-xs text-slate-500 mt-1">The timeline above updates live as you change settings. Add your players and click <strong>Generate Tournament</strong> to seat them.</p>
                 </div>`;
                 return;
             }
