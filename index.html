@@ -167,7 +167,7 @@
             <!-- Logo & Title -->
             <div class="flex items-center min-w-0">
                 <div class="flex items-center gap-3">
-                    <div class="bg-gradient-to-br from-amber-500 to-amber-700 text-slate-950 p-2.5 rounded-xl font-black text-xl tracking-wider shadow-lg shadow-amber-500/20 flex items-center justify-center w-10 h-10 shrink-0">
+                    <div class="bg-gradient-to-br from-amber-500 to-amber-700 text-slate-950 p-2.5 rounded-xl font-black text-xl tracking-wider flex items-center justify-center w-10 h-10 shrink-0">
                         <i class="fa-solid fa-crown text-slate-950"></i>
                     </div>
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 min-w-0">
@@ -236,7 +236,7 @@
                     <button id="btn-settings-lock" type="button" onclick="window.toggleSettingsLock()" aria-label="Lock settings" title="Lock settings" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-400 flex items-center justify-center transition-colors cursor-pointer shrink-0">
                         <i id="settings-lock-icon" class="fa-solid fa-lock-open text-xs"></i>
                     </button>
-                    <button id="btn-generate-r1" type="button" onclick="window.requestGenerateTournament()" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg shadow-lg shadow-emerald-950/50 transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
+                    <button id="btn-generate-r1" type="button" onclick="window.requestGenerateTournament()" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
                         <i class="fa-solid fa-play"></i> Generate Tournament
                     </button>
                     </div>
@@ -327,17 +327,36 @@
                         <div class="relative h-4 mx-[11px] mt-1.5 text-[10px] font-bold text-slate-500"><span class="absolute -translate-x-1/2" style="left:0.00%">5m</span><span class="absolute -translate-x-1/2" style="left:18.18%">15m</span><span class="absolute -translate-x-1/2" style="left:45.45%">30m</span><span class="absolute -translate-x-1/2" style="left:72.73%">45m</span><span class="absolute -translate-x-1/2" style="left:100.00%">60m</span></div>
                     </div>
 
-                    <!-- Bonuses toggle -->
-                    <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
-                        <input type="checkbox" id="setting-bonuses" checked onchange="window.updateSettings()" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
-                        <span class="min-w-0">
-                            <span class="block text-xs font-bold text-slate-200">🎖️ Include Bonuses</span>
-                            <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">Smasher, Tanker, Collector and Harvester each add +1 point. Turn off to play with places only.</span>
-                        </span>
-                    </label>
+                    <!-- Bonuses + Monsters toggles -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors" title="Smasher, Tanker, Collector and Harvester each add +1 point">
+                            <input type="checkbox" id="setting-bonuses" checked onchange="window.updateSettings()" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
+                            <span class="min-w-0">
+                                <span class="block text-xs font-bold text-slate-200">🎖️ Bonuses</span>
+                                <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">+1 point bonuses</span>
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors" title="Show a 3 letter monster tag next to each player. Turn off for quick tournaments.">
+                            <input type="checkbox" id="setting-monsters" checked onchange="window.updateSettings()" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
+                            <span class="min-w-0">
+                                <span class="block text-xs font-bold text-slate-200">👾 Monsters</span>
+                                <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">Monster tags</span>
+                            </span>
+                        </label>
+                    </div>
 
                     </div>
                 </fieldset>
+
+                <!-- Sound effects (a device preference, so it stays usable while settings are locked) -->
+                <label class="flex items-start gap-3 p-3 mt-5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                    <input type="checkbox" id="setting-sfx" checked onchange="window.setSfxEnabled(this.checked)" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
+                    <span class="min-w-0">
+                        <span class="block text-xs font-bold text-slate-200">🔊 Sound Effects</span>
+                        <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">Spoken timer call-outs. Mute and volume sit next to the clock.</span>
+                        <span id="sfx-support-note" class="hidden block text-[10px] text-rose-400 leading-snug mt-0.5">Speech isn't supported in this browser.</span>
+                    </span>
+                </label>
             </div>
 
             <!-- Player Roster Card -->
@@ -354,7 +373,7 @@
                 <form id="add-player-form" onsubmit="window.handleAddPlayer(event)" class="flex flex-col gap-2 mb-4">
                     <textarea id="player-name-input" rows="2" placeholder="Enter monster name(s)... (comma or new line separated)" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors resize-none"></textarea>
                     <div class="flex items-stretch gap-2">
-                        <button type="submit" class="shrink-0 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap">
+                        <button type="submit" class="shrink-0 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap">
                             <i class="fa-solid fa-plus"></i> Add Player(s)
                         </button>
                         <button type="button" onclick="window.quickAddSamplePlayers()" class="flex-1 min-w-0 px-2 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition-colors flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap">
@@ -377,7 +396,7 @@
             <div class="flex flex-col border-b border-slate-800 pb-3 gap-3">
                 <div class="flex items-center justify-between" id="tab-controls">
                     <div class="flex gap-2">
-                        <button onclick="window.switchTab('rounds')" id="tab-btn-rounds" class="px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 shadow-lg cursor-pointer">
+                        <button onclick="window.switchTab('rounds')" id="tab-btn-rounds" class="px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-gamepad"></i> Tournament
                         </button>
                         <button onclick="window.switchTab('standings')" id="tab-btn-standings" class="px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer">
@@ -411,15 +430,24 @@
                                 <i class="fa-solid fa-trophy text-xl"></i>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2">
+                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                                     <h2 id="round-title-display" class="text-2xl font-extrabold text-white tracking-tight">Round 1</h2>
                                     <span id="game-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-300 border border-slate-700 uppercase tracking-wider whitespace-nowrap">Game 1 of 2</span>
                                     <span id="round-status-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-400 border border-slate-700 uppercase tracking-wider">
-                                        Waiting to Start
+                                        Waiting
                                     </span>
                                 </div>
-                                <div class="flex items-center gap-2 mt-0.5">
+                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
                                     <span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider">30:00</span>
+                                    <!-- Sound controls: mute + volume -->
+                                    <div id="sound-controls" class="flex items-center gap-1">
+                                        <button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors">
+                                            <i id="mute-icon" class="fa-solid fa-volume-high text-xs"></i>
+                                        </button>
+                                        <button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Volume" title="Volume" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors">
+                                            <i class="fa-solid fa-sliders text-xs"></i>
+                                        </button>
+                                    </div>
                                     <span id="round-timer-state" class="text-xs text-slate-400 font-medium"></span>
                                 </div>
                             </div>
@@ -429,18 +457,18 @@
                         <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
                             
                             <!-- Start Round -->
-                            <button id="btn-start-round" onclick="window.startCurrentGame()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-sm shadow-lg shadow-emerald-950/40 transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
+                            <button id="btn-start-round" onclick="window.startCurrentGame()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
                                 <i class="fa-solid fa-play"></i> Start Game
                             </button>
 
-                            <!-- Skip Round (only before a round has started) -->
-                            <button id="btn-skip-round" onclick="window.skipRound()" title="Skip this round" class="hidden px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i class="fa-solid fa-forward"></i> Skip Round
+                            <!-- Skip Game (only before a game has started) -->
+                            <button id="btn-skip-game" onclick="window.skipGame()" title="Skip this game" class="hidden px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-forward"></i> Skip Game
                             </button>
 
-                            <!-- Restore a skipped round -->
-                            <button id="btn-restore-round" onclick="window.restoreRound()" title="Put this round back in the tournament" class="hidden px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i class="fa-solid fa-rotate-left"></i> Restore Round
+                            <!-- Restore a skipped game -->
+                            <button id="btn-restore-game" onclick="window.restoreGame()" title="Put this game back in the tournament" class="hidden px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-rotate-left"></i> Restore Game
                             </button>
 
                             <!-- Pause / Resume Round -->
@@ -455,17 +483,17 @@
                             </div>
 
                             <!-- Next Game in this Round -->
-                            <button id="btn-next-game" onclick="window.goToNextGame()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-950/40 transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
+                            <button id="btn-next-game" onclick="window.goToNextGame()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
                                 <i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span>
                             </button>
 
                             <!-- Generate Next Round / Additional Round -->
-                            <button id="btn-generate-next" onclick="window.generateNextRound()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-950/40 transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
+                            <button id="btn-generate-next" onclick="window.generateNextRound()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
                                 <i class="fa-solid fa-forward-step"></i> <span id="generate-next-label">Generate Next Round</span>
                             </button>
                             
                             <!-- Grand Finals Trigger -->
-                            <button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-sm shadow-lg shadow-purple-950/50 transition-all flex items-center gap-2 cursor-pointer">
+                            <button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer">
                                 <i class="fa-solid fa-crown"></i> Trigger Grand Finals
                             </button>
 
@@ -779,9 +807,46 @@
                 <button onclick="window.closeResetModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors cursor-pointer">
                     Cancel
                 </button>
-                <button onclick="window.executeResetTournament()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-colors shadow-lg shadow-rose-950/40 cursor-pointer">
+                <button onclick="window.executeResetTournament()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-colors cursor-pointer">
                     Yes, Reset Everything
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Volume popover (positioned next to the volume button) -->
+    <div id="volume-popover" class="hidden fixed z-50 w-52 p-3 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl">
+        <div class="flex items-center justify-between mb-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <span><i class="fa-solid fa-volume-high mr-1"></i> Volume</span>
+            <span id="volume-value" class="text-amber-400">80%</span>
+        </div>
+        <input type="range" id="volume-slider" class="kot-range" min="0" max="100" step="5" value="80" oninput="window.setVolume(this.value)" onchange="window.testVolume()" aria-label="Volume">
+    </div>
+
+    <!-- Monster Picker -->
+    <div id="monster-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4" onclick="if(event.target===this) window.closeMonsterPicker()">
+        <div class="bg-slate-900 border border-slate-800 w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+            <div class="flex items-center justify-between gap-3 p-4 border-b border-slate-800">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0"><i class="fa-solid fa-dragon"></i></div>
+                    <div class="min-w-0">
+                        <h3 class="font-extrabold text-white text-sm">Choose Monster</h3>
+                        <p id="monster-modal-player" class="text-[11px] text-slate-400 truncate"></p>
+                    </div>
+                </div>
+                <button type="button" onclick="window.closeMonsterPicker()" aria-label="Close" class="w-8 h-8 shrink-0 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-3 border-b border-slate-800">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                    <input id="monster-search" type="search" autocomplete="off" placeholder="Search name or code" oninput="window.filterMonsters(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors">
+                </div>
+            </div>
+            <div id="monster-list" class="p-3 space-y-1.5 overflow-y-auto custom-scrollbar"></div>
+            <div class="p-3 border-t border-slate-800 flex justify-end">
+                <button id="monster-clear" type="button" onclick="window.clearMonster()" class="hidden px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors cursor-pointer">Remove monster</button>
             </div>
         </div>
     </div>
@@ -818,7 +883,7 @@
                 <button onclick="window.closeGenerateModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors cursor-pointer">
                     Cancel
                 </button>
-                <button onclick="window.confirmGenerateTournament()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors shadow-lg shadow-amber-500/20 cursor-pointer">
+                <button onclick="window.confirmGenerateTournament()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors cursor-pointer">
                     Yes, Replace It
                 </button>
             </div>
@@ -924,7 +989,8 @@
                 gamesPerRound: 2,
                 prelimRounds: 3,
                 roundTimerMinutes: 30,
-                bonusesEnabled: true
+                bonusesEnabled: true,
+                monstersEnabled: true
             },
             players: [],
             rounds: [],
@@ -953,6 +1019,7 @@
             if (st.prelimRounds === undefined) st.prelimRounds = st.maxRounds || 3;
             delete st.maxRounds;
             if (st.bonusesEnabled === undefined) st.bonusesEnabled = true;
+            if (st.monstersEnabled === undefined) st.monstersEnabled = true;
             if (!st.tableSize) st.tableSize = 5;
             if (!st.roundTimerMinutes) st.roundTimerMinutes = 30;
             if (!Array.isArray(t.rounds)) t.rounds = [];
@@ -966,6 +1033,27 @@
                     delete r.tables; delete r.started; delete r.timerRemaining;
                 }
             });
+            t.rounds.forEach(r => {
+                // Older saves skipped whole rounds; now individual games are skipped
+                if (r.skipped) {
+                    r.games.forEach(g => { if (!g.started) g.skipped = true; });
+                    delete r.skipped;
+                }
+                if (!r.monsters) r.monsters = {};
+            });
+            // Health now starts at 10 (once): fix games that have not been played yet
+            if (!t.hpDefaultApplied) {
+                t.rounds.forEach(r => r.games.forEach(g => {
+                    if (g.started || g.skipped) return;
+                    g.tables.forEach(tbl => {
+                        if (tbl.completed) return;
+                        tbl.seats.forEach(seat => {
+                            if (!(parseInt(seat.rank) > 0) && !(parseInt(seat.vp) > 0) && !(parseInt(seat.hp) > 0)) seat.hp = DEFAULT_HP;
+                        });
+                    });
+                }));
+                t.hpDefaultApplied = true;
+            }
             if (typeof t.currentGame !== 'number') t.currentGame = 0;
             if (t.currentRound >= t.rounds.length) t.currentRound = Math.max(0, t.rounds.length - 1);
             const cr = t.rounds[t.currentRound];
@@ -984,12 +1072,16 @@
             return r.games[gi];
         };
 
+        // Players start every game on 10 health, as in the board game
+        const DEFAULT_HP = 10;
+
+        // A skipped game counts as finished so the round can move on, but nothing in it is scored
         function isGameComplete(game) {
-            return !!game && game.tables.length > 0 && game.tables.every(t => t.completed);
+            return !!game && (!!game.skipped || (game.tables.length > 0 && game.tables.every(t => t.completed)));
         }
 
         function isRoundComplete(round) {
-            return !!round && (!!round.skipped || (round.games.length > 0 && round.games.every(isGameComplete)));
+            return !!round && round.games.length > 0 && round.games.every(isGameComplete);
         }
 
         window.loadTournament = function() {
@@ -1022,7 +1114,8 @@
                     gamesPerRound: parseInt(document.getElementById('setting-games-per-round').value) || 2,
                     prelimRounds: parseInt(document.getElementById('setting-prelim-rounds').value) || 3,
                     roundTimerMinutes: parseInt(document.getElementById('setting-round-timer').value) || 30,
-                    bonusesEnabled: document.getElementById('setting-bonuses').checked
+                    bonusesEnabled: document.getElementById('setting-bonuses').checked,
+                    monstersEnabled: document.getElementById('setting-monsters').checked
                 },
                 players: [],
                 rounds: [],
@@ -1105,7 +1198,7 @@
                 const active = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
                 const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + 1);
                 const cls = active
-                    ? 'bg-amber-500/15 border-amber-400 text-amber-300 shadow-lg shadow-amber-500/10'
+                    ? 'bg-amber-500/15 border-amber-400 text-amber-300'
                     : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-500/50 hover:text-amber-300';
                 const stats = `${t.players} player tables · ${t.games} game${t.games === 1 ? '' : 's'} per ${t.rounds} rounds · ${t.timer} min games · ~ ${formatDuration(total)}`;
                 // Tooltip lines up with the left edge, centre or right edge so it never spills out of the card
@@ -1168,7 +1261,7 @@
             document.querySelectorAll('.opt-btn').forEach(btn => {
                 const active = parseInt(btn.dataset.val) === current[btn.dataset.group];
                 btn.className = 'opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer ' +
-                    (active ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-lg shadow-amber-500/20'
+                    (active ? 'bg-amber-500 border-amber-400 text-slate-950'
                             : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-amber-500/50 hover:text-amber-300');
             });
         };
@@ -1182,13 +1275,18 @@
             document.getElementById('setting-prelim-rounds').value = st.prelimRounds || 3;
             document.getElementById('setting-round-timer').value = st.roundTimerMinutes || 30;
             document.getElementById('setting-bonuses').checked = st.bonusesEnabled !== false;
+            document.getElementById('setting-monsters').checked = st.monstersEnabled !== false;
             window.syncSettingsUI();
         };
 
         // A round is "pristine" until play begins: nothing started, scored, locked or bonus-tagged
+        function isGamePristine(game) {
+            return !game.started && !game.skipped && game.tables.every(t => !t.completed &&
+                t.seats.every(seat => !(parseInt(seat.rank) > 0) && !(parseInt(seat.vp) > 0) && parseInt(seat.hp) === DEFAULT_HP && window.getBonusCount(seat) === 0));
+        }
+
         function isRoundPristine(round) {
-            return round.games.every(g => !g.started && g.tables.every(t => !t.completed &&
-                t.seats.every(seat => !(parseInt(seat.rank) > 0) && !(parseInt(seat.vp) > 0) && !(parseInt(seat.hp) > 0) && window.getBonusCount(seat) === 0)));
+            return round.games.every(isGamePristine);
         }
 
         // Keeps a not-yet-played Round 1 in step with the settings, so changing them rarely needs a re-generate
@@ -1196,7 +1294,7 @@
             const t = window.tournament;
             if (t.rounds.length !== 1) return;
             const round = t.rounds[0];
-            if (round.isFinals || round.skipped || !isRoundPristine(round)) return;
+            if (round.isFinals || !isRoundPristine(round)) return;
             const st = t.settings;
 
             if (round.tableSize !== undefined && round.tableSize !== st.tableSize) {
@@ -1217,7 +1315,7 @@
                         ...tbl,
                         id: tbl.id.replace(/_g\d+$/, `_g${n}`),
                         completed: false,
-                        seats: tbl.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: 0 }))
+                        seats: tbl.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: DEFAULT_HP }))
                     }))
                 });
             }
@@ -1230,7 +1328,7 @@
         function isTournamentStarted() {
             const r = window.tournament.rounds;
             if (r.length === 0) return false;
-            return !(r.length === 1 && !r[0].isFinals && !r[0].skipped && isRoundPristine(r[0]));
+            return !(r.length === 1 && !r[0].isFinals && isRoundPristine(r[0]));
         }
 
         window.isSettingsLocked = function() {
@@ -1271,6 +1369,8 @@
             window.tournament.settings.prelimRounds = readSetting('setting-prelim-rounds');
             window.tournament.settings.roundTimerMinutes = readSetting('setting-round-timer');
             window.tournament.settings.bonusesEnabled = document.getElementById('setting-bonuses').checked;
+            window.tournament.settings.monstersEnabled = document.getElementById('setting-monsters').checked;
+            if (!window.tournament.settings.monstersEnabled && window.closeMonsterPicker) window.closeMonsterPicker();
             if (!window.tournament.settings.bonusesEnabled && window.closeBonusModal) window.closeBonusModal();
             window.syncSettingsUI();
             syncPendingPlan();
@@ -1411,24 +1511,146 @@
             window.renderRoster();
         };
 
-        // Every monster with official Evolution cards (King of Tokyo, King of New York, expansions and packs)
-        const EVOLUTION_MONSTERS = {
-            "King of Tokyo / Power Up!": [
-                "Alienoid", "Cyber Bunny", "Cyber Kitty", "Gigazaur", "Kraken",
-                "Meka Dragon", "Pandakaï", "Space Penguin", "The King", "Baby Gigazaur"
-            ],
-            "Halloween": ["Boogie Woogie", "Pumpkin Jack"],
-            "King of New York / Power Up!": [
-                "Captain Fish", "Drakonis", "Kong", "Mantis", "Mega Shark", "Rob", "Sheriff"
-            ],
-            "Monster Packs": ["Anubis", "Cthulhu", "Cybertooth", "King Kong"],
-            "King of Tokyo: Godzilla": [
-                "Godzilla", "Hedorah", "King Ghidorah", "Mechagodzilla", "Mothra", "Rodan"
-            ]
+        // Every monster with official Evolution cards (promo monsters without evolution cards are not included).
+        // The 3 letter code is the short tag shown next to a player's name.
+        const MONSTERS = [
+            { name: 'Alienoid',        code: 'ALN', group: 'King of Tokyo' },
+            { name: 'Baby Gigazaur',   code: 'BGZ', group: 'King of Tokyo' },
+            { name: 'Cyber Bunny',     code: 'CBN', group: 'King of Tokyo' },
+            { name: 'Cyber Kitty',     code: 'CKT', group: 'King of Tokyo' },
+            { name: 'Gigazaur',        code: 'GZR', group: 'King of Tokyo' },
+            { name: 'Kraken',          code: 'KRK', group: 'King of Tokyo' },
+            { name: 'Meka Dragon',     code: 'MKD', group: 'King of Tokyo' },
+            { name: 'Pandakaï',        code: 'PDK', group: 'King of Tokyo' },
+            { name: 'Space Penguin',   code: 'SPG', group: 'King of Tokyo' },
+            { name: 'The King',        code: 'KNG', group: 'King of Tokyo' },
+            { name: 'Boogie Woogie',   code: 'BWG', group: 'Halloween' },
+            { name: 'Pumpkin Jack',    code: 'PJK', group: 'Halloween' },
+            { name: 'Captain Fish',    code: 'CFH', group: 'King of New York' },
+            { name: 'Drakonis',        code: 'DRK', group: 'King of New York' },
+            { name: 'Kong',            code: 'KON', group: 'King of New York' },
+            { name: 'Mantis',          code: 'MNT', group: 'King of New York' },
+            { name: 'Mega Shark',      code: 'MSK', group: 'King of New York' },
+            { name: 'Rob',             code: 'ROB', group: 'King of New York' },
+            { name: 'Sheriff',         code: 'SHF', group: 'King of New York' },
+            { name: 'Anubis',          code: 'ANU', group: 'Monster Packs' },
+            { name: 'Cthulhu',         code: 'CTH', group: 'Monster Packs' },
+            { name: 'Cybertooth',      code: 'CYT', group: 'Monster Packs' },
+            { name: 'King Kong',       code: 'KKG', group: 'Monster Packs' },
+            { name: 'Luchador',        code: 'LCH', group: 'Monster Packs' },
+            { name: 'Godzilla',        code: 'GDZ', group: 'Godzilla' },
+            { name: 'Hedorah',         code: 'HDR', group: 'Godzilla' },
+            { name: 'King Ghidorah',   code: 'KGH', group: 'Godzilla' },
+            { name: 'Mechagodzilla',   code: 'MGZ', group: 'Godzilla' },
+            { name: 'Mothra',          code: 'MTH', group: 'Godzilla' },
+            { name: 'Rodan',           code: 'RDN', group: 'Godzilla' }
+        ];
+        MONSTERS.forEach(m => { m.key = m.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'); });
+        const monsterByKey = (key) => MONSTERS.find(m => m.key === key) || null;
+        const searchText = (t) => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+        // ----- Monster tags: one monster per player per round (drafting happens between rounds) -----
+        window.monstersEnabled = function() {
+            return !window.tournament.settings || window.tournament.settings.monstersEnabled !== false;
         };
 
+        window.getPlayerMonster = function(playerId) {
+            const round = window.getCurrentRound();
+            const key = round && round.monsters && round.monsters[playerId];
+            return key ? monsterByKey(key) : null;
+        };
+
+        window.monsterTagHTML = function(playerId) {
+            const m = window.getPlayerMonster(playerId);
+            const base = 'shrink-0 rounded-md border font-mono text-[10px] leading-none tracking-wider cursor-pointer transition-colors px-1.5 py-1 ';
+            if (m) {
+                return `<button type="button" onclick="window.openMonsterPicker('${playerId}')" title="${escapeHtml(m.name)} (tap to change)" aria-label="Monster: ${escapeHtml(m.name)}, tap to change" class="${base} font-semibold border-slate-700 bg-slate-800/60 text-slate-400 hover:text-amber-300 hover:border-amber-500/50">${m.code}</button>`;
+            }
+            return `<button type="button" onclick="window.openMonsterPicker('${playerId}')" title="Add a monster" aria-label="Add a monster" class="${base} border-dashed border-slate-700 text-slate-500 hover:text-amber-300 hover:border-amber-500/50">+ MON</button>`;
+        };
+
+        let monsterPickerPlayerId = null;
+
+        function renderMonsterList(query) {
+            const round = window.getCurrentRound();
+            const picks = (round && round.monsters) || {};
+            const q = searchText(query || '').trim();
+            const current = picks[monsterPickerPlayerId];
+            const holders = {};
+            Object.keys(picks).forEach(pid => {
+                if (pid === monsterPickerPlayerId) return;
+                const pl = window.tournament.players.find(p => p.id === pid);
+                if (pl) (holders[picks[pid]] = holders[picks[pid]] || []).push(pl.name);
+            });
+            const rows = [...MONSTERS]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .filter(m => !q || searchText(m.name).includes(q) || searchText(m.code).includes(q) || searchText(m.group).includes(q))
+                .map(m => {
+                    const selected = m.key === current;
+                    const taken = holders[m.key];
+                    const cls = selected ? 'bg-amber-500/15 border-amber-500/50' : 'bg-slate-950 border-slate-800 hover:border-amber-500/40';
+                    return `<button type="button" onclick="window.pickMonster('${m.key}')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl border text-left transition-colors cursor-pointer ${cls}">
+                        <span class="shrink-0 w-11 text-center font-mono text-[11px] font-bold tracking-wider px-1.5 py-1 rounded-md border border-slate-700 bg-slate-800/60 text-slate-300">${m.code}</span>
+                        <span class="min-w-0 flex-1">
+                            <span class="block text-sm font-bold text-slate-100 truncate">${escapeHtml(m.name)}</span>
+                            <span class="block text-[10px] text-slate-500 truncate">${m.group}${taken ? ' · also picked by ' + escapeHtml(taken.join(', ')) : ''}</span>
+                        </span>
+                        ${selected ? '<i class="fa-solid fa-check text-amber-400 text-xs shrink-0"></i>' : ''}
+                    </button>`;
+                }).join('');
+            document.getElementById('monster-list').innerHTML = rows || '<p class="text-center text-xs text-slate-500 py-8">No monsters match that search.</p>';
+            document.getElementById('monster-clear').classList.toggle('hidden', !current);
+        }
+
+        window.openMonsterPicker = function(playerId) {
+            const player = window.tournament.players.find(p => p.id === playerId);
+            if (!player || !window.getCurrentRound()) return;
+            monsterPickerPlayerId = playerId;
+            document.getElementById('monster-modal-player').textContent = player.name;
+            const search = document.getElementById('monster-search');
+            search.value = '';
+            renderMonsterList('');
+            document.getElementById('monster-modal').classList.remove('hidden');
+            // Only pop the keyboard open on devices with a mouse, so touch screens keep the whole list in view
+            if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) search.focus();
+        };
+
+        window.filterMonsters = function(q) { renderMonsterList(q); };
+
+        window.closeMonsterPicker = function() {
+            document.getElementById('monster-modal').classList.add('hidden');
+            monsterPickerPlayerId = null;
+        };
+
+        window.pickMonster = function(key) {
+            const round = window.getCurrentRound();
+            if (!round || !monsterPickerPlayerId) return;
+            const m = monsterByKey(key);
+            if (!m) return;
+            const others = Object.keys(round.monsters || {}).filter(pid => pid !== monsterPickerPlayerId && round.monsters[pid] === key)
+                .map(pid => (window.tournament.players.find(p => p.id === pid) || {}).name).filter(Boolean);
+            if (!round.monsters) round.monsters = {};
+            round.monsters[monsterPickerPlayerId] = key;
+            window.closeMonsterPicker();
+            window.saveTournament();
+            window.renderAll();
+            if (others.length) window.showToast(`${others.join(', ')} also picked ${m.name}. Roll 1d6 to decide who keeps it.`, "info");
+        };
+
+        window.clearMonster = function() {
+            const round = window.getCurrentRound();
+            if (round && round.monsters && monsterPickerPlayerId) delete round.monsters[monsterPickerPlayerId];
+            window.closeMonsterPicker();
+            window.saveTournament();
+            window.renderAll();
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && monsterPickerPlayerId) window.closeMonsterPicker();
+        });
+
         window.quickAddSamplePlayers = function() {
-            const samplePool = Object.values(EVOLUTION_MONSTERS).flat();
+            const samplePool = MONSTERS.map(m => m.name);
 
             const existingNames = new Set(window.tournament.players.map(p => p.name.toLowerCase()));
             const availablePool = samplePool.filter(name => !existingNames.has(name.toLowerCase()));
@@ -1527,7 +1749,7 @@
                     playerId: p.id,
                     rank: 0,
                     vp: 0,
-                    hp: 0
+                    hp: DEFAULT_HP
                 }))
             };
         }
@@ -1542,10 +1764,10 @@
                     ...t,
                     id: `${t.id}_g${g + 1}`,
                     completed: false,
-                    seats: t.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: 0 }))
+                    seats: t.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: DEFAULT_HP }))
                 }))
             }));
-            return { name, isFinals: !!isFinals, games, tableSize: window.tournament.settings.tableSize };
+            return { name, isFinals: !!isFinals, games, tableSize: window.tournament.settings.tableSize, monsters: {} };
         }
 
         // Round 1: a random draw split evenly across tables
@@ -1558,7 +1780,7 @@
             return buildRound("Round 1", templates, gamesPerRound, false);
         }
 
-        const GENERATE_BTN_PRIMARY = "px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg shadow-lg shadow-emerald-950/50 transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
+        const GENERATE_BTN_PRIMARY = "px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
         const GENERATE_BTN_SUBTLE = "px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
 
         // Bright green call-to-action before a tournament exists, subtle once one is underway
@@ -1570,7 +1792,7 @@
 
         window.requestGenerateTournament = function() {
             const rounds = window.tournament.rounds;
-            const nothingPlayed = rounds.length === 1 && !rounds[0].isFinals && !rounds[0].skipped && isRoundPristine(rounds[0]);
+            const nothingPlayed = rounds.length === 1 && !rounds[0].isFinals && isRoundPristine(rounds[0]);
             if (rounds.length > 0 && !nothingPlayed) {
                 document.getElementById('generate-modal').classList.remove('hidden');
             } else {
@@ -1616,32 +1838,34 @@
             window.showToast(`New tournament generated! Round 1 has ${gamesPerRound} game${gamesPerRound === 1 ? '' : 's'}.`, "success");
         };
 
-        // Skip a round that has not started: it stays on the timeline (greyed out) but no games are played or scored
-        window.skipRound = function() {
+        // Skip a game that has not started: it stays on the timeline (greyed out) but nothing is played or scored
+        window.skipGame = function() {
             const round = window.getCurrentRound();
-            if (!round || round.isFinals || round.skipped) return;
-            if (!isRoundPristine(round)) {
-                window.showToast("Only a round that hasn't started can be skipped.", "error");
+            const game = window.getCurrentGame();
+            if (!round || !game || round.isFinals || game.skipped) return;
+            if (!isGamePristine(game)) {
+                window.showToast("Only a game that hasn't started can be skipped.", "error");
                 return;
             }
-            round.skipped = true;
+            game.skipped = true;
             isRoundActive = false;
             window.saveTournament();
             window.renderAll();
-            window.showToast(`${round.name} skipped. It won't count toward the leaderboard.`, "info");
+            window.showToast(`${round.name}, Game ${window.tournament.currentGame + 1} skipped. It won't count toward the leaderboard.`, "info");
         };
 
-        window.restoreRound = function() {
+        window.restoreGame = function() {
             const round = window.getCurrentRound();
-            if (!round || !round.skipped) return;
+            const game = window.getCurrentGame();
+            if (!round || !game || !game.skipped) return;
             if (round.nextRoundGenerated || round.finalsTriggered) {
-                window.showToast("This round can't be restored once the next stage has been generated.", "error");
+                window.showToast("This game can't be restored once the next stage has been generated.", "error");
                 return;
             }
-            round.skipped = false;
+            game.skipped = false;
             window.saveTournament();
             window.renderAll();
-            window.showToast(`${round.name} restored.`, "success");
+            window.showToast(`${round.name}, Game ${window.tournament.currentGame + 1} restored.`, "success");
         };
 
         window.generateNextRound = function() {
@@ -1662,7 +1886,9 @@
             const gamesPerRound = window.tournament.settings.gamesPerRound || 1;
 
             const nextRoundNum = window.tournament.rounds.length + 1;
-            window.tournament.rounds.push(buildRound(`Round ${nextRoundNum}`, templates, gamesPerRound, false));
+            const nextRound = buildRound(`Round ${nextRoundNum}`, templates, gamesPerRound, false);
+            nextRound.monsters = { ...(currentRoundObj.monsters || {}) };
+            window.tournament.rounds.push(nextRound);
             window.tournament.currentRound = window.tournament.rounds.length - 1;
             window.tournament.currentGame = 0;
             isRoundActive = false;
@@ -1702,7 +1928,7 @@
                 iconColor: "text-amber-400",
                 isFinalsTable: true,
                 completed: false,
-                seats: finalistPlayers.map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: 0 }))
+                seats: finalistPlayers.map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: DEFAULT_HP }))
             });
 
             if (consolationPlayers.length > 0) {
@@ -1721,13 +1947,15 @@
                         iconColor: theme.iconColor,
                         isFinalsTable: false,
                         completed: false,
-                        seats: group.map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: 0 }))
+                        seats: group.map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: DEFAULT_HP }))
                     });
                 });
             }
 
             // The finals are a single decisive game
-            window.tournament.rounds.push(buildRound("Finals", finalTables, 1, true));
+            const finalsRound = buildRound("Finals", finalTables, 1, true);
+            finalsRound.monsters = { ...((currentRoundObj && currentRoundObj.monsters) || {}) };
+            window.tournament.rounds.push(finalsRound);
             window.tournament.currentRound = window.tournament.rounds.length - 1;
             window.tournament.currentGame = 0;
             isRoundActive = false;
@@ -1894,8 +2122,8 @@
             const ptsLookup = [0, 3, 2, 1];
 
             window.tournament.rounds.forEach((round) => {
-                if (round.skipped) return;
                 round.games.forEach((game) => {
+                    if (game.skipped) return;
                     game.tables.forEach((table) => {
                         if (round.isFinals && table.isFinalsTable === false) {
                             return;
@@ -1971,8 +2199,10 @@
 
                 const game = window.getCurrentGame();
                 if (game && game.timerRemaining > 0) {
+                    const before = game.timerRemaining;
                     game.timerRemaining -= 1;
                     updateTimerDisplay(game.timerRemaining);
+                    window.announceTimerCrossings(game, before, game.timerRemaining);
                 }
             }, 1000);
         }
@@ -1990,6 +2220,11 @@
             }
             window.renderRoundsUI();
             window.showToast("Game started! Timer running.", "success");
+            game.timerTotal = game.timerRemaining;
+            const startRound = window.getCurrentRound();
+            window.speak(startRound && startRound.isFinals
+                ? `The finals have started. ${spokenTime(game.timerRemaining)} on the clock. Good luck.`
+                : `Game ${window.tournament.currentGame + 1} has started. ${spokenTime(game.timerRemaining)} on the clock.`);
         };
 
         window.togglePauseCurrentGame = function() {
@@ -1998,12 +2233,15 @@
             window.saveTournament();
             window.renderRoundsUI();
             window.showToast(isRoundActive ? "Game resumed" : "Game paused", "info");
+            const pausedGame = window.getCurrentGame();
+            if (pausedGame) window.speak(isRoundActive ? `Game resumed. ${spokenTime(pausedGame.timerRemaining)} remaining.` : 'Game paused.');
         };
 
         window.adjustGameTime = function(deltaMinutes) {
             const game = window.getCurrentGame();
             if (!game || isGameComplete(game)) return;
 
+            game.timerTotal = Math.max(0, (game.timerTotal || game.timerRemaining || 0) + (deltaMinutes * 60));
             game.timerRemaining = Math.max(0, (game.timerRemaining || 0) + (deltaMinutes * 60));
             updateTimerDisplay(game.timerRemaining);
             window.saveTournament();
@@ -2068,6 +2306,7 @@
                                 <i class="fa-solid fa-grip-vertical text-slate-600 mr-1 text-[8px]"></i>${sIdx + 1}
                             </span>
                             <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
+                            ${window.monstersEnabled() ? window.monsterTagHTML(seat.playerId) : ''}
                         </div>
                         
                         <div class="flex items-center gap-1.5 flex-wrap" ondragstart="event.stopPropagation()">
@@ -2117,7 +2356,7 @@
                 </div>
 
                 <div class="pt-2 border-t border-slate-900 flex items-center justify-between gap-2">
-                    <button onclick="window.toggleTableComplete('${table.id}')" ${isUnstarted ? 'disabled' : ''} class="flex-1 py-2 rounded-xl ${table.completed ? 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800' : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-950/40'} font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50">
+                    <button onclick="window.toggleTableComplete('${table.id}')" ${isUnstarted ? 'disabled' : ''} class="flex-1 py-2 rounded-xl ${table.completed ? 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800' : 'bg-emerald-600 hover:bg-emerald-500 text-white'} font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50">
                         <i class="fa-solid ${table.completed ? 'fa-pen-to-square' : 'fa-check'}"></i> ${table.completed ? 'Unlock Table Results' : 'Submit Table Results'}
                     </button>
                 </div>
@@ -2278,8 +2517,10 @@
             if (!game || !game.started) return;
 
             if (isGameComplete(game)) {
+                const wasRunning = isRoundActive;
                 isRoundActive = false;
                 window.showToast("All tables completed! Game timer stopped.", "success");
+                if (wasRunning) window.speak('All tables are done. Game complete.');
             }
         }
 
@@ -2313,13 +2554,13 @@
             if (tab === 'rounds') {
                 roundsView.classList.remove('hidden');
                 standingsView.classList.add('hidden');
-                tabBtnRounds.className = "px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 shadow-lg cursor-pointer";
+                tabBtnRounds.className = "px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 cursor-pointer";
                 tabBtnStandings.className = "px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
             } else {
                 roundsView.classList.add('hidden');
                 standingsView.classList.remove('hidden');
                 tabBtnRounds.className = "px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
-                tabBtnStandings.className = "px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 shadow-lg cursor-pointer";
+                tabBtnStandings.className = "px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 cursor-pointer";
                 window.renderStandings();
             }
         };
@@ -2347,7 +2588,7 @@
             const prelimCount = Math.max(prelims.length, goal);
 
             const NODE = 'w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-black shrink-0 transition-all';
-            const gameState = (game) => isGameComplete(game) ? 'done' : (game.started ? 'live' : 'ready');
+            const gameState = (game) => game.skipped ? 'skipped' : (isGameComplete(game) ? 'done' : (game.started ? 'live' : 'ready'));
 
             const connector = (done) => `<div class="h-0.5 w-4 sm:w-6 rounded shrink-0 ${done ? 'bg-emerald-500/70' : 'bg-slate-700'}"></div>`;
             const futureConnector = () => `<div class="h-0.5 w-4 sm:w-6 rounded shrink-0 bg-slate-800"></div>`;
@@ -2367,7 +2608,7 @@
             let prevSegDone = false;
             const html = segments.map((seg, segIdx) => {
                 const isCurrentRound = seg.real && seg.roundIdx === t.currentRound;
-                const segSkipped = seg.real && !!seg.round.skipped;
+                const segSkipped = seg.real && seg.round.games.length > 0 && seg.round.games.every(g => g.skipped);
                 const segDone = seg.real && !segSkipped && isRoundComplete(seg.round);
 
                 let groupCls, labelCls;
@@ -2389,30 +2630,23 @@
                 }
 
                 let nodes = '';
-                if (segSkipped) {
-                    // Skipped round: greyed out, still clickable so it can be restored
-                    nodes = seg.round.games.map((game, gi) => {
-                        const isCurrent = isCurrentRound && gi === t.currentGame;
-                        const cls = 'bg-slate-800 border-slate-700 text-slate-600' + (isCurrent ? ' ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 scale-110' : '');
-                        const node = `<button type="button" ${isCurrent ? 'data-current="1"' : ''} onclick="window.selectGame(${seg.roundIdx}, ${gi})" title="${seg.label}, Game ${gi + 1} (skipped)" class="${NODE} ${cls} cursor-pointer hover:scale-110"><i class="fa-solid fa-forward text-[10px]"></i></button>`;
-                        return (gi > 0 ? futureConnector() : '') + node;
-                    }).join('');
-                } else if (seg.real) {
+                if (seg.real) {
                     nodes = seg.round.games.map((game, gi) => {
                         const state = gameState(game);
                         const isCurrent = isCurrentRound && gi === t.currentGame;
                         const isFinal = seg.kind === 'finals';
                         let cls;
-                        if (state === 'done') cls = isFinal ? 'bg-amber-400 border-amber-300 text-slate-950' : 'bg-emerald-500 border-emerald-400 text-slate-950';
+                        if (state === 'skipped') cls = 'bg-slate-800 border-slate-700 text-slate-600';
+                        else if (state === 'done') cls = isFinal ? 'bg-amber-400 border-amber-300 text-slate-950' : 'bg-emerald-500 border-emerald-400 text-slate-950';
                         else if (state === 'live') cls = isFinal ? 'bg-purple-500/20 border-purple-400 text-purple-200' : 'bg-amber-500/20 border-amber-400 text-amber-300';
                         else cls = isFinal ? 'bg-slate-900 border-purple-500/50 text-purple-300' : 'bg-slate-900 border-slate-600 text-slate-300';
                         if (isCurrent) cls += ' ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 scale-110' + (state === 'live' ? ' animate-pulse' : '');
                         const inner = isFinal ? '<i class="fa-solid fa-crown text-xs"></i>'
-                                              : (state === 'done' ? '<i class="fa-solid fa-check text-xs"></i>' : (gi + 1));
-                        const stateLabel = state === 'done' ? 'Completed' : (state === 'live' ? 'In progress' : 'Not started');
+                                              : (state === 'skipped' ? '<i class="fa-solid fa-forward text-[10px]"></i>' : (state === 'done' ? '<i class="fa-solid fa-check text-xs"></i>' : (gi + 1)));
+                        const stateLabel = state === 'skipped' ? 'Skipped' : (state === 'done' ? 'Done' : (state === 'live' ? 'Playing' : 'Waiting'));
                         const title = isFinal ? `Finals (${stateLabel})` : `${seg.label}, Game ${gi + 1} (${stateLabel})`;
                         const node = `<button type="button" ${isCurrent ? 'data-current="1"' : ''} onclick="window.selectGame(${seg.roundIdx}, ${gi})" title="${title}" class="${NODE} ${cls} cursor-pointer hover:scale-110">${inner}</button>`;
-                        const prevDone = gi > 0 && isGameComplete(seg.round.games[gi - 1]);
+                        const prevDone = gi > 0 && isGameComplete(seg.round.games[gi - 1]) && !seg.round.games[gi - 1].skipped;
                         return (gi > 0 ? connector(prevDone) : '') + node;
                     }).join('');
                 } else {
@@ -2451,15 +2685,15 @@
                 container.scrollLeft = Math.max(0, cur.offsetLeft - container.clientWidth / 2 + cur.offsetWidth / 2);
             }
 
-            const done = prelims.filter(e => !e.round.skipped && isRoundComplete(e.round)).length;
-            const skippedCount = prelims.filter(e => e.round.skipped).length;
+            const done = prelims.filter(e => !e.round.games.every(g => g.skipped) && isRoundComplete(e.round)).length;
+            const skippedCount = prelims.reduce((n, e) => n + e.round.games.filter(g => g.skipped).length, 0);
             const summary = document.getElementById('timeline-summary');
             const previewTotal = estimateMinutes(t.settings.tableSize || 5, t.settings.roundTimerMinutes || 30, prelimCount * gamesPerRound + 1);
             summary.textContent = t.rounds.length === 0
                 ? `Live preview of your settings · about ${formatDuration(previewTotal)} in total`
                 : finals
                 ? 'Finals in progress'
-                : `${done} of ${goal} round${goal === 1 ? '' : 's'} done${skippedCount ? ` · ${skippedCount} skipped` : ''} · ${gamesPerRound} game${gamesPerRound === 1 ? '' : 's'} per round`;
+                : `${done} of ${goal} round${goal === 1 ? '' : 's'} done${skippedCount ? ` · ${skippedCount} game${skippedCount === 1 ? '' : 's'} skipped` : ''} · ${gamesPerRound} game${gamesPerRound === 1 ? '' : 's'} per round`;
         }
 
         window.renderRoundsUI = function() {
@@ -2504,7 +2738,7 @@
             const isGameStarted = game.started || false;
             const totalGames = roundData.games.length;
             const isGrandFinalsRound = roundData.isFinals;
-            const isSkipped = !!roundData.skipped;
+            const isSkipped = !!game.skipped;
 
             document.getElementById('round-title-display').innerText = roundData.name || `Round ${currentRoundIndex + 1}`;
             const gameBadge = document.getElementById('game-badge');
@@ -2512,12 +2746,12 @@
                 gameBadge.classList.add('hidden');
             } else {
                 gameBadge.classList.remove('hidden');
-                gameBadge.innerText = isSkipped ? 'Skipped' : `Game ${gameIndex + 1} of ${totalGames}`;
+                gameBadge.innerText = `Game ${gameIndex + 1} of ${totalGames}`;
                 gameBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 border border-slate-700 uppercase tracking-wider whitespace-nowrap ' + (isSkipped ? 'text-slate-500' : 'text-slate-300');
             }
 
             const seatingNote = document.getElementById('round-timer-state');
-            if (isSkipped) seatingNote.innerText = 'No games played, no points awarded';
+            if (isSkipped) seatingNote.innerText = 'Not played, no points awarded';
             else if (isGrandFinalsRound) seatingNote.innerText = 'Top seeds vs top seeds';
             else if (gameIndex > 0) seatingNote.innerText = `Same tables as Game ${gameIndex}`;
             else if (currentRoundIndex === 0) seatingNote.innerText = 'Random draw';
@@ -2541,8 +2775,8 @@
             const btnGenerateNext = document.getElementById('btn-generate-next');
             const btnFinals = document.getElementById('btn-trigger-finals');
             const btnCrownChampion = document.getElementById('btn-crown-champion');
-            const btnSkip = document.getElementById('btn-skip-round');
-            const btnRestore = document.getElementById('btn-restore-round');
+            const btnSkip = document.getElementById('btn-skip-game');
+            const btnRestore = document.getElementById('btn-restore-game');
             const statusBadge = document.getElementById('round-status-badge');
             const timeMinusBtn = document.getElementById('btn-time-minus');
             const timePlusBtn = document.getElementById('btn-time-plus');
@@ -2573,14 +2807,14 @@
 
                 if (goalReached && !isFinalsTriggered) {
                     btnFinals.classList.remove('hidden');
-                    btnFinals.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-sm shadow-lg shadow-purple-950/50 transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
+                    btnFinals.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
                 }
 
                 if (!isNextRoundGenerated) {
                     btnGenerateNext.classList.remove('hidden');
                     if (!goalReached) {
                         document.getElementById('generate-next-label').innerText = "Generate Next Round";
-                        btnGenerateNext.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-950/40 transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
+                        btnGenerateNext.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
                     } else {
                         document.getElementById('generate-next-label').innerText = "Add Additional Round";
                         btnGenerateNext.className = "px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer";
@@ -2594,28 +2828,33 @@
                 btnStart.classList.add('hidden');
                 btnPause.classList.add('hidden');
                 if (isLatestRound) {
-                    showRoundEndButtons();
+                    if (!isLastGame) {
+                        document.getElementById('next-game-label').innerText = `Next Game (${gameIndex + 2} of ${totalGames})`;
+                        btnNextGame.classList.remove('hidden');
+                    } else if (roundDone) {
+                        showRoundEndButtons();
+                    }
                     if (!roundData.nextRoundGenerated && !roundData.finalsTriggered) btnRestore.classList.remove('hidden');
                 }
             } else if (!isGameStarted) {
-                statusBadge.innerText = 'Waiting to Start';
+                statusBadge.innerText = 'Waiting';
                 statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase tracking-wider';
 
                 btnStart.classList.remove('hidden');
                 btnPause.classList.add('hidden');
                 // A round that has not started can be skipped
-                if (!isGrandFinalsRound && isLatestRound && isRoundPristine(roundData)) btnSkip.classList.remove('hidden');
+                if (!isGrandFinalsRound && isLatestRound && isGamePristine(game)) btnSkip.classList.remove('hidden');
             } else {
                 btnStart.classList.add('hidden');
                 btnPause.classList.remove('hidden');
 
                 if (isRoundActive) {
-                    statusBadge.innerText = 'In Progress';
+                    statusBadge.innerText = 'Playing';
                     statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider animate-pulse';
                     pauseIcon.className = "fa-solid fa-pause";
                     pauseText.innerText = "Pause Game";
                 } else if (isGameDone) {
-                    statusBadge.innerText = 'Completed';
+                    statusBadge.innerText = 'Done';
                     statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 uppercase tracking-wider';
                     pauseIcon.className = "fa-solid fa-play";
                     pauseText.innerText = "Resume Game";
@@ -2634,7 +2873,7 @@
                     showRoundEndButtons();
                 } else if (isGameDone && isGrandFinalsRound && isLatestRound) {
                     btnCrownChampion.classList.remove('hidden');
-                    btnCrownChampion.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-950/60 transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
+                    btnCrownChampion.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
                     btnCrownChampion.removeAttribute('disabled');
                 }
             }
@@ -2644,8 +2883,8 @@
                 const canRestore = isLatestRound && !roundData.nextRoundGenerated && !roundData.finalsTriggered;
                 container.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-14 text-slate-500 bg-slate-900/40 rounded-2xl border border-slate-800 border-dashed">
                     <i class="fa-solid fa-forward text-3xl mb-3 opacity-50"></i>
-                    <p class="text-base font-bold text-slate-300">${escapeHtml(roundData.name)} was skipped</p>
-                    <p class="text-xs text-slate-500 mt-1">No games were played, so nothing from this round counts toward the leaderboard.${canRestore ? ' Use Restore Round to put it back.' : ''}</p>
+                    <p class="text-base font-bold text-slate-300">${escapeHtml(roundData.name)}, Game ${gameIndex + 1} was skipped</p>
+                    <p class="text-xs text-slate-500 mt-1">This game was not played, so nothing from it counts toward the leaderboard.${canRestore ? ' Use Restore Game to put it back.' : ''}</p>
                 </div>`;
             } else {
                 game.tables.forEach((table) => {
@@ -2653,6 +2892,150 @@
                 });
             }
         };
+
+        // ----- Sound effects: spoken timer call-outs using the browser's built-in speech API -----
+        // A device preference (not tournament data), so it is stored separately.
+        const SPEECH_OK = typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined';
+        let soundPrefs = { enabled: true, muted: false, volume: 0.8 };
+        try {
+            const savedSound = JSON.parse(localStorage.getItem('kot_sound') || 'null');
+            if (savedSound) soundPrefs = { ...soundPrefs, ...savedSound };
+        } catch (e) {}
+
+        function saveSoundPrefs() {
+            try { localStorage.setItem('kot_sound', JSON.stringify(soundPrefs)); } catch (e) {}
+        }
+
+        function spokenTime(seconds) {
+            const total = Math.max(0, Math.round(seconds));
+            const m = Math.floor(total / 60), sec = total % 60;
+            const parts = [];
+            if (m) parts.push(`${m} minute${m === 1 ? '' : 's'}`);
+            if (sec) parts.push(`${sec} second${sec === 1 ? '' : 's'}`);
+            return parts.join(' and ') || '0 seconds';
+        }
+
+        function pickVoice() {
+            const voices = window.speechSynthesis.getVoices() || [];
+            return voices.find(v => /^en[-_]US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang)) || null;
+        }
+
+        window.speak = function(text) {
+            if (!SPEECH_OK || !soundPrefs.enabled || soundPrefs.muted || soundPrefs.volume <= 0) return false;
+            try {
+                const synth = window.speechSynthesis;
+                if (synth.speaking || synth.pending) synth.cancel();
+                const utterance = new window.SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = soundPrefs.volume;
+                const voice = pickVoice();
+                if (voice) utterance.voice = voice;
+                synth.speak(utterance);
+                return true;
+            } catch (e) { return false; }
+        };
+
+        // Phones only allow speech after a tap, so quietly "wake" the speech engine on the first touch
+        let speechUnlocked = false;
+        function unlockSpeech() {
+            if (speechUnlocked || !SPEECH_OK) return;
+            speechUnlocked = true;
+            try {
+                const u = new window.SpeechSynthesisUtterance(' ');
+                u.volume = 0;
+                window.speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+        document.addEventListener('pointerdown', unlockSpeech, { once: true });
+
+        // Called every second with the time before and after the tick, so each mark is announced once as the clock passes it
+        window.announceTimerCrossings = function(game, prev, now) {
+            if (!game || prev <= now) return;
+            const total = game.timerTotal || prev;
+            const half = Math.floor(total / 2);
+            const crossed = (t) => prev > t && now <= t;
+            if (half >= 30 && crossed(half)) {
+                window.speak(`Halfway there. ${spokenTime(now)} remaining.`);
+                return;
+            }
+            const marks = [[600, '10 minutes'], [300, '5 minutes'], [60, '1 minute'], [30, '30 seconds'], [10, '10 seconds']];
+            for (const [t, label] of marks) {
+                if (crossed(t)) { window.speak(`${label} remaining.`); return; }
+            }
+            if (prev > 0 && now <= 0) window.speak('Time is up. Finish your turn and wrap up the game.');
+        };
+
+        function syncSoundUI() {
+            const controls = document.getElementById('sound-controls');
+            const toggle = document.getElementById('setting-sfx');
+            const note = document.getElementById('sfx-support-note');
+            const silent = soundPrefs.muted || soundPrefs.volume <= 0;
+            const vol = Math.round(soundPrefs.volume * 100);
+            if (toggle) { toggle.checked = SPEECH_OK && soundPrefs.enabled; toggle.disabled = !SPEECH_OK; }
+            if (note) note.classList.toggle('hidden', SPEECH_OK);
+            if (controls) controls.classList.toggle('hidden', !(SPEECH_OK && soundPrefs.enabled));
+            const icon = document.getElementById('mute-icon');
+            if (icon) icon.className = (silent ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high') + ' text-xs';
+            const btn = document.getElementById('btn-mute');
+            if (btn) {
+                const label = soundPrefs.muted ? 'Unmute' : 'Mute';
+                btn.title = label;
+                btn.setAttribute('aria-label', label + ' sound');
+                btn.setAttribute('aria-pressed', soundPrefs.muted ? 'true' : 'false');
+                btn.className = 'w-8 h-8 rounded-lg border flex items-center justify-center cursor-pointer transition-colors ' +
+                    (silent ? 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/40 text-rose-400'
+                            : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300');
+            }
+            const slider = document.getElementById('volume-slider');
+            if (slider) { slider.value = vol; slider.style.setProperty('--pct', vol + '%'); }
+            const label = document.getElementById('volume-value');
+            if (label) label.textContent = vol + '%';
+        }
+
+        window.setSfxEnabled = function(on) {
+            soundPrefs.enabled = !!on;
+            if (!on && SPEECH_OK) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+            const pop = document.getElementById('volume-popover');
+            if (!on && pop) pop.classList.add('hidden');
+            saveSoundPrefs();
+            syncSoundUI();
+        };
+
+        window.toggleMute = function() {
+            soundPrefs.muted = !soundPrefs.muted;
+            if (soundPrefs.muted && SPEECH_OK) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+            if (!soundPrefs.muted && soundPrefs.volume <= 0) soundPrefs.volume = 0.5;
+            saveSoundPrefs();
+            syncSoundUI();
+        };
+
+        window.setVolume = function(v) {
+            soundPrefs.volume = Math.min(1, Math.max(0, (parseInt(v) || 0) / 100));
+            if (soundPrefs.volume > 0) soundPrefs.muted = false;
+            saveSoundPrefs();
+            syncSoundUI();
+        };
+
+        window.testVolume = function() { window.speak('Volume check.'); };
+
+        window.toggleVolumePopover = function() {
+            const pop = document.getElementById('volume-popover');
+            const btn = document.getElementById('btn-volume');
+            if (!pop || !btn) return;
+            if (!pop.classList.contains('hidden')) { pop.classList.add('hidden'); return; }
+            pop.classList.remove('hidden');
+            const r = btn.getBoundingClientRect();
+            const w = pop.offsetWidth || 208;
+            pop.style.left = Math.min(Math.max(8, r.left), window.innerWidth - w - 8) + 'px';
+            pop.style.top = (r.bottom + 8) + 'px';
+        };
+
+        document.addEventListener('pointerdown', function(e) {
+            const pop = document.getElementById('volume-popover');
+            if (pop && !pop.classList.contains('hidden') && !pop.contains(e.target) && !e.target.closest('#btn-volume')) pop.classList.add('hidden');
+        });
 
         // Light / Dark theme (saved separately from tournament data)
         window.applyTheme = function(theme) {
@@ -2673,6 +3056,7 @@
         // Application Initialization
         window.onload = function() {
             window.applyTheme(document.documentElement.classList.contains('light') ? 'light' : 'dark');
+            syncSoundUI();
             window.loadTournament();
             window.syncSettingsUI();
             window.renderAll();
