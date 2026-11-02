@@ -59,6 +59,8 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
+        #roster-fieldset:disabled { opacity: .5; }
+        #roster-fieldset:disabled * { cursor: not-allowed !important; }
         #settings-fieldset:disabled .settings-body { opacity: .5; }
         #settings-fieldset:disabled .settings-body * { cursor: not-allowed !important; }
         .tpl-tip { visibility: hidden; opacity: 0; transition: opacity .12s ease; }
@@ -115,20 +117,22 @@
         html.light .hover\:bg-slate-800:hover{background-color:rgb(238 242 247)}
         html.light .text-slate-200{color:rgb(30 41 59)}
         html.light .text-slate-500{color:rgb(100 116 139)}
+        html.light .disabled\:hover\:bg-slate-800:disabled:hover{background-color:rgb(238 242 247)}
         html.light .hover\:border-slate-700:hover{border-color:rgb(203 213 225)}
         html.light .placeholder-slate-500::placeholder{color:rgb(148 163 184)}
         html.light .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]){border-color:rgb(226 232 240 / 0.6)}
         html.light .bg-slate-950\/80{background-color:rgb(15 23 42 / 0.45)}
         html.light .bg-slate-900\/80{background-color:rgb(248 250 252 / 0.8)}
         html.light .bg-slate-950\/70{background-color:rgb(15 23 42 / 0.45)}
+        html.light .bg-slate-800\/60{background-color:rgb(238 242 247 / 0.6)}
         html.light .bg-slate-300\/20{background-color:rgb(100 116 139 / 0.2)}
         html.light .border-slate-400\/30{border-color:rgb(100 116 139 / 0.3)}
         html.light .hover\:bg-slate-800\/40:hover{background-color:rgb(238 242 247 / 0.4)}
         html.light .text-slate-600{color:rgb(148 163 184)}
         html.light .border-slate-900{border-color:rgb(241 245 249)}
         html.light .bg-slate-700{background-color:rgb(221 227 236)}
-        html.light .ring-offset-slate-900{--tw-ring-offset-color:rgb(255 255 255)}
         html.light .border-slate-600{border-color:rgb(182 192 206)}
+        html.light .ring-offset-slate-900{--tw-ring-offset-color:rgb(255 255 255)}
         html.light .text-slate-700{color:rgb(148 163 184)}
         html.light .bg-slate-900\/40{background-color:rgb(248 250 252 / 0.4)}
         html.light .text-amber-400{color:rgb(180 83 9)}
@@ -199,6 +203,9 @@
                             <button onclick="window.openRulesModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
                                 <i class="fa-solid fa-book-open text-amber-400 w-4"></i> Tournament Rules
                             </button>
+                            <button onclick="window.openLogModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
+                                <i class="fa-solid fa-clock-rotate-left text-amber-400 w-4"></i> Update Log
+                            </button>
                         </div>
                         <div class="py-1">
                             <button onclick="window.exportTournamentData(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
@@ -237,7 +244,7 @@
                         <i id="settings-lock-icon" class="fa-solid fa-lock-open text-xs"></i>
                     </button>
                     <button id="btn-generate-r1" type="button" onclick="window.requestGenerateTournament()" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
-                        <i class="fa-solid fa-play"></i> Generate Tournament
+                        <i class="fa-solid fa-play"></i> Generate
                     </button>
                     </div>
                 </div>
@@ -247,6 +254,10 @@
                     <legend class="w-full p-0 mb-2">
                         <div class="flex items-center justify-between gap-2">
                             <div class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-bolt text-slate-500 mr-1"></i> Quick Start</div>
+                            <div class="flex items-center gap-1.5">
+                            <button id="btn-save-custom" type="button" onclick="window.saveCustomTemplate()" disabled title="Save these settings as your Custom template" aria-label="Save these settings as your Custom template" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg flex items-center justify-center transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-slate-800">
+                                <i class="fa-solid fa-floppy-disk text-sm text-amber-400"></i>
+                            </button>
                             <div class="relative group">
                                 <button type="button" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5 cursor-help normal-case tracking-normal">
                                     <i class="fa-solid fa-circle-info text-amber-400 text-sm"></i>
@@ -255,8 +266,9 @@
                                 <!-- Overview Popup -->
                                 <div class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-950 border border-slate-700 rounded-xl shadow-2xl text-xs text-slate-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all z-50 normal-case tracking-normal font-normal">
                                     <p id="tournament-overview-text" class="leading-relaxed"></p>
-                                    <p class="mt-2 text-[10px] text-slate-500 leading-snug">Estimate only. The Game Timer is the ideal time for a 4 player table (about 10 turns each), so bigger tables take longer. Includes about 5 minutes between games.</p>
+                                    <p class="mt-2 text-[10px] text-slate-500 leading-snug">Estimate only. Turn time is the Game Timer shared across about 10 turns per player. Games usually run about 20% over the timer, plus about 5 minutes between games.</p>
                                 </div>
+                            </div>
                             </div>
                         </div>
                     </legend>
@@ -270,29 +282,6 @@
                         </div>
                         <input type="range" id="setting-table-size" class="kot-range" min="2" max="6" step="1" value="5" oninput="window.updateSettings()">
                         <div class="flex justify-between text-[10px] font-bold text-slate-500 px-1 mt-1.5"><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
-                    </div>
-
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-dice-d6 text-slate-500 mr-1"></i> Games per Round</label>
-                            <span id="badge-games-per-round" class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">2 games</span>
-                        </div>
-                        <input type="hidden" id="setting-games-per-round" value="2">
-                        <div class="grid grid-cols-3 gap-2">
-                            <button type="button" data-group="games" data-val="1" onclick="window.setGamesPerRound(1)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
-                                <span class="text-base font-black leading-none">1</span>
-                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i></span>
-                            </button>
-                            <button type="button" data-group="games" data-val="2" onclick="window.setGamesPerRound(2)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
-                                <span class="text-base font-black leading-none">2</span>
-                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i></span>
-                            </button>
-                            <button type="button" data-group="games" data-val="3" onclick="window.setGamesPerRound(3)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
-                                <span class="text-base font-black leading-none">3</span>
-                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i></span>
-                            </button>
-                        </div>
-                        <p class="text-[10px] text-slate-500 mt-1.5 leading-snug">Players stay at the same table for every game in a round.</p>
                     </div>
 
                     <div>
@@ -320,43 +309,68 @@
 
                     <div>
                         <div class="flex items-center justify-between mb-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-dice-d6 text-slate-500 mr-1"></i> Games per Round</label>
+                            <span id="badge-games-per-round" class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">2 games</span>
+                        </div>
+                        <input type="hidden" id="setting-games-per-round" value="2">
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" data-group="games" data-val="1" onclick="window.setGamesPerRound(1)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
+                                <span class="text-base font-black leading-none">1</span>
+                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i></span>
+                            </button>
+                            <button type="button" data-group="games" data-val="2" onclick="window.setGamesPerRound(2)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
+                                <span class="text-base font-black leading-none">2</span>
+                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i></span>
+                            </button>
+                            <button type="button" data-group="games" data-val="3" onclick="window.setGamesPerRound(3)" class="opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer">
+                                <span class="text-base font-black leading-none">3</span>
+                                <span class="flex gap-0.5 text-[8px]"><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i><i class="fa-solid fa-dice-d6"></i></span>
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1.5 leading-snug">Players stay at the same table for every game in a round.</p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
                             <label for="setting-round-timer" class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-stopwatch text-slate-500 mr-1"></i> Game Timer</label>
                             <span id="badge-round-timer" class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">30 min</span>
                         </div>
-                        <input type="range" id="setting-round-timer" class="kot-range" min="5" max="60" step="5" value="30" oninput="window.updateSettings()">
-                        <div class="relative h-4 mx-[11px] mt-1.5 text-[10px] font-bold text-slate-500"><span class="absolute -translate-x-1/2" style="left:0.00%">5m</span><span class="absolute -translate-x-1/2" style="left:18.18%">15m</span><span class="absolute -translate-x-1/2" style="left:45.45%">30m</span><span class="absolute -translate-x-1/2" style="left:72.73%">45m</span><span class="absolute -translate-x-1/2" style="left:100.00%">60m</span></div>
+                        <input type="range" id="setting-round-timer" class="kot-range" min="15" max="60" step="5" value="30" oninput="window.updateSettings()">
+                        <div class="relative h-4 mx-[11px] mt-1.5 text-[10px] font-bold text-slate-500"><span class="absolute -translate-x-1/2" style="left:0.00%">15m</span><span class="absolute -translate-x-1/2" style="left:33.33%">30m</span><span class="absolute -translate-x-1/2" style="left:66.67%">45m</span><span class="absolute -translate-x-1/2" style="left:100.00%">60m</span></div>
                     </div>
 
-                    <!-- Bonuses + Monsters toggles -->
-                    <div class="grid grid-cols-2 gap-2">
-                        <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors" title="Smasher, Tanker, Collector and Harvester each add +1 point">
-                            <input type="checkbox" id="setting-bonuses" checked onchange="window.updateSettings()" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
-                            <span class="min-w-0">
-                                <span class="block text-xs font-bold text-slate-200">🎖️ Bonuses</span>
-                                <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">+1 point bonuses</span>
-                            </span>
-                        </label>
-                        <label class="flex items-start gap-2.5 p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors" title="Show a 3 letter monster tag next to each player. Turn off for quick tournaments.">
-                            <input type="checkbox" id="setting-monsters" checked onchange="window.updateSettings()" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
-                            <span class="min-w-0">
-                                <span class="block text-xs font-bold text-slate-200">👾 Monsters</span>
-                                <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">Monster tags</span>
-                            </span>
-                        </label>
+                    <!-- Options -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-toggle-on text-slate-500 mr-1"></i> Options</label>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="relative group">
+                                <label class="flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                                    <input type="checkbox" id="setting-bonuses" checked onchange="window.updateSettings()" class="w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
+                                    <span class="text-xs font-bold text-slate-200 truncate">Bonuses</span>
+                                </label>
+                                <span role="tooltip" class="pointer-events-none absolute top-full mt-1.5 left-0 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Smasher, Tanker, Collector and Harvester each add +1 point. Turn off to play with places only.</span>
+                            </div>
+                            <div class="relative group">
+                                <label class="flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                                    <input type="checkbox" id="setting-monsters" checked onchange="window.updateSettings()" class="w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
+                                    <span class="text-xs font-bold text-slate-200 truncate">Monsters</span>
+                                </label>
+                                <span role="tooltip" class="pointer-events-none absolute top-full mt-1.5 left-1/2 -translate-x-1/2 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Show a 3 letter monster tag next to each player. Turn off for quick tournaments.</span>
+                            </div>
+                            <div class="relative group">
+                                <label class="flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                                    <input type="checkbox" id="setting-sfx" checked onchange="window.setSfxEnabled(this.checked)" class="w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
+                                    <span class="text-xs font-bold text-slate-200 truncate">Sound FX</span>
+                                </label>
+                                <span role="tooltip" class="pointer-events-none absolute top-full mt-1.5 right-0 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Sound Effects: spoken timer call-outs. Mute and volume sit next to the clock.<span id="sfx-support-note" class="hidden block text-rose-400 mt-1">Speech isn't supported in this browser.</span></span>
+                            </div>
+                        </div>
                     </div>
 
                     </div>
                 </fieldset>
-
-                <!-- Sound effects (a device preference, so it stays usable while settings are locked) -->
-                <label class="flex items-start gap-3 p-3 mt-5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
-                    <input type="checkbox" id="setting-sfx" checked onchange="window.setSfxEnabled(this.checked)" class="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
-                    <span class="min-w-0">
-                        <span class="block text-xs font-bold text-slate-200">🔊 Sound Effects</span>
-                        <span class="block text-[10px] text-slate-500 leading-snug mt-0.5">Spoken timer call-outs. Mute and volume sit next to the clock.</span>
-                        <span id="sfx-support-note" class="hidden block text-[10px] text-rose-400 leading-snug mt-0.5">Speech isn't supported in this browser.</span>
-                    </span>
-                </label>
             </div>
 
             <!-- Player Roster Card -->
@@ -369,6 +383,7 @@
                     </h2>
                 </div>
 
+                <fieldset id="roster-fieldset" class="border-0 p-0 m-0 min-w-0 flex flex-col flex-1">
                 <!-- Add Player Form -->
                 <form id="add-player-form" onsubmit="window.handleAddPlayer(event)" class="flex flex-col gap-2 mb-4">
                     <textarea id="player-name-input" rows="2" placeholder="Enter monster name(s)... (comma or new line separated)" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors resize-none"></textarea>
@@ -386,6 +401,7 @@
                 <div class="flex-1 overflow-y-auto max-h-[280px] custom-scrollbar pr-1 space-y-2" id="roster-list-container">
                     <!-- Populated via JS -->
                 </div>
+                </fieldset>
             </div>
         </section>
 
@@ -458,12 +474,12 @@
                             
                             <!-- Start Round -->
                             <button id="btn-start-round" onclick="window.startCurrentGame()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
-                                <i class="fa-solid fa-play"></i> Start Game
+                                <i class="fa-solid fa-play"></i> Start
                             </button>
 
                             <!-- Skip Game (only before a game has started) -->
                             <button id="btn-skip-game" onclick="window.skipGame()" title="Skip this game" class="hidden px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i class="fa-solid fa-forward"></i> Skip Game
+                                <i class="fa-solid fa-forward"></i> Skip
                             </button>
 
                             <!-- Restore a skipped game -->
@@ -473,7 +489,7 @@
 
                             <!-- Pause / Resume Round -->
                             <button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause Game</span>
+                                <i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span>
                             </button>
 
                             <!-- Time Adjustments -->
@@ -483,7 +499,7 @@
                             </div>
 
                             <!-- Next Game in this Round -->
-                            <button id="btn-next-game" onclick="window.goToNextGame()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
+                            <button id="btn-next-game" onclick="window.goToNextGame()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
                                 <i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span>
                             </button>
 
@@ -791,6 +807,38 @@
         </div>
     </div>
 
+    <!-- Update Log Modal -->
+    <div id="log-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeLogModal()">
+        <div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-5 border-b border-slate-800 bg-slate-900/80">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                        <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-white text-base">Update Log</h3>
+                        <p class="text-xs text-slate-400">What changed in each version of the Tournament Manager</p>
+                    </div>
+                </div>
+                <button onclick="window.closeLogModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div id="log-content" class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"></div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-slate-800 bg-slate-900/80 flex justify-end">
+                <button onclick="window.closeLogModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors cursor-pointer">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom Reset Modal Dialog -->
     <div id="reset-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
         <div class="bg-slate-900 border border-slate-800 max-w-sm w-full rounded-2xl p-6 shadow-2xl space-y-4">
@@ -959,6 +1007,269 @@
             if (menu && !menu.classList.contains('hidden')) {
                 menu.classList.add('hidden');
             }
+        });
+
+        // ----- Update Log -----
+        // Add a new entry at the top of this list with every update (month and year only, no dates).
+        const APP_VERSION = '2.28';
+        const CHANGELOG = [
+            {
+                        "version": "2.28",
+                        "date": "November 2026",
+                        "items": [
+                                    "Game Timer slider now goes down to 15 minutes",
+                                    "Settings order is now Players per Table, Total Rounds, then Games per Round",
+                                    "New Options group for Bonuses, Monsters and Sound FX, with descriptions on hover",
+                                    "Sound FX now locks with the other settings, and the Player Roster locks too",
+                                    "Game start call-out now names the round, for example \"Game one of Round one has started\"",
+                                    "Quick Start templates are now Melee, Clash, Brawl and Custom",
+                                    "Custom template: save your own settings, including the Options, on this device and apply them in one tap",
+                                    "Time estimates retuned: they no longer scale up with table size and assume games run about 20% over the timer",
+                                    "Monster tags and the monster picker now work in light mode",
+                                    "Added this Update Log to the Menu"
+                        ]
+            },
+            {
+                        "version": "2.27",
+                        "date": "November 2026",
+                        "items": [
+                                    "Monster tags: a 3 letter tag next to each player, tap it to pick a monster from a searchable list, with a settings toggle",
+                                    "Monster list covers every monster with Evolution cards, including Luchador, Godzilla and Mindbug monsters",
+                                    "Sound effects: spoken timer call-outs using the browser's speech, with a settings toggle plus mute and volume buttons",
+                                    "Skip Round replaced by Skip Game, so individual games can be skipped",
+                                    "Shorter status tags (Waiting, Playing, Done) and shorter button labels",
+                                    "Player health now starts at 10",
+                                    "Softer look: removed shadows from buttons inside cards"
+                        ]
+            },
+            {
+                        "version": "2.26",
+                        "date": "November 2026",
+                        "items": [
+                                    "Settings lock: they lock once play starts, with a lock button next to Generate",
+                                    "Overview moved into a popup beside Quick Start",
+                                    "Light / Dark mode switch moved into the Menu",
+                                    "The rules pop-up has its own shareable link (#rules)",
+                                    "Tabs renamed Tournament and Leaderboard, and the Timeline and Scoring titles simplified",
+                                    "Footer wording updated for the tournament app",
+                                    "Skip Round option added"
+                        ]
+            },
+            {
+                        "version": "2.24",
+                        "date": "November 2026",
+                        "items": [
+                                    "Light mode toggle",
+                                    "Quick Start templates sit in one row with details on hover"
+                        ]
+            },
+            {
+                        "version": "2.23",
+                        "date": "November 2026",
+                        "items": [
+                                    "Include Bonuses checkbox",
+                                    "Games per Round and Total Rounds limited to 1 to 3",
+                                    "Tap-to-pick number picker for VPs and HPs",
+                                    "Templates renamed Brawl, Melee, Clash and Showdown",
+                                    "Rules rewritten with a new goal and a General section"
+                        ]
+            },
+            {
+                        "version": "2.22",
+                        "date": "November 2026",
+                        "items": [
+                                    "Quick Start templates added",
+                                    "The timeline shows a live preview before the tournament is generated",
+                                    "A Round 1 that has not been played updates live as settings change",
+                                    "Generate Tournament only warns once play has started"
+                        ]
+            },
+            {
+                        "version": "2.21",
+                        "date": "November 2026",
+                        "items": [
+                                    "Overview now accounts for table size",
+                                    "Renamed Game Timer, Overview and Total Rounds"
+                        ]
+            },
+            {
+                        "version": "2.20",
+                        "date": "November 2026",
+                        "items": [
+                                    "Overview sentence added to Settings with the estimated total time and turn length"
+                        ]
+            },
+            {
+                        "version": "2.19",
+                        "date": "November 2026",
+                        "items": [
+                                    "Generate Tournament turns subtle once a tournament has started, with a warning before replacing it"
+                        ]
+            },
+            {
+                        "version": "2.18",
+                        "date": "November 2026",
+                        "items": [
+                                    "Tournament Rules rewritten: Goal, Drafting, Modes, Play, Rounds, Scoring and Clarifications"
+                        ]
+            },
+            {
+                        "version": "2.17",
+                        "date": "November 2026",
+                        "items": [
+                                    "Games per Round: players stay at the same table for every game in a round",
+                                    "Players are re-seated by standings between rounds",
+                                    "Each game has its own timer, with a Next Game button",
+                                    "A timeline replaces the round pills",
+                                    "The finals are a single game, and older saves are upgraded automatically",
+                                    "Pause and resume keeps the clock running after a page reload"
+                        ]
+            },
+            {
+                        "version": "2.16",
+                        "date": "November 2026",
+                        "items": [
+                                    "Quick Add uses a researched list of monsters with Evolution cards and adds 4 at random"
+                        ]
+            },
+            {
+                        "version": "2.15",
+                        "date": "November 2026",
+                        "items": [
+                                    "Add Player and Quick Add buttons sit side by side"
+                        ]
+            },
+            {
+                        "version": "2.14",
+                        "date": "November 2026",
+                        "items": [
+                                    "Added a 1 round option"
+                        ]
+            },
+            {
+                        "version": "2.13",
+                        "date": "November 2026",
+                        "items": [
+                                    "Player Roster uses the amber colours",
+                                    "Generate Round 1 renamed Generate Tournament"
+                        ]
+            },
+            {
+                        "version": "2.12",
+                        "date": "November 2026",
+                        "items": [
+                                    "\"Random Swiss Rounds\" tag added to the roster",
+                                    "Settings title simplified"
+                        ]
+            },
+            {
+                        "version": "2.11",
+                        "date": "November 2026",
+                        "items": [
+                                    "Game timer slider limited to 5 to 60 minutes"
+                        ]
+            },
+            {
+                        "version": "2.10",
+                        "date": "November 2026",
+                        "items": [
+                                    "Settings use sliders and icon buttons"
+                        ]
+            },
+            {
+                        "version": "2.9",
+                        "date": "November 2026",
+                        "items": [
+                                    "Leaderboard headings shortened with emoji"
+                        ]
+            },
+            {
+                        "version": "2.8",
+                        "date": "November 2026",
+                        "items": [
+                                    "Header tag moved next to the title",
+                                    "Single-row header"
+                        ]
+            },
+            {
+                        "version": "2.7",
+                        "date": "November 2026",
+                        "items": [
+                                    "The \"Settings updated\" notice appears once instead of on every click"
+                        ]
+            },
+            {
+                        "version": "2.6",
+                        "date": "November 2026",
+                        "items": [
+                                    "Timer steps by 5 minutes",
+                                    "Generate button moved into the Settings header"
+                        ]
+            },
+            {
+                        "version": "2.5",
+                        "date": "November 2026",
+                        "items": [
+                                    "Settings steppers with -1 and +1 buttons"
+                        ]
+            },
+            {
+                        "version": "2.4",
+                        "date": "November 2026",
+                        "items": [
+                                    "Removed the Setup Phase tag"
+                        ]
+            },
+            {
+                        "version": "2.3",
+                        "date": "November 2026",
+                        "items": [
+                                    "Two-line player seats with names above the stats",
+                                    "Tighter spacing"
+                        ]
+            },
+            {
+                        "version": "2.2",
+                        "date": "November 2026",
+                        "items": [
+                                    "Emoji stats for VPs and HPs",
+                                    "Player bonuses: Smasher, Tanker, Collector and Harvester"
+                        ]
+            },
+            {
+                        "version": "2.1",
+                        "date": "November 2026",
+                        "items": [
+                                    "Starting version: roster, settings, rounds, tables, standings, finals, rules, export and import"
+                        ]
+            }
+];
+
+        function renderChangelog() {
+            document.getElementById('log-content').innerHTML = CHANGELOG.map((entry, i) => `
+                <div class="${i === 0 ? '' : 'pt-5 border-t border-slate-800'}">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">v${escapeHtml(entry.version)}</span>
+                        <span class="text-[11px] font-semibold text-slate-500">${escapeHtml(entry.date)}</span>
+                        ${entry.version === APP_VERSION ? '<span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider">Current</span>' : ''}
+                    </div>
+                    <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
+                        ${entry.items.map(t => `<li>${escapeHtml(t)}</li>`).join('')}
+                    </ul>
+                </div>`).join('');
+        }
+
+        window.openLogModal = function() {
+            renderChangelog();
+            document.getElementById('log-modal').classList.remove('hidden');
+        };
+
+        window.closeLogModal = function() {
+            document.getElementById('log-modal').classList.add('hidden');
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') window.closeLogModal();
         });
 
         // Rules Modal Controls. The pop-up has its own link (#rules) so it can be shared.
@@ -1134,7 +1445,7 @@
             'setting-table-size': { min: 2, max: 6, def: 5 },
             'setting-games-per-round': { min: 1, max: 3, def: 2 },
             'setting-prelim-rounds': { min: 1, max: 3, def: 3 },
-            'setting-round-timer': { min: 5, max: 60, def: 30 }
+            'setting-round-timer': { min: 15, max: 60, def: 30 }
         };
 
         function readSetting(id) {
@@ -1150,7 +1461,9 @@
         // Turn length is fixed, so a bigger table has more turns per round and takes longer; a smaller table finishes sooner.
         // Between games we allow ~5 minutes for re-seating, drafting and setup.
         const TURNS_EACH = 10;
-        const REFERENCE_TABLE_SIZE = 4;
+        // The Game Timer is the target length of one game at the chosen table size (the templates raise it for bigger tables).
+        // Real games usually run a little over, so allow 20% extra, plus time between games for re-seating and setup.
+        const GAME_OVERRUN = 1.2;
         const CHANGEOVER_MINUTES = 5;
 
         function formatDuration(totalMinutes) {
@@ -1168,8 +1481,7 @@
         }
 
         function estimateGameMinutes(players, timer) {
-            const secondsPerTurn = (timer * 60) / (REFERENCE_TABLE_SIZE * TURNS_EACH);
-            return (secondsPerTurn * players * TURNS_EACH) / 60;
+            return timer * GAME_OVERRUN;
         }
 
         // Estimated minutes for `games` games, including time between games
@@ -1177,32 +1489,86 @@
             return games * (estimateGameMinutes(players, timer) + CHANGEOVER_MINUTES);
         }
 
-        // Quick start templates: scale from short 3 player tournaments up to long 6 player ones
+        // Quick start templates: from a short 4 player tournament up to a long 6 player one
         const TEMPLATES = [
-            { key: 'brawl',    name: 'Brawl',    icon: 'fa-bolt',       players: 3, games: 1, rounds: 2, timer: 35 },
-            { key: 'melee',    name: 'Melee',    icon: 'fa-hand-fist',  players: 4, games: 2, rounds: 2, timer: 45 },
-            { key: 'clash',    name: 'Clash',    icon: 'fa-fire',       players: 5, games: 2, rounds: 3, timer: 50 },
-            { key: 'showdown', name: 'Showdown', icon: 'fa-crown',      players: 6, games: 3, rounds: 3, timer: 60 }
+            { key: 'melee', name: 'Melee', icon: 'fa-hand-fist', players: 4, games: 1, rounds: 3, timer: 40 },
+            { key: 'clash', name: 'Clash', icon: 'fa-fire',      players: 5, games: 2, rounds: 2, timer: 45 },
+            { key: 'brawl', name: 'Brawl', icon: 'fa-user-ninja',      players: 6, games: 3, rounds: 2, timer: 50 }
         ];
+
+        // ----- Custom template: the user's own preset, saved on this device (includes the Options toggles) -----
+        const CUSTOM_TEMPLATE_KEY = 'kot_custom_template';
+        const DEFAULT_SNAPSHOT = { players: 5, games: 2, rounds: 3, timer: 30, bonuses: true, monsters: true, sfx: true };
+
+        function loadCustomTemplate() {
+            try {
+                const c = JSON.parse(localStorage.getItem(CUSTOM_TEMPLATE_KEY) || 'null');
+                if (c && [c.players, c.games, c.rounds, c.timer].every(n => Number.isFinite(n))) return c;
+            } catch (e) {}
+            return null;
+        }
+
+        function currentSnapshot() {
+            return {
+                players: readSetting('setting-table-size'),
+                games: readSetting('setting-games-per-round'),
+                rounds: readSetting('setting-prelim-rounds'),
+                timer: readSetting('setting-round-timer'),
+                bonuses: document.getElementById('setting-bonuses').checked,
+                monsters: document.getElementById('setting-monsters').checked,
+                sfx: soundPrefs.enabled
+            };
+        }
+
+        function sameSnapshot(a, b) {
+            return ['players', 'games', 'rounds', 'timer', 'bonuses', 'monsters', 'sfx'].every(k => a[k] === b[k]);
+        }
+
+        // The save button is only clickable once the settings differ from what is saved (or from the defaults, if nothing is saved yet)
+        function syncCustomSaveButton() {
+            const btn = document.getElementById('btn-save-custom');
+            if (!btn) return;
+            btn.disabled = sameSnapshot(currentSnapshot(), loadCustomTemplate() || DEFAULT_SNAPSHOT);
+        }
+
+        window.saveCustomTemplate = function() {
+            try {
+                localStorage.setItem(CUSTOM_TEMPLATE_KEY, JSON.stringify(currentSnapshot()));
+            } catch (e) {
+                window.showToast("Couldn't save to this device.", "error");
+                return;
+            }
+            window.showToast("Custom template saved on this device", "success");
+            renderTemplateButtons();
+            syncCustomSaveButton();
+        };
 
         function renderTemplateButtons() {
             const host = document.getElementById('template-buttons');
             if (!host) return;
-            const cur = {
-                players: readSetting('setting-table-size'),
-                games: readSetting('setting-games-per-round'),
-                rounds: readSetting('setting-prelim-rounds'),
-                timer: readSetting('setting-round-timer')
-            };
-            host.innerHTML = TEMPLATES.map((t, i) => {
-                const active = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
-                const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + 1);
+            const cur = currentSnapshot();
+            const custom = loadCustomTemplate();
+            const items = TEMPLATES.map(t => ({ ...t }));
+            items.push({ key: 'custom', name: 'Custom', icon: 'fa-sliders', isCustom: true, saved: !!custom, ...(custom || {}) });
+
+            host.innerHTML = items.map((t, i) => {
+                const empty = t.isCustom && !t.saved;
+                const sameCore = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
+                const active = !empty && sameCore && (!t.isCustom || (t.bonuses === cur.bonuses && t.monsters === cur.monsters && t.sfx === cur.sfx));
                 const cls = active
                     ? 'bg-amber-500/15 border-amber-400 text-amber-300'
-                    : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-500/50 hover:text-amber-300';
-                const stats = `${t.players} player tables · ${t.games} game${t.games === 1 ? '' : 's'} per ${t.rounds} rounds · ${t.timer} min games · ~ ${formatDuration(total)}`;
+                    : (empty ? 'bg-slate-950 border-dashed border-slate-700 text-slate-500 hover:border-amber-500/50 hover:text-amber-300'
+                             : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-500/50 hover:text-amber-300');
+                let stats;
+                if (empty) {
+                    stats = 'Nothing saved yet. Change your settings, then tap the save icon next to Overview to keep them here.';
+                } else {
+                    const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + 1);
+                    stats = `${t.players} player tables · ${t.games} game${t.games === 1 ? '' : 's'} per ${t.rounds} rounds · ${t.timer} min games · ~ ${formatDuration(total)}`;
+                    if (t.isCustom) stats += ` · Bonuses ${t.bonuses !== false ? 'on' : 'off'}, Monsters ${t.monsters !== false ? 'on' : 'off'}, Sound ${t.sfx !== false ? 'on' : 'off'}`;
+                }
                 // Tooltip lines up with the left edge, centre or right edge so it never spills out of the card
-                const tipPos = i === 0 ? 'left-0' : (i === TEMPLATES.length - 1 ? 'right-0' : 'left-1/2 -translate-x-1/2');
+                const tipPos = i === 0 ? 'left-0' : (i === items.length - 1 ? 'right-0' : 'left-1/2 -translate-x-1/2');
                 return `<div class="tpl-wrap relative">
                     <button type="button" onclick="window.applyTemplate('${t.key}')" aria-label="${t.name}: ${stats}" class="w-full flex flex-col items-center gap-1 px-1 py-2 rounded-xl border transition-colors cursor-pointer ${cls}">
                         <i class="fa-solid ${t.icon} text-amber-500 text-xs"></i>
@@ -1227,8 +1593,8 @@
             const roundGames = gamesPerRound * rounds;
             const totalGames = roundGames + 1; // plus the finals
 
-            // Seconds per turn comes from the Game Timer at the reference table size; real game length grows with table size
-            const secondsPerTurn = (timer * 60) / (REFERENCE_TABLE_SIZE * TURNS_EACH);
+            // Seconds per turn: the Game Timer shared across every player's turns
+            const secondsPerTurn = (timer * 60) / (players * TURNS_EACH);
             const totalMinutes = estimateMinutes(players, timer, totalGames);
 
             const strong = (t) => `<strong class="text-amber-400">${t}</strong>`;
@@ -1256,6 +1622,7 @@
 
             renderTournamentOverview();
             renderTemplateButtons();
+            syncCustomSaveButton();
 
             const current = { games, prelim: prelims };
             document.querySelectorAll('.opt-btn').forEach(btn => {
@@ -1344,6 +1711,8 @@
             const btn = document.getElementById('btn-settings-lock');
             const icon = document.getElementById('settings-lock-icon');
             if (fieldset) fieldset.disabled = locked;
+            const roster = document.getElementById('roster-fieldset');
+            if (roster) roster.disabled = locked;
             if (icon) icon.className = (locked ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open') + ' text-xs';
             if (btn) {
                 const label = locked ? 'Unlock settings' : 'Lock settings';
@@ -1384,15 +1753,34 @@
         };
 
         window.applyTemplate = function(key) {
-            const tpl = TEMPLATES.find(t => t.key === key);
+            let tpl = TEMPLATES.find(t => t.key === key);
+            let name = tpl ? tpl.name : '';
+            let saved = null;
+            if (key === 'custom') {
+                saved = loadCustomTemplate();
+                if (!saved) {
+                    window.showToast("No Custom template saved yet. Change your settings, then tap the save icon.", "info");
+                    return;
+                }
+                tpl = saved;
+                name = 'Custom';
+            }
             if (!tpl) return;
             document.getElementById('setting-table-size').value = tpl.players;
             document.getElementById('setting-games-per-round').value = tpl.games;
             document.getElementById('setting-prelim-rounds').value = tpl.rounds;
             document.getElementById('setting-round-timer').value = tpl.timer;
+            if (saved) {
+                // The Custom template also restores the Options toggles
+                document.getElementById('setting-bonuses').checked = saved.bonuses !== false;
+                document.getElementById('setting-monsters').checked = saved.monsters !== false;
+                soundPrefs.enabled = saved.sfx !== false;
+                saveSoundPrefs();
+                syncSoundUI();
+            }
             clearTimeout(settingsToastTimer);
             window.updateSettings(true);
-            window.showToast(`${tpl.name} template applied`, "success");
+            window.showToast(`${name} template applied`, "success");
         };
 
         // Games per Round applies live to a not-yet-played round and to every round generated afterwards
@@ -1514,30 +1902,33 @@
         // Every monster with official Evolution cards (promo monsters without evolution cards are not included).
         // The 3 letter code is the short tag shown next to a player's name.
         const MONSTERS = [
-            { name: 'Alienoid',        code: 'ALN', group: 'King of Tokyo' },
-            { name: 'Baby Gigazaur',   code: 'BGZ', group: 'King of Tokyo' },
-            { name: 'Cyber Bunny',     code: 'CBN', group: 'King of Tokyo' },
-            { name: 'Cyber Kitty',     code: 'CKT', group: 'King of Tokyo' },
-            { name: 'Gigazaur',        code: 'GZR', group: 'King of Tokyo' },
-            { name: 'Kraken',          code: 'KRK', group: 'King of Tokyo' },
-            { name: 'Meka Dragon',     code: 'MKD', group: 'King of Tokyo' },
-            { name: 'Pandakaï',        code: 'PDK', group: 'King of Tokyo' },
-            { name: 'Space Penguin',   code: 'SPG', group: 'King of Tokyo' },
-            { name: 'The King',        code: 'KNG', group: 'King of Tokyo' },
-            { name: 'Boogie Woogie',   code: 'BWG', group: 'Halloween' },
-            { name: 'Pumpkin Jack',    code: 'PJK', group: 'Halloween' },
-            { name: 'Captain Fish',    code: 'CFH', group: 'King of New York' },
-            { name: 'Drakonis',        code: 'DRK', group: 'King of New York' },
-            { name: 'Kong',            code: 'KON', group: 'King of New York' },
-            { name: 'Mantis',          code: 'MNT', group: 'King of New York' },
-            { name: 'Mega Shark',      code: 'MSK', group: 'King of New York' },
-            { name: 'Rob',             code: 'ROB', group: 'King of New York' },
-            { name: 'Sheriff',         code: 'SHF', group: 'King of New York' },
-            { name: 'Anubis',          code: 'ANU', group: 'Monster Packs' },
-            { name: 'Cthulhu',         code: 'CTH', group: 'Monster Packs' },
-            { name: 'Cybertooth',      code: 'CYT', group: 'Monster Packs' },
-            { name: 'King Kong',       code: 'KKG', group: 'Monster Packs' },
-            { name: 'Luchador',        code: 'LCH', group: 'Monster Packs' },
+            { name: 'Alienoid',        code: 'ALN', group: 'Tokyo' },
+            { name: 'Baby Gigazaur',   code: 'BGZ', group: 'Micro' },
+            { name: 'Cyber Bunny',     code: 'CBN', group: 'Tokyo' },
+            { name: 'Cyber Kitty',     code: 'CKT', group: 'Tokyo' },
+            { name: 'Gigazaur',        code: 'GZR', group: 'Tokyo' },
+            { name: 'Kraken',          code: 'KRN', group: 'Tokyo' },
+            { name: 'Meka Dragon',     code: 'MKD', group: 'Tokyo' },
+            { name: 'Space Penguin',   code: 'SPG', group: 'Tokyo' },
+            { name: 'The King',        code: 'KNG', group: 'Tokyo' },
+            { name: 'Boogie Woogie',   code: 'BWG', group: 'Spooky' },
+            { name: 'Pumpkin Jack',    code: 'PJK', group: 'Spooky' },
+            { name: 'Captain Fish',    code: 'CFH', group: 'New York' },
+            { name: 'Drakonis',        code: 'DRK', group: 'New York' },
+            { name: 'Kong',            code: 'KON', group: 'New York' },
+            { name: 'Mantis',          code: 'MNT', group: 'New York' },
+            { name: 'Rob',             code: 'ROB', group: 'New York' },
+            { name: 'Sheriff',         code: 'SHF', group: 'New York' },
+            { name: 'Pandakaï',        code: 'PDK', group: 'Power Up' },
+            { name: 'Mega Shark',      code: 'MSK', group: 'Power Up' },
+            { name: 'Anubis',          code: 'ANU', group: 'Monster Pack' },
+            { name: 'Cthulhu',         code: 'CTH', group: 'Monster Pack' },
+            { name: 'Cybertooth',      code: 'CYT', group: 'Monster Pack' },
+            { name: 'King Kong',       code: 'KKG', group: 'Monster Pack' },
+            { name: 'Luchador',        code: 'LCH', group: 'Monster Pack' },
+            { name: 'Master Mindbug',  code: 'MBG', group: 'Mindbug' },
+            { name: 'Sharky Crab-Dog Mummypus-Zilla', code: 'SHZ', group: 'Mindbug' },
+            { name: 'Gigasnail Hydra', code: 'GSH', group: 'Mindbug' },
             { name: 'Godzilla',        code: 'GDZ', group: 'Godzilla' },
             { name: 'Hedorah',         code: 'HDR', group: 'Godzilla' },
             { name: 'King Ghidorah',   code: 'KGH', group: 'Godzilla' },
@@ -2224,7 +2615,7 @@
             const startRound = window.getCurrentRound();
             window.speak(startRound && startRound.isFinals
                 ? `The finals have started. ${spokenTime(game.timerRemaining)} on the clock. Good luck.`
-                : `Game ${window.tournament.currentGame + 1} has started. ${spokenTime(game.timerRemaining)} on the clock.`);
+                : `Game ${numberWord(window.tournament.currentGame + 1)} of Round ${numberWord(window.tournament.currentRound + 1)} has started. ${spokenTime(game.timerRemaining)} on the clock.`);
         };
 
         window.togglePauseCurrentGame = function() {
@@ -2724,7 +3115,7 @@
                 container.innerHTML = `<div class="col-span-2 text-center py-16 text-slate-500 bg-slate-900/40 rounded-2xl border border-slate-800 border-dashed">
                     <i class="fa-solid fa-dice-d6 text-4xl mb-3 opacity-40 text-amber-500"></i>
                     <p class="text-base font-bold text-slate-300">No rounds generated yet.</p>
-                    <p class="text-xs text-slate-500 mt-1">The timeline above updates live as you change settings. Add your players and click <strong>Generate Tournament</strong> to seat them.</p>
+                    <p class="text-xs text-slate-500 mt-1">The timeline above updates live as you change settings. Add your players and click <strong>Generate</strong> to seat them.</p>
                 </div>`;
                 return;
             }
@@ -2852,17 +3243,17 @@
                     statusBadge.innerText = 'Playing';
                     statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider animate-pulse';
                     pauseIcon.className = "fa-solid fa-pause";
-                    pauseText.innerText = "Pause Game";
+                    pauseText.innerText = "Pause";
                 } else if (isGameDone) {
                     statusBadge.innerText = 'Done';
                     statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 uppercase tracking-wider';
                     pauseIcon.className = "fa-solid fa-play";
-                    pauseText.innerText = "Resume Game";
+                    pauseText.innerText = "Resume";
                 } else {
                     statusBadge.innerText = 'Paused';
                     statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-400 border border-slate-700 uppercase tracking-wider';
                     pauseIcon.className = "fa-solid fa-play";
-                    pauseText.innerText = "Resume Game";
+                    pauseText.innerText = "Resume";
                 }
 
                 if (isGameDone && !isGrandFinalsRound && !isLastGame) {
@@ -2904,6 +3295,11 @@
 
         function saveSoundPrefs() {
             try { localStorage.setItem('kot_sound', JSON.stringify(soundPrefs)); } catch (e) {}
+        }
+
+        function numberWord(n) {
+            const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+            return words[n] !== undefined ? words[n] : String(n);
         }
 
         function spokenTime(seconds) {
@@ -3001,6 +3397,8 @@
             if (!on && pop) pop.classList.add('hidden');
             saveSoundPrefs();
             syncSoundUI();
+            renderTemplateButtons();
+            syncCustomSaveButton();
         };
 
         window.toggleMute = function() {
