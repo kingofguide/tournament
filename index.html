@@ -164,6 +164,9 @@
     .opt-check:has(input:checked) { background-color: rgba(245,158,11,.15) !important; border-color: #fbbf24 !important; }
         .opt-check:has(input:checked) span { color: #fcd34d; }
         html.light .opt-check:has(input:checked) span { color: rgb(180 83 9); }
+    html.light .text-violet-300, html.light .text-violet-200 { color: rgb(109 40 217); }
+        html.light .text-fuchsia-300, html.light .text-fuchsia-200 { color: rgb(162 28 175); }
+        html.light .text-purple-200 { color: rgb(107 33 168); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
@@ -437,7 +440,7 @@
                 </div>
                 
                 <!-- Round Header & Workflows -->
-                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
 <div>
 <div class="flex flex-wrap items-center gap-2">
 <h2 id="round-title-display" class="text-2xl font-extrabold text-white tracking-tight">Round 1</h2>
@@ -446,31 +449,29 @@
 </div>
 <p id="round-timer-state" class="text-xs text-slate-400 font-medium mt-1"></p>
 </div>
-<div class="flex flex-wrap items-center gap-3">
-<div class="flex flex-wrap items-center gap-3 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2">
-<span id="round-clock" class="font-mono text-3xl font-black text-amber-400 tracking-wider">30:00</span>
-<div id="timer-adjust-group" class="flex items-center gap-1">
-<button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="h-8 px-2.5 text-xs font-bold rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
-<button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="h-8 px-2.5 text-xs font-bold rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">+5m</button>
-</div>
-<button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden h-8 px-3 text-xs font-bold rounded-lg bg-slate-800 border border-slate-700 text-amber-400 hover:bg-slate-700 flex items-center gap-1.5 cursor-pointer transition-colors"><i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span></button>
-<div id="sound-controls" class="flex items-center gap-1 sm:pl-3 sm:border-l border-slate-800">
-<button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-xs"></i></button>
-<button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Volume" title="Volume" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-xs"></i></button>
-</div>
-</div>
-<div class="flex flex-wrap items-center gap-2 sm:ml-auto">
+<div class="flex flex-wrap items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-3">
 <button id="btn-start-round" onclick="window.startCurrentGame()" class="h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-play"></i> Start</button>
+<button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span></button>
 <button id="btn-skip-game" onclick="window.skipGame()" title="Skip this game" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"><i class="fa-solid fa-forward"></i> Skip</button>
 <button id="btn-restore-game" onclick="window.restoreGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"><i class="fa-solid fa-rotate-left"></i> Restore Game</button>
 <button id="btn-next-game" onclick="window.goToNextGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span></button>
 <button id="btn-generate-next" onclick="window.generateNextRound()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-forward-step"></i> <span id="generate-next-label">Generate Next Round</span></button>
 <button id="btn-trigger-semis" onclick="window.triggerSemis()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white"><i class="fa-solid fa-medal"></i> Semis</button>
 <button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30"><i class="fa-solid fa-crown"></i> Finals</button>
-<button id="btn-crown-champion" onclick="window.crownChampion()" disabled class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950"><i class="fa-solid fa-award"></i> Crown The Champion</button>
+<button id="btn-crown-champion" onclick="window.crownChampion()" disabled class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950"><i class="fa-solid fa-award"></i> Champion</button>
+<div id="timer-adjust-group" class="flex items-center gap-1.5">
+<button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="h-10 px-3 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
+<span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider px-1">30:00</span>
+<button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="h-10 px-3 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">+5m</button>
+</div>
+<div id="sound-controls" class="flex items-center gap-1.5">
+<button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i></button>
+<button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Sound options" title="Sound options" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-sm"></i></button>
 </div>
 </div>
 </div>
+
+
 
 
 
@@ -639,13 +640,18 @@
     </div>
 
     <!-- Volume popover (positioned next to the volume button) -->
-    <div id="volume-popover" class="hidden fixed z-50 w-52 p-3 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl">
-        <div class="flex items-center justify-between mb-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            <span><i class="fa-solid fa-volume-high mr-1"></i> Volume</span>
-            <span id="volume-value" class="text-amber-400">80%</span>
-        </div>
-        <input type="range" id="volume-slider" class="kot-range" min="0" max="100" step="5" value="80" oninput="window.setVolume(this.value)" onchange="window.testVolume()" aria-label="Volume">
-    </div>
+    <div id="volume-popover" class="hidden fixed z-50 w-64 max-h-[80vh] overflow-y-auto p-3 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl space-y-3">
+<div><div class="flex items-center justify-between mb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider"><span><i class="fa-solid fa-volume-high mr-1"></i> Volume</span><span id="volume-value" class="text-amber-400">80%</span></div>
+<input type="range" id="volume-slider" class="kot-range" min="0" max="100" step="5" value="80" oninput="window.setVolume(this.value)" onchange="window.testVolume()" aria-label="Volume"></div>
+<div><div class="flex items-center justify-between mb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider"><span><i class="fa-solid fa-microphone-lines mr-1"></i> Voice</span></div>
+<select id="voice-select" onchange="window.setVoice(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-200 focus:outline-none focus:border-amber-500"><option value="">Auto</option></select></div>
+<div><div class="flex items-center justify-between mb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider"><span><i class="fa-solid fa-gauge-high mr-1"></i> Speed</span><span id="rate-value" class="text-amber-400">1.0x</span></div>
+<input type="range" id="rate-slider" class="kot-range" min="0.5" max="1.5" step="0.1" value="1" oninput="window.setRate(this.value)" onchange="window.testVoice()" aria-label="Speed"></div>
+<div><div class="flex items-center justify-between mb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider"><span><i class="fa-solid fa-music mr-1"></i> Pitch</span><span id="pitch-value" class="text-amber-400">1.0</span></div>
+<input type="range" id="pitch-slider" class="kot-range" min="0.5" max="1.5" step="0.1" value="1" oninput="window.setPitch(this.value)" onchange="window.testVoice()" aria-label="Pitch"></div>
+<div class="flex gap-2"><button type="button" onclick="window.testVoice()" class="flex-1 h-9 rounded-lg bg-amber-500/15 border border-amber-400 text-amber-300 text-xs font-bold cursor-pointer"><i class="fa-solid fa-play mr-1"></i> Test</button>
+<button type="button" onclick="window.resetSound()" class="flex-1 h-9 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold cursor-pointer"><i class="fa-solid fa-rotate-left mr-1"></i> Reset</button></div>
+</div>
 
     <!-- Monster Picker -->
     <div id="monster-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4" onclick="if(event.target===this) window.closeMonsterPicker()">
@@ -793,8 +799,15 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.32';
+        const APP_VERSION = '2.33';
         const CHANGELOG = [
+            { "version": "2.33", "date": "November 2026", "items": [
+                "Semis and Finals now seat every player on evenly balanced tables, so nobody is left alone. Finalists and consolation players are tagged and points work as normal",
+                "Semis and Finals tags and the timeline crowns are readable in light mode",
+                "Removed the Locked and In Play table tags. The Unlock button is now orange and Lock is grey",
+                "Round controls reordered: Start / Play / Pause, stage buttons, -5m, clock, +5m, mute and sound options",
+                "Sound options now include English voices, speed and pitch alongside volume"
+            ]},
             { "version": "2.32", "date": "November 2026", "items": [
                 "Small tournaments (players fit on one table) now keep everyone on a single table for the Semis and Finals instead of splitting them up",
                 "On a shared table the Semis and Finals players are tagged, and consolation players are shown with a softer dashed seat",
@@ -905,155 +918,14 @@
                                     "Renamed Game Timer, Overview and Total Rounds"
                         ]
             },
-            {
-                        "version": "2.20",
-                        "date": "November 2026",
-                        "items": [
-                                    "Overview sentence added to Settings with the estimated total time and turn length"
-                        ]
-            },
-            {
-                        "version": "2.19",
-                        "date": "November 2026",
-                        "items": [
-                                    "Generate Tournament turns subtle once a tournament has started, with a warning before replacing it"
-                        ]
-            },
-            {
-                        "version": "2.18",
-                        "date": "November 2026",
-                        "items": [
-                                    "Tournament Rules rewritten: Goal, Drafting, Modes, Play, Rounds, Scoring and Clarifications"
-                        ]
-            },
-            {
-                        "version": "2.17",
-                        "date": "November 2026",
-                        "items": [
-                                    "Games per Round: players stay at the same table for every game in a round",
-                                    "Players are re-seated by standings between rounds",
-                                    "Each game has its own timer, with a Next Game button",
-                                    "A timeline replaces the round pills",
-                                    "The finals are a single game, and older saves are upgraded automatically",
-                                    "Pause and resume keeps the clock running after a page reload"
-                        ]
-            },
-            {
-                        "version": "2.16",
-                        "date": "November 2026",
-                        "items": [
-                                    "Quick Add uses a researched list of monsters with Evolution cards and adds 4 at random"
-                        ]
-            },
-            {
-                        "version": "2.15",
-                        "date": "November 2026",
-                        "items": [
-                                    "Add Player and Quick Add buttons sit side by side"
-                        ]
-            },
-            {
-                        "version": "2.14",
-                        "date": "November 2026",
-                        "items": [
-                                    "Added a 1 round option"
-                        ]
-            },
-            {
-                        "version": "2.13",
-                        "date": "November 2026",
-                        "items": [
-                                    "Player Roster uses the amber colours",
-                                    "Generate Round 1 renamed Generate Tournament"
-                        ]
-            },
-            {
-                        "version": "2.12",
-                        "date": "November 2026",
-                        "items": [
-                                    "\"Random Swiss Rounds\" tag added to the roster",
-                                    "Settings title simplified"
-                        ]
-            },
-            {
-                        "version": "2.11",
-                        "date": "November 2026",
-                        "items": [
-                                    "Game timer slider limited to 5 to 60 minutes"
-                        ]
-            },
-            {
-                        "version": "2.10",
-                        "date": "November 2026",
-                        "items": [
-                                    "Settings use sliders and icon buttons"
-                        ]
-            },
-            {
-                        "version": "2.9",
-                        "date": "November 2026",
-                        "items": [
-                                    "Leaderboard headings shortened with emoji"
-                        ]
-            },
-            {
-                        "version": "2.8",
-                        "date": "November 2026",
-                        "items": [
-                                    "Header tag moved next to the title",
-                                    "Single-row header"
-                        ]
-            },
-            {
-                        "version": "2.7",
-                        "date": "November 2026",
-                        "items": [
-                                    "The \"Settings updated\" notice appears once instead of on every click"
-                        ]
-            },
-            {
-                        "version": "2.6",
-                        "date": "November 2026",
-                        "items": [
-                                    "Timer steps by 5 minutes",
-                                    "Generate button moved into the Settings header"
-                        ]
-            },
-            {
-                        "version": "2.5",
-                        "date": "November 2026",
-                        "items": [
-                                    "Settings steppers with -1 and +1 buttons"
-                        ]
-            },
-            {
-                        "version": "2.4",
-                        "date": "November 2026",
-                        "items": [
-                                    "Removed the Setup Phase tag"
-                        ]
-            },
-            {
-                        "version": "2.3",
-                        "date": "November 2026",
-                        "items": [
-                                    "Two-line player seats with names above the stats",
-                                    "Tighter spacing"
-                        ]
-            },
-            {
-                        "version": "2.2",
-                        "date": "November 2026",
-                        "items": [
-                                    "Emoji stats for VPs and HPs",
-                                    "Player bonuses: Smasher, Tanker, Collector and Harvester"
-                        ]
-            },
-            {
-                        "version": "2.1",
-                        "date": "November 2026",
-                        "items": [
-                                    "Starting version: roster, settings, rounds, tables, standings, finals, rules, export and import"
+            { "version": "2.1 - 2.20", "date": "November 2026", "items": [
+                                    "Starting version: roster, settings, rounds, tables, standings, finals, rules, export and import",
+                                    "Settings sliders, icon buttons and a Generate button in the Settings header",
+                                    "Games per Round, with players staying at the same table, re-seating by standings between rounds, a timeline and per-game timers",
+                                    "Player bonuses (Smasher, Tanker, Collector, Harvester) and emoji VP and HP stats",
+                                    "Quick Add with a researched monster list, a 1 round option and the Random Swiss Rounds tag",
+                                    "Overview estimate of total time and turn length, and a warning before replacing a started tournament",
+                                    "Tournament Rules rewritten, plus tidier headers, leaderboard headings and notices"
                         ]
             }
 ];
@@ -2112,28 +1984,30 @@
             window.showToast(`Round ${nextRoundNum} seated by standings. Top seeds meet on Table 1.`, "success");
         };
 
+        function snakeTables(ordered, size) {
+            const T = Math.max(1, Math.ceil(ordered.length / size));
+            const groups = Array.from({ length: T }, () => []);
+            ordered.forEach((p, i) => { const r = Math.floor(i / T), c = i % T; groups[r % 2 === 0 ? c : T - 1 - c].push(p); });
+            return groups;
+        }
+
+        function activeStandingsPlayers() {
+            return window.calculateStandings().map(x => window.tournament.players.find(p => p.id === x.id)).filter(p => p && !p.left);
+        }
+
         window.triggerSemis = function() {
             const cur = window.getCurrentRound();
             const size = window.tournament.settings.tableSize || 5;
-            const pool = window.calculateStandings().map(x => window.tournament.players.find(p => p.id === x.id)).filter(p => p && !p.left);
+            const pool = activeStandingsPlayers();
             if (pool.length < 4) { window.showToast("Not enough players for Semis.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
-            const top = pool.slice(0, size * 2), A = [], B = [];
-            top.forEach((p, i) => ((i % 4 === 0 || i % 4 === 3) ? A : B).push(p));
-            const single = pool.length <= size;
-            const tables = single ? [(() => {
-                const t = createTableStructure(0, pool, true);
-                t.seedTag = 'Semis Table'; t.isFinalsTable = true;
-                const q = Math.ceil(pool.length / 2);
-                t.seats.forEach((x, i) => { x.tier = i < q ? 'in' : 'out'; });
-                return t;
-            })()] : [A, B].map((g, i) => {
+            const cut = Math.min(size * 2, Math.max(2, Math.ceil(pool.length / 2)));
+            const inSet = new Set(pool.slice(0, cut).map(p => p.id));
+            const tables = snakeTables(pool, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
-                t.seedTag = `Semi ${i + 1}`; t.isFinalsTable = true; return t;
-            });
-            (single ? [] : partitionPlayersEvenly(pool.slice(size * 2), size)).forEach((g, i) => {
-                const t = createTableStructure(i + 2, g, false);
-                t.seedTag = 'Consolation'; t.isFinalsTable = false; tables.push(t);
+                t.seedTag = 'Semis'; t.isFinalsTable = true;
+                t.seats.forEach(x => { x.tier = inSet.has(x.playerId) ? 'in' : 'out'; });
+                return t;
             });
             const gpr = window.tournament.settings.gamesPerRound || 1;
             const r = buildRound('Semis', tables, Math.min(2, Math.ceil(gpr / 2)), false);
@@ -2144,88 +2018,41 @@
             window.tournament.currentGame = 0;
             isRoundActive = false;
             window.saveTournament(); window.renderAll();
-            window.showToast("Semis generated! Two scored tables, the rest are consolation.", "success");
+            window.showToast("Semis generated! Everyone plays on balanced tables.", "success");
         };
 
         window.triggerGrandFinals = function() {
-            const currentRoundObj = window.getCurrentRound();
-            if (currentRoundObj) {
-                currentRoundObj.finalsTriggered = true;
-            }
-
-            const standings = window.calculateStandings();
-            if (standings.length < 4) {
-                window.showToast("Not enough players for Grand Finals.", "error");
-                return;
-            }
-
-            const targetTableSize = window.tournament.settings.tableSize;
-            const rankedPlayers = standings.map(s => window.tournament.players.find(p => p.id === s.id)).filter(Boolean);
-
-            const pool = rankedPlayers.filter(p => !p.left);
-            let finalistPlayers, consolationPlayers;
-            if (currentRoundObj && currentRoundObj.isSemis) {
-                const idx = id => pool.findIndex(p => p.id === id);
+            const cur = window.getCurrentRound();
+            const size = window.tournament.settings.tableSize || 5;
+            const pool = activeStandingsPlayers();
+            if (pool.length < 4) { window.showToast("Not enough players for Grand Finals.", "error"); return; }
+            if (cur) cur.finalsTriggered = true;
+            const idx = id => pool.findIndex(p => p.id === id);
+            let fin;
+            if (cur && cur.isSemis) {
                 const adv = [];
-                currentRoundObj.games[0].tables.filter(t => t.isFinalsTable).forEach((t, i) => {
-                    const k = Math.ceil(t.seats.length / 2);
-                    t.seats.map(x => x.playerId).filter(id => idx(id) >= 0).sort((a, b) => idx(a) - idx(b)).slice(0, k).forEach(id => adv.push(pool[idx(id)]));
+                cur.games[0].tables.forEach(t => {
+                    const ids = t.seats.map(x => x.playerId).filter(id => idx(id) >= 0).sort((a, b) => idx(a) - idx(b));
+                    ids.slice(0, Math.ceil(ids.length / 2)).forEach(id => adv.push(id));
                 });
-                finalistPlayers = pool.filter(p => adv.includes(p)).slice(0, targetTableSize);
-                consolationPlayers = pool.filter(p => !finalistPlayers.includes(p));
+                fin = new Set(pool.filter(p => adv.includes(p.id)).slice(0, size).map(p => p.id));
             } else {
-                finalistPlayers = pool.slice(0, targetTableSize);
-                consolationPlayers = pool.slice(targetTableSize);
+                fin = new Set(pool.slice(0, Math.min(size, Math.ceil(pool.length / 2))).map(p => p.id));
             }
-
-            const finalTables = [];
-            const single = pool.length <= targetTableSize;
-
-            finalTables.push({
-                id: 't_finals_champ_' + Date.now(),
-                tableNumber: 1,
-                tableName: "Table 1",
-                seedTag: "Top Seeds Finalists",
-                tableIcon: "fa-crown",
-                borderColor: "border-amber-400/60",
-                badgeBg: "bg-amber-400/20 text-amber-300 border-amber-400/30",
-                iconColor: "text-amber-400",
-                isFinalsTable: true,
-                completed: false,
-                seats: (single ? pool : finalistPlayers).map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: DEFAULT_HP, scored: single ? finalistPlayers.includes(p) : undefined }))
+            const tables = snakeTables(pool, size).map((g, i) => {
+                const t = createTableStructure(i, g, true);
+                t.seedTag = 'Finals'; t.isFinalsTable = true;
+                t.seats.forEach(x => { x.scored = fin.has(x.playerId); });
+                return t;
             });
-
-            if (consolationPlayers.length > 0 && !single) {
-                const consolationGroups = partitionPlayersEvenly(consolationPlayers, targetTableSize);
-                consolationGroups.forEach((group, idx) => {
-                    const tableNum = idx + 2;
-                    const theme = TABLE_THEMES[tableNum % TABLE_THEMES.length];
-                    finalTables.push({
-                        id: `t_finals_cons_${idx}_` + Date.now(),
-                        tableNumber: tableNum,
-                        tableName: `Table ${tableNum}`,
-                        seedTag: "Consolation Pod",
-                        tableIcon: theme.icon,
-                        borderColor: theme.borderColor,
-                        badgeBg: theme.badgeBg,
-                        iconColor: theme.iconColor,
-                        isFinalsTable: false,
-                        completed: false,
-                        seats: group.map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: DEFAULT_HP }))
-                    });
-                });
-            }
-
-            // The finals are a single decisive game
-            const finalsRound = buildRound("Finals", finalTables, 1, true);
-            finalsRound.monsters = { ...((currentRoundObj && currentRoundObj.monsters) || {}) };
-            window.tournament.rounds.push(finalsRound);
+            const r = buildRound('Finals', tables, 1, true);
+            r.monsters = { ...((cur && cur.monsters) || {}) };
+            window.tournament.rounds.push(r);
             window.tournament.currentRound = window.tournament.rounds.length - 1;
             window.tournament.currentGame = 0;
             isRoundActive = false;
-            window.saveTournament();
-            window.renderAll();
-            window.showToast("Finals & Consolation tables generated!", "success");
+            window.saveTournament(); window.renderAll();
+            window.showToast("Finals generated! Finalists are tagged, everyone plays.", "success");
         };
 
         window.crownChampion = function() {
@@ -2585,11 +2412,10 @@
             card.innerHTML = `
                 <div class="flex items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2">
                     <div class="flex items-center gap-2 min-w-0">
-                        ${statusTag}
                         <h3 class="font-extrabold text-sm text-white truncate">${escapeHtml(table.tableName || 'Table')}</h3>
                         <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${seedCls} shrink-0 truncate">${escapeHtml(seedTag)}</span>
                     </div>
-                    <button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="shrink-0 h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700' : 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25'}">
+                    <button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="shrink-0 h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
                         <i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock' : 'Lock'}
                     </button>
                 </div>
@@ -3159,12 +2985,12 @@
                     statusBadge.innerText = 'Done';
                     statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 uppercase tracking-wider';
                     pauseIcon.className = "fa-solid fa-play";
-                    pauseText.innerText = "Resume";
+                    pauseText.innerText = "Play";
                 } else {
                     statusBadge.innerText = 'Paused';
                     statusBadge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-400 border border-slate-700 uppercase tracking-wider';
                     pauseIcon.className = "fa-solid fa-play";
-                    pauseText.innerText = "Resume";
+                    pauseText.innerText = "Play";
                 }
 
                 if (isGameDone && !isGrandFinalsRound && !isLastGame) {
@@ -3198,7 +3024,7 @@
         // ----- Sound effects: spoken timer call-outs using the browser's built-in speech API -----
         // A device preference (not tournament data), so it is stored separately.
         const SPEECH_OK = typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined';
-        let soundPrefs = { enabled: true, muted: false, volume: 0.8 };
+        let soundPrefs = { enabled: true, muted: false, volume: 0.8, voice: '', rate: 1, pitch: 1 };
         try {
             const savedSound = JSON.parse(localStorage.getItem('kot_sound') || 'null');
             if (savedSound) soundPrefs = { ...soundPrefs, ...savedSound };
@@ -3224,7 +3050,7 @@
 
         function pickVoice() {
             const voices = window.speechSynthesis.getVoices() || [];
-            return voices.find(v => /^en[-_]US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang)) || null;
+            return voices.find(v => soundPrefs.voice && v.name === soundPrefs.voice) || voices.find(v => /^en[-_]US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang)) || null;
         }
 
         window.speak = function(text) {
@@ -3234,11 +3060,11 @@
                 if (synth.speaking || synth.pending) synth.cancel();
                 const utterance = new window.SpeechSynthesisUtterance(text);
                 utterance.lang = 'en-US';
-                utterance.rate = 1;
-                utterance.pitch = 1;
+                utterance.rate = soundPrefs.rate || 1;
+                utterance.pitch = soundPrefs.pitch || 1;
                 utterance.volume = soundPrefs.volume;
                 const voice = pickVoice();
-                if (voice) utterance.voice = voice;
+                if (voice) { utterance.voice = voice; utterance.lang = voice.lang; }
                 synth.speak(utterance);
                 return true;
             } catch (e) { return false; }
@@ -3284,14 +3110,14 @@
             if (note) note.classList.toggle('hidden', SPEECH_OK);
             if (controls) controls.classList.toggle('hidden', !(SPEECH_OK && soundPrefs.enabled));
             const icon = document.getElementById('mute-icon');
-            if (icon) icon.className = (silent ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high') + ' text-xs';
+            if (icon) icon.className = (silent ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high') + ' text-sm';
             const btn = document.getElementById('btn-mute');
             if (btn) {
                 const label = soundPrefs.muted ? 'Unmute' : 'Mute';
                 btn.title = label;
                 btn.setAttribute('aria-label', label + ' sound');
                 btn.setAttribute('aria-pressed', soundPrefs.muted ? 'true' : 'false');
-                btn.className = 'w-8 h-8 rounded-lg border flex items-center justify-center cursor-pointer transition-colors ' +
+                btn.className = 'w-10 h-10 rounded-xl border flex items-center justify-center cursor-pointer transition-colors ' +
                     (silent ? 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/40 text-rose-400'
                             : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300');
             }
@@ -3334,17 +3160,42 @@
             const btn = document.getElementById('btn-volume');
             if (!pop || !btn) return;
             if (!pop.classList.contains('hidden')) { pop.classList.add('hidden'); return; }
+            populateVoices();
             pop.classList.remove('hidden');
             const r = btn.getBoundingClientRect();
             const w = pop.offsetWidth || 208;
             pop.style.left = Math.min(Math.max(8, r.left), window.innerWidth - w - 8) + 'px';
-            pop.style.top = (r.bottom + 8) + 'px';
+            pop.style.top = Math.max(8, Math.min(r.bottom + 8, window.innerHeight - pop.offsetHeight - 8)) + 'px';
         };
 
         document.addEventListener('pointerdown', function(e) {
             const pop = document.getElementById('volume-popover');
             if (pop && !pop.classList.contains('hidden') && !pop.contains(e.target) && !e.target.closest('#btn-volume')) pop.classList.add('hidden');
         });
+
+        function syncVoicePanel() {
+            const set = (id, v, min, max, lab, txt) => {
+                const el = document.getElementById(id); if (el) { el.value = v; el.style.setProperty('--pct', ((v - min) / (max - min) * 100) + '%'); }
+                const l = document.getElementById(lab); if (l) l.textContent = txt;
+            };
+            set('rate-slider', soundPrefs.rate, 0.5, 1.5, 'rate-value', soundPrefs.rate.toFixed(1) + 'x');
+            set('pitch-slider', soundPrefs.pitch, 0.5, 1.5, 'pitch-value', soundPrefs.pitch.toFixed(1));
+        }
+        function populateVoices() {
+            const sel = document.getElementById('voice-select');
+            if (!sel || !SPEECH_OK) return;
+            const voices = (window.speechSynthesis.getVoices() || []).filter(v => /^en/i.test(v.lang))
+                .sort((a, b) => a.lang.localeCompare(b.lang) || a.name.localeCompare(b.name));
+            sel.innerHTML = '<option value="">Auto (best English voice)</option>' + voices.map(v =>
+                `<option value="${escapeHtml(v.name)}" ${v.name === soundPrefs.voice ? 'selected' : ''}>${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`).join('');
+            syncVoicePanel();
+        }
+        if (SPEECH_OK) { try { window.speechSynthesis.onvoiceschanged = populateVoices; } catch (e) {} }
+        window.setVoice = function(n) { soundPrefs.voice = n || ''; saveSoundPrefs(); window.testVoice(); };
+        window.setRate = function(v) { soundPrefs.rate = Math.min(1.5, Math.max(0.5, parseFloat(v) || 1)); saveSoundPrefs(); syncVoicePanel(); };
+        window.setPitch = function(v) { soundPrefs.pitch = Math.min(1.5, Math.max(0.5, parseFloat(v) || 1)); saveSoundPrefs(); syncVoicePanel(); };
+        window.testVoice = function() { window.speak('Ten minutes remaining.'); };
+        window.resetSound = function() { soundPrefs.voice = ''; soundPrefs.rate = 1; soundPrefs.pitch = 1; soundPrefs.volume = 0.8; saveSoundPrefs(); syncSoundUI(); populateVoices(); };
 
         // Light / Dark theme (saved separately from tournament data)
         window.applyTheme = function(theme) {
