@@ -68,7 +68,7 @@
         .kot-range {
             -webkit-appearance: none; appearance: none;
             width: 100%; height: 8px; border-radius: 9999px; outline: none; cursor: pointer;
-            background: linear-gradient(to right, #f59e0b 0%, #f59e0b var(--pct, 50%), #1e293b var(--pct, 50%), #1e293b 100%);
+            background: linear-gradient(to right, rgba(245,158,11,.45) 0%, rgba(245,158,11,.45) var(--pct, 50%), #1e293b var(--pct, 50%), #1e293b 100%);
             border: 1px solid #334155;
         }
         .kot-range::-webkit-slider-thumb {
@@ -97,7 +97,7 @@
         html.light .custom-scrollbar::-webkit-scrollbar-track { background: #e2e8f0; }
         html.light .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; }
         html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
-        html.light .kot-range { background: linear-gradient(to right, #f59e0b 0%, #f59e0b var(--pct, 50%), #e2e8f0 var(--pct, 50%), #e2e8f0 100%); border-color: #cbd5e1; }
+        html.light .kot-range { background: linear-gradient(to right, rgba(245,158,11,.45) 0%, rgba(245,158,11,.45) var(--pct, 50%), #e2e8f0 var(--pct, 50%), #e2e8f0 100%); border-color: #cbd5e1; }
         html.light .kot-range::-webkit-slider-thumb { border-color: #ffffff; box-shadow: 0 0 0 2px #f59e0b, 0 2px 6px rgba(15,23,42,.25); }
         html.light .kot-range::-moz-range-thumb { border-color: #ffffff; box-shadow: 0 0 0 2px #f59e0b; }
         html.light .text-white { color: #0f172a; }
@@ -160,6 +160,10 @@
         html.light .text-pink-400{color:rgb(219 39 119)}
         html.light .text-emerald-500{color:rgb(5 150 105)}
         html.light .hover\:text-rose-400:hover{color:rgb(225 29 72)}
+    html.light .text-white[class*="from-violet-"], html.light .text-white[class*="from-fuchsia-"] { color: #ffffff; }
+    .opt-check:has(input:checked) { background-color: rgba(245,158,11,.15) !important; border-color: #fbbf24 !important; }
+        .opt-check:has(input:checked) span { color: #fcd34d; }
+        html.light .opt-check:has(input:checked) span { color: rgb(180 83 9); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
@@ -201,11 +205,11 @@
                                 <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-400 w-4"></i> <span id="theme-toggle-label">Light Mode</span>
                             </button>
                             <button onclick="window.openRulesModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-book-open text-amber-400 w-4"></i> Tournament Rules
+                                <i class="fa-solid fa-book-open text-amber-400 w-4"></i> Rules
                             </button>
                             <button onclick="window.openLogModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-clock-rotate-left text-amber-400 w-4"></i> Update Log
-                            </button>
+                                <i class="fa-solid fa-clock-rotate-left text-amber-400 w-4"></i> Updates
+<button onclick="window.openAboutModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i class="fa-solid fa-circle-question text-amber-400 w-4"></i> About</button>
                         </div>
                         <div class="py-1">
                             <button onclick="window.exportTournamentData(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
@@ -243,7 +247,7 @@
                     <button id="btn-settings-lock" type="button" onclick="window.toggleSettingsLock()" aria-label="Lock settings" title="Lock settings" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-400 flex items-center justify-center transition-colors cursor-pointer shrink-0">
                         <i id="settings-lock-icon" class="fa-solid fa-lock-open text-xs"></i>
                     </button>
-                    <button id="btn-generate-r1" type="button" onclick="window.requestGenerateTournament()" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
+                    <button id="btn-generate-r1" type="button" onclick="window.requestGenerateTournament()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
                         <i class="fa-solid fa-play"></i> Generate
                     </button>
                     </div>
@@ -346,25 +350,25 @@
                         </div>
                         <div class="grid grid-cols-3 gap-2">
                             <div class="relative group">
-                                <label class="flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                                <label class="opt-check flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
                                     <input type="checkbox" id="setting-bonuses" checked onchange="window.updateSettings()" class="w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
                                     <span class="text-xs font-bold text-slate-200 truncate">Bonuses</span>
                                 </label>
-                                <span role="tooltip" class="pointer-events-none absolute top-full mt-1.5 left-0 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Smasher, Tanker, Collector and Harvester each add +1 point. Turn off to play with places only.</span>
+                                <span role="tooltip" class="pointer-events-none absolute bottom-full mb-1.5 left-0 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Smasher, Tanker, Collector and Harvester each add +1 point. Turn off to play with places only.</span>
                             </div>
                             <div class="relative group">
-                                <label class="flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                                <label class="opt-check flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
                                     <input type="checkbox" id="setting-monsters" checked onchange="window.updateSettings()" class="w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
                                     <span class="text-xs font-bold text-slate-200 truncate">Monsters</span>
                                 </label>
-                                <span role="tooltip" class="pointer-events-none absolute top-full mt-1.5 left-1/2 -translate-x-1/2 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Show a 3 letter monster tag next to each player. Turn off for quick tournaments.</span>
+                                <span role="tooltip" class="pointer-events-none absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Show a 3 letter monster tag next to each player. Turn off for quick tournaments.</span>
                             </div>
                             <div class="relative group">
-                                <label class="flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
+                                <label class="opt-check flex items-center gap-2 px-2.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 cursor-pointer transition-colors">
                                     <input type="checkbox" id="setting-sfx" checked onchange="window.setSfxEnabled(this.checked)" class="w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
                                     <span class="text-xs font-bold text-slate-200 truncate">Sound FX</span>
                                 </label>
-                                <span role="tooltip" class="pointer-events-none absolute top-full mt-1.5 right-0 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Sound Effects: spoken timer call-outs. Mute and volume sit next to the clock.<span id="sfx-support-note" class="hidden block text-rose-400 mt-1">Speech isn't supported in this browser.</span></span>
+                                <span role="tooltip" class="pointer-events-none absolute bottom-full mb-1.5 right-0 z-30 w-48 p-2.5 rounded-xl bg-slate-950 border border-slate-700 shadow-2xl text-[11px] leading-snug text-slate-300 text-left normal-case tracking-normal font-normal opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">Sound Effects: spoken timer call-outs. Mute and volume sit next to the clock.<span id="sfx-support-note" class="hidden block text-rose-400 mt-1">Speech isn't supported in this browser.</span></span>
                             </div>
                         </div>
                     </div>
@@ -377,24 +381,20 @@
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col flex-1">
                 <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                     <h2 class="text-base font-bold text-white flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <i class="fa-solid fa-users text-amber-500"></i> Player Roster
+                        <i class="fa-solid fa-users text-amber-500"></i> Roster
                         <span id="player-count-badge" class="text-xs bg-slate-800 text-slate-300 font-extrabold px-2 py-0.5 rounded-full border border-slate-700">0</span>
-                        <span title="Players are randomly split between tables for Round 1" class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider whitespace-nowrap"><i class="fa-solid fa-shuffle mr-1"></i>Random Swiss Rounds</span>
+                        
                     </h2>
-                </div>
-
-                <fieldset id="roster-fieldset" class="border-0 p-0 m-0 min-w-0 flex flex-col flex-1">
+<div id="roster-actions" class="flex items-center gap-1.5 shrink-0">
+<button type="submit" form="add-player-form" class="px-3 py-1.5 bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25 font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-plus"></i> Players</button>
+<button type="button" onclick="window.quickAddSamplePlayers()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg border border-slate-700 flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Examples</button>
+</div>
+</div>
+<fieldset id="roster-fieldset" class="border-0 p-0 m-0 min-w-0 flex flex-col flex-1">
                 <!-- Add Player Form -->
                 <form id="add-player-form" onsubmit="window.handleAddPlayer(event)" class="flex flex-col gap-2 mb-4">
                     <textarea id="player-name-input" rows="2" placeholder="Enter monster name(s)... (comma or new line separated)" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors resize-none"></textarea>
-                    <div class="flex items-stretch gap-2">
-                        <button type="submit" class="shrink-0 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap">
-                            <i class="fa-solid fa-plus"></i> Add Player(s)
-                        </button>
-                        <button type="button" onclick="window.quickAddSamplePlayers()" class="flex-1 min-w-0 px-2 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition-colors flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap">
-                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> +4 Monsters (Quick Add)
-                        </button>
-                    </div>
+                    
                 </form>
 
                 <!-- Player List Container -->
@@ -410,14 +410,14 @@
 
             <!-- Navigation Tabs for Rounds & Standings -->
             <div class="flex flex-col border-b border-slate-800 pb-3 gap-3">
-                <div class="flex items-center justify-between" id="tab-controls">
-                    <div class="flex gap-2">
-                        <button onclick="window.switchTab('rounds')" id="tab-btn-rounds" class="px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 cursor-pointer">
+                <div class="flex items-center justify-between min-w-0" id="tab-controls">
+                    <div class="flex gap-2 overflow-x-auto whitespace-nowrap custom-scrollbar pb-1 max-w-full">
+                        <button onclick="window.switchTab('rounds')" id="tab-btn-rounds" class="shrink-0 shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 transition-all flex items-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-gamepad"></i> Tournament
                         </button>
-                        <button onclick="window.switchTab('standings')" id="tab-btn-standings" class="px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer">
+                        <button onclick="window.switchTab('standings')" id="tab-btn-standings" class="shrink-0 shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-list-ol"></i> Leaderboard
-                        </button>
+</button><button type="button" disabled title="Coming soon" class="shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-600 border border-dashed border-slate-700 flex items-center gap-2 cursor-not-allowed opacity-70"><i class="fa-solid fa-trophy"></i> Hall of Fame <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">Coming soon</span></button><button type="button" disabled title="Coming soon" class="shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-600 border border-dashed border-slate-700 flex items-center gap-2 cursor-not-allowed opacity-70"><i class="fa-solid fa-chart-simple"></i> Statistics <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">Coming soon</span></button>
                     </div>
                 </div>
             </div>
@@ -437,89 +437,42 @@
                 </div>
                 
                 <!-- Round Header & Workflows -->
-                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
-                    <div class="flex flex-wrap items-center justify-between gap-4 relative z-10">
-                        
-                        <!-- Title & Clock Badge -->
-                        <div class="flex items-center gap-3">
-                            <div class="bg-amber-500/20 text-amber-400 p-2.5 rounded-xl border border-amber-500/30">
-                                <i class="fa-solid fa-trophy text-xl"></i>
-                            </div>
-                            <div>
-                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                    <h2 id="round-title-display" class="text-2xl font-extrabold text-white tracking-tight">Round 1</h2>
-                                    <span id="game-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-300 border border-slate-700 uppercase tracking-wider whitespace-nowrap">Game 1 of 2</span>
-                                    <span id="round-status-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-400 border border-slate-700 uppercase tracking-wider">
-                                        Waiting
-                                    </span>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
-                                    <span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider">30:00</span>
-                                    <!-- Sound controls: mute + volume -->
-                                    <div id="sound-controls" class="flex items-center gap-1">
-                                        <button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors">
-                                            <i id="mute-icon" class="fa-solid fa-volume-high text-xs"></i>
-                                        </button>
-                                        <button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Volume" title="Volume" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors">
-                                            <i class="fa-solid fa-sliders text-xs"></i>
-                                        </button>
-                                    </div>
-                                    <span id="round-timer-state" class="text-xs text-slate-400 font-medium"></span>
-                                </div>
-                            </div>
-                        </div>
+                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+<div>
+<div class="flex flex-wrap items-center gap-2">
+<h2 id="round-title-display" class="text-2xl font-extrabold text-white tracking-tight">Round 1</h2>
+<span id="game-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-300 border border-slate-700 uppercase tracking-wider whitespace-nowrap">Game 1 of 2</span>
+<span id="round-status-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-400 border border-slate-700 uppercase tracking-wider">Waiting</span>
+</div>
+<p id="round-timer-state" class="text-xs text-slate-400 font-medium mt-1"></p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex flex-wrap items-center gap-3 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2">
+<span id="round-clock" class="font-mono text-3xl font-black text-amber-400 tracking-wider">30:00</span>
+<div id="timer-adjust-group" class="flex items-center gap-1">
+<button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="h-8 px-2.5 text-xs font-bold rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
+<button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="h-8 px-2.5 text-xs font-bold rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">+5m</button>
+</div>
+<button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden h-8 px-3 text-xs font-bold rounded-lg bg-slate-800 border border-slate-700 text-amber-400 hover:bg-slate-700 flex items-center gap-1.5 cursor-pointer transition-colors"><i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span></button>
+<div id="sound-controls" class="flex items-center gap-1 sm:pl-3 sm:border-l border-slate-800">
+<button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-xs"></i></button>
+<button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Volume" title="Volume" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-xs"></i></button>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-2 sm:ml-auto">
+<button id="btn-start-round" onclick="window.startCurrentGame()" class="h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-play"></i> Start</button>
+<button id="btn-skip-game" onclick="window.skipGame()" title="Skip this game" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"><i class="fa-solid fa-forward"></i> Skip</button>
+<button id="btn-restore-game" onclick="window.restoreGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"><i class="fa-solid fa-rotate-left"></i> Restore Game</button>
+<button id="btn-next-game" onclick="window.goToNextGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span></button>
+<button id="btn-generate-next" onclick="window.generateNextRound()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-forward-step"></i> <span id="generate-next-label">Generate Next Round</span></button>
+<button id="btn-trigger-semis" onclick="window.triggerSemis()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white"><i class="fa-solid fa-medal"></i> Semis</button>
+<button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30"><i class="fa-solid fa-crown"></i> Finals</button>
+<button id="btn-crown-champion" onclick="window.crownChampion()" disabled class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950"><i class="fa-solid fa-award"></i> Crown The Champion</button>
+</div>
+</div>
+</div>
 
-                        <!-- Action Control Buttons -->
-                        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
-                            
-                            <!-- Start Round -->
-                            <button id="btn-start-round" onclick="window.startCurrentGame()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
-                                <i class="fa-solid fa-play"></i> Start
-                            </button>
 
-                            <!-- Skip Game (only before a game has started) -->
-                            <button id="btn-skip-game" onclick="window.skipGame()" title="Skip this game" class="hidden px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i class="fa-solid fa-forward"></i> Skip
-                            </button>
-
-                            <!-- Restore a skipped game -->
-                            <button id="btn-restore-game" onclick="window.restoreGame()" title="Put this game back in the tournament" class="hidden px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i class="fa-solid fa-rotate-left"></i> Restore Game
-                            </button>
-
-                            <!-- Pause / Resume Round -->
-                            <button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span>
-                            </button>
-
-                            <!-- Time Adjustments -->
-                            <div id="timer-adjust-group" class="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1 gap-1">
-                                <button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="px-2.5 py-1 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer">-5m</button>
-                                <button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="px-2.5 py-1 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer">+5m</button>
-                            </div>
-
-                            <!-- Next Game in this Round -->
-                            <button id="btn-next-game" onclick="window.goToNextGame()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
-                                <i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span>
-                            </button>
-
-                            <!-- Generate Next Round / Additional Round -->
-                            <button id="btn-generate-next" onclick="window.generateNextRound()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5">
-                                <i class="fa-solid fa-forward-step"></i> <span id="generate-next-label">Generate Next Round</span>
-                            </button>
-                            
-                            <!-- Grand Finals Trigger -->
-                            <button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" class="hidden px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer">
-                                <i class="fa-solid fa-crown"></i> Trigger Grand Finals
-                            </button>
-
-                            <!-- Crown The Champion Trigger -->
-                            <button id="btn-crown-champion" onclick="window.crownChampion()" class="hidden px-4 py-2.5 rounded-xl bg-slate-800 text-slate-500 border border-slate-700 font-bold text-sm transition-all flex items-center gap-2 cursor-not-allowed" disabled>
-                                <i class="fa-solid fa-award"></i> Crown The Champion
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Tables Container -->
                 <div class="relative">
@@ -628,186 +581,9 @@
     <!-- Toast Notification Overlay -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Rules Scrollable Modal Dialog -->
-    <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-        <div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
-            
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between p-5 border-b border-slate-800 bg-slate-900/80">
-                <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                        <i class="fa-solid fa-book-open text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-extrabold text-white text-base">Tournament Rules & Guidelines</h3>
-                        <p class="text-xs text-slate-400">Official rules, scoring system, and clarifications</p>
-                    </div>
-                </div>
-                <button onclick="window.closeRulesModal()" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Modal Content (Scrollable) -->
-            <div class="p-6 overflow-y-auto custom-scrollbar space-y-6 text-slate-300 text-xs leading-relaxed">
-                
-                <!-- Goal Banner -->
-                <div class="bg-gradient-to-r from-amber-500/10 to-amber-700/10 border border-amber-500/30 rounded-xl p-4 flex items-center gap-3">
-                    <i class="fa-solid fa-trophy text-2xl text-amber-400 shrink-0"></i>
-                    <div>
-                        <span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span>
-                        <p class="font-bold text-white text-sm">Power up to claim first place podium.</p>
-                    </div>
-                </div>
-
-                <!-- Rules Section -->
-                <div>
-                    <h4 class="text-sm font-extrabold text-white mb-3 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
-                        <i class="fa-solid fa-scroll text-amber-400"></i> Rules
-                    </h4>
-
-                    <div class="space-y-4">
-                        <!-- Drafting -->
-                        <div>
-                            <h5 class="font-bold text-slate-100 text-xs mb-1.5 flex items-center gap-1.5">
-                                <i class="fa-solid fa-dragon text-amber-400"></i> Drafting:
-                            </h5>
-                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                                <li>Players select one monster from the pool.</li>
-                                <li>After each round, players may draft a different monster from the pool.</li>
-                                <li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li>
-                            </ul>
-                        </div>
-
-                        <!-- Play -->
-                        <div>
-                            <h5 class="font-bold text-slate-100 text-xs mb-1.5 flex items-center gap-1.5">
-                                <i class="fa-solid fa-dice text-amber-400"></i> Play:
-                            </h5>
-                            <p class="mb-1 text-slate-400">Play each game as per normal rules except the following:</p>
-                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                                <li>The Power Up expansion must be used.</li>
-                                <li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li>
-                            </ul>
-                        </div>
-
-                        <!-- Rounds -->
-                        <div>
-                            <h5 class="font-bold text-slate-100 text-xs mb-1.5 flex items-center gap-1.5">
-                                <i class="fa-solid fa-route text-amber-400"></i> Rounds:
-                            </h5>
-                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                                <li>Set the number of games per round, the recommended is 1-2.</li>
-                                <li>Set the number of total rounds in the tournament, recommended is 2-3.</li>
-                                <li>Once a round is complete, the top seed players will move to the same table. This is repeated for the low seed players.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scoring Section -->
-                <div>
-                    <h4 class="text-sm font-extrabold text-white mb-3 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
-                        <i class="fa-solid fa-star text-amber-400"></i> Scoring
-                    </h4>
-                    <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2">
-                        <li>Once a player wins, they finish their turn, claim first place and the game is over.</li>
-                        <li>Second and third places are determined by VPs + Health, highest wins. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li>
-                        <li>All the players' places, VPs and HPs should be entered into the Manager App.</li>
-                    </ul>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                            <span class="font-bold text-white block mb-1">Places</span>
-                            <ul class="space-y-0.5 text-slate-400">
-                                <li><strong class="text-amber-400">1st Place:</strong> 3 pts</li>
-                                <li><strong class="text-slate-300">2nd Place:</strong> 2 pts</li>
-                                <li><strong class="text-amber-600">3rd Place:</strong> 1 pt</li>
-                                <li><strong class="text-slate-500">4th-6th Place:</strong> 0 pts</li>
-                            </ul>
-                        </div>
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                            <span class="font-bold text-white block mb-1">Bonuses <span class="text-slate-500 font-semibold">(optional)</span></span>
-                            <ul class="space-y-0.5 text-slate-400">
-                                <li><strong class="text-rose-400">Smasher:</strong> 1 pt (most kills)</li>
-                                <li><strong class="text-emerald-400">Tanker:</strong> 1 pt (most health)</li>
-                                <li><strong class="text-purple-400">Collector:</strong> 1 pt (most cards)</li>
-                                <li><strong class="text-cyan-400">Harvester:</strong> 1 pt (most energy)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Clarifications Section -->
-                <div>
-                    <h4 class="text-sm font-extrabold text-white mb-3 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
-                        <i class="fa-solid fa-circle-info text-cyan-400"></i> Clarifications
-                    </h4>
-
-                    <div class="space-y-3 text-slate-400">
-                        <div>
-                            <strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.
-                        </div>
-                        <div>
-                            <strong class="text-slate-200">Places:</strong> In games where 2nd and/or 3rd places are not claimed, those points are not awarded.
-                        </div>
-                        <div>
-                            <strong class="text-slate-200">Bonuses:</strong> Awarded to players at the end of the game.
-                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2 mt-1">
-                                <li><strong class="text-slate-300">Smasher:</strong> Granted to the player with the most kills. A kill is when an enemy is eliminated, the active player is awarded that kill.</li>
-                                <li><strong class="text-slate-300">Tanker, Collector, or Harvester:</strong> Granted to the player who has the most Health, Power Cards, or Energy, respectively. In case of ties, each player is awarded the bonus.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <strong class="text-slate-200">Expansions:</strong> The Power Up must be used, all other expansions are up to the Tournament Managers.
-                        </div>
-                        <div>
-                            <strong class="text-slate-200">Cards:</strong>
-                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2 mt-1">
-                                <li>It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- General Section -->
-                <div>
-                    <h4 class="text-sm font-extrabold text-white mb-3 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
-                        <i class="fa-solid fa-handshake text-emerald-400"></i> General
-                    </h4>
-
-                    <div class="space-y-3 text-slate-400">
-                        <div>
-                            <strong class="text-slate-200">Rules:</strong> Players should always follow the rules to their utmost ability.
-                        </div>
-                        <div>
-                            <strong class="text-slate-200">Missed abilities:</strong> In case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible, as a fun atmosphere should be the priority over simply gaining an edge.
-                        </div>
-                        <div>
-                            <strong class="text-slate-200">Cheating:</strong> In cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.
-                        </div>
-                        <div>
-                            <strong class="text-slate-200">Tips and Tricks:</strong>
-                            <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2 mt-1">
-                                <li>Follow the dice, let your first roll guide your turn.</li>
-                                <li>Follow your first Power Up, let it guide your play style.</li>
-                                <li>Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="p-4 border-t border-slate-800 bg-slate-900/80 flex justify-end">
-                <button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors cursor-pointer">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Update Log Modal -->
+    <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRulesModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-book-open text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Rules &amp; Guidelines</h3><p class="text-xs text-slate-400">Rules, scoring and clarifications</p></div></div><button onclick="window.closeRulesModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4"><span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span><p class="font-bold text-white text-sm">Battle to claim first place podium.</p></div><p><strong class="text-slate-200">Guides:</strong> Find Monster guides at <a href="https://kingofguide.github.io/tokyo" target="_blank" rel="noopener" class="text-amber-400 underline">kingofguide.github.io/tokyo</a></p><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Rules</h4><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Play</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Play each game as per normal rules except the following:</li><li>The Power Up expansion must be used.</li><li>A maximum of 8 dice is allowed per player despite monster abilities.</li><li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Drafting</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Players select one monster from the pool.</li><li>After each round, players may draft a different monster from the pool.</li><li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Rounds</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Set the number of games per round, the recommended is 1-2.</li><li>Set the number of total rounds in the tournament, recommended is 2-3.</li><li>Once a round is complete, the top seed players will move to the same table. This is repeated for the low seed players.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Scoring</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Once a player is about to win, they finish their turn, claim first place and the game is over.</li><li>Second and third places are determined by VPs + Health, highest wins. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>If a player is eliminated, they do not score VPs and HPs.</li><li>All the players places, VPs and HPs should be entered into the Manager App.</li><li><strong class="text-slate-200">Places:</strong> 1st = 3pts, 2nd = 2pts, 3rd = 1pt, 4th-6th = 0pt</li><li><strong class="text-slate-200">Bonuses (optional):</strong> Smasher = 1pt (most kills), Tanker = 1pt (most health), Collector = 1pt (most cards), Harvester = 1pt (most energy)</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Clarifications</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.</li><li><strong class="text-slate-200">Bonuses:</strong> optional points awarded to players at the end of the game.</li><li><strong class="text-slate-200">Smasher:</strong> granted to the player with the most kills, a kill is when an enemy is eliminated, the active player is awarded that kill.</li><li><strong class="text-slate-200">Tanker, Collector, or Harvester:</strong> granted to the player who has the most Health, Power Cards, or Energy, respectively at the end state of the game. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li><strong class="text-slate-200">Expansions:</strong> the Power Up must be used, all other expansions are up to the Tournament Managers.</li><li><strong class="text-slate-200">Cards:</strong> It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">General</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Rules:</strong> players should always follow the rules to their utmost ability.</li><li><strong class="text-slate-200">Missed abilities:</strong> in case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible as a fun atmosphere should be the priority over simply gaining an edge.</li><li><strong class="text-slate-200">Cheating:</strong> in cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.</li><li><strong class="text-slate-200">Tips and Tricks:</strong> Follow the dice, let your first roll guide your turn. Follow your first Power Up, let it guide your play style. Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Disclaimer</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>The Power Tournament format is a work in progress and can be updated at any time, including during live games.</li><li>Decisions will be made by the Tournament Managers and are final.</li><li>Feedback is welcome, please email kingofguide(at)outlook(dot)com.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
+<div id="about-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeAboutModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-circle-question text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">About</h3><p class="text-xs text-slate-400">A note from the creator</p></div></div><button onclick="window.closeAboutModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><p class="font-bold text-white text-sm">Welcome fellow Kaiju battler,</p><p>I'm the creator of this Tournament Manager. It's a fun project I've been working on leading up to a tournament with friends.</p><p>While writing scores down on paper and organising brackets in real time is doable. I'd really rather not. Especially if I'm playing, it's the last thing I want to manage.</p><p>Enter this app! Where it does all that for me... and more.</p><p>Thanks to Claude, I vibe coded this sucker in no time. But my brain has got the best of me. "What if I add this? What if I make that?"</p><p>So welcome to my current obsession.</p></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeAboutModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
+<!-- Update Log Modal -->
     <div id="log-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeLogModal()">
         <div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
 
@@ -938,6 +714,8 @@
         </div>
     </div>
 
+    <div id="player-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4" onclick="if(event.target===this) window.closePlayerMenu()"><div class="bg-slate-900 border border-slate-800 w-full sm:max-w-sm rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar p-4 space-y-4"><div class="flex items-center justify-between"><h3 class="font-extrabold text-white text-sm"><i class="fa-solid fa-gear text-amber-400 mr-1.5"></i>Player Settings</h3><button type="button" onclick="window.closePlayerMenu()" aria-label="Close" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark"></i></button></div><div id="player-modal-body" class="space-y-4"></div></div></div>
+
     <!-- Bonus Modal -->
     <div id="bonus-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeBonusModal()">
         <div class="bg-slate-900 border border-slate-800 max-w-sm w-full rounded-2xl p-5 shadow-2xl space-y-4">
@@ -985,6 +763,10 @@
             { icon: 'fa-crown', borderColor: 'border-amber-400/60', badgeBg: 'bg-amber-400/20 text-amber-300 border-amber-400/30', iconColor: 'text-amber-400' }
         ];
 
+        const BTN_PRIMARY = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25", BTN_SECONDARY = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700", BTN_SEMIS = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white", BTN_FINALS = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30", BTN_CROWN = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950";
+        window.activePlayers = () => window.tournament.players.filter(p => !p.left);
+        function needsSemis() { return window.activePlayers().length >= 4; }
+
         // Header Dropdown Menu Controls
         window.toggleHeaderMenu = function(event) {
             if (event) event.stopPropagation();
@@ -1011,8 +793,39 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.28';
+        const APP_VERSION = '2.32';
         const CHANGELOG = [
+            { "version": "2.32", "date": "November 2026", "items": [
+                "Small tournaments (players fit on one table) now keep everyone on a single table for the Semis and Finals instead of splitting them up",
+                "On a shared table the Semis and Finals players are tagged, and consolation players are shown with a softer dashed seat",
+                "In a shared Finals table only the finalists score, and ranks work as normal for the whole game, so a consolation player can finish above a finalist",
+                "In a shared Semis table everyone scores, with Semi and Consolation tags showing who is on track for the Finals"
+            ]},
+            { "version": "2.31", "date": "November 2026", "items": [
+                "Semis now appear for any tournament with 4 or more players, and always show on the timeline before the Finals",
+                "When the last round is done, Trigger Semis appears just like the Finals button; the Finals follow the Semis",
+                "Finals take the top half of each Semis table",
+                "Selected buttons now share the softer Quick Start look: Total Rounds, Games per Round, Options, tabs, Start, Lock and the roster Players button",
+                "Slider fills use the same softer amber",
+                "Generate is now the only bold orange button, and the green buttons are gone"
+            ]},
+            { "version": "2.30", "date": "November 2026", "items": [
+                "New Semis round between the rounds and the Finals: two scored tables, consolation tables for everyone else, and one or two games depending on Games per Round",
+                "Finals take the top half of each Semis table",
+                "Player settings cog on every seat: rename, VPs, HPs, bonuses, monster and a Left option that keeps a player out of future tables",
+                "Round header redesigned: timer, timer controls and sound grouped together, seating note under the title, uniform action buttons",
+                "Table cards redesigned: lock button in the title row, status tag replaces the icon, neutral colours that follow the lock state",
+                "Semis and Finals share matching buttons, in two shades of purple and pink",
+                "Rules pop-up no longer rewrites the page address on close"
+            ]},
+            { "version": "2.29", "date": "November 2026", "items": [
+                "Ranks are now automatic from VPs + HPs, and a player on 0 HP takes the lowest rank. The rank dropdown is gone; the seat badge shows the rank and tables re-order when results are locked",
+                "Option tooltips in Settings now open above the options",
+                "Roster: Players and Examples buttons moved to the header, Swiss tag removed, names can be edited before the tournament starts",
+                "Leaderboard tabs: Hall of Fame and Statistics added as Coming Soon, tabs scroll sideways on mobile",
+                "Timeline completed games now use the amber colour",
+                "New About page in the Menu, Rules page rewritten"
+            ]},
             {
                         "version": "2.28",
                         "date": "November 2026",
@@ -1272,6 +1085,10 @@
             if (e.key === 'Escape') window.closeLogModal();
         });
 
+        window.openAboutModal = function() { document.getElementById('about-modal').classList.remove('hidden'); };
+        window.closeAboutModal = function() { document.getElementById('about-modal').classList.add('hidden'); };
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') window.closeAboutModal(); });
+
         // Rules Modal Controls. The pop-up has its own link (#rules) so it can be shared.
         window.openRulesModal = function() {
             document.getElementById('rules-modal').classList.remove('hidden');
@@ -1283,7 +1100,7 @@
         window.closeRulesModal = function() {
             document.getElementById('rules-modal').classList.add('hidden');
             if (location.hash === '#rules') {
-                try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { location.hash = ''; }
+                try { history.replaceState(null, '', location.href.split('#')[0]); } catch (e) { location.hash = ''; }
             }
         };
 
@@ -1491,7 +1308,7 @@
 
         // Quick start templates: from a short 4 player tournament up to a long 6 player one
         const TEMPLATES = [
-            { key: 'melee', name: 'Melee', icon: 'fa-hand-fist', players: 4, games: 1, rounds: 3, timer: 40 },
+            { key: 'melee', name: 'Melee', icon: 'fa-hand-fist', players: 4, games: 1, rounds: 1, timer: 40 },
             { key: 'clash', name: 'Clash', icon: 'fa-fire',      players: 5, games: 2, rounds: 2, timer: 45 },
             { key: 'brawl', name: 'Brawl', icon: 'fa-user-ninja',      players: 6, games: 3, rounds: 2, timer: 50 }
         ];
@@ -1628,7 +1445,7 @@
             document.querySelectorAll('.opt-btn').forEach(btn => {
                 const active = parseInt(btn.dataset.val) === current[btn.dataset.group];
                 btn.className = 'opt-btn flex flex-col items-center gap-1 py-2 rounded-xl border transition-colors cursor-pointer ' +
-                    (active ? 'bg-amber-500 border-amber-400 text-slate-950'
+                    (active ? 'bg-amber-500/15 border-amber-400 text-amber-300'
                             : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-amber-500/50 hover:text-amber-300');
             });
         };
@@ -1713,6 +1530,7 @@
             if (fieldset) fieldset.disabled = locked;
             const roster = document.getElementById('roster-fieldset');
             if (roster) roster.disabled = locked;
+            document.querySelectorAll('#roster-actions button').forEach(b => b.disabled = locked);
             if (icon) icon.className = (locked ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open') + ' text-xs';
             if (btn) {
                 const label = locked ? 'Unlock settings' : 'Lock settings';
@@ -1893,6 +1711,14 @@
             }
         };
 
+        window.editPlayer = function(id) {
+            const p = window.tournament.players.find(x => x.id === id);
+            if (!p) return;
+            const n = (prompt('Edit player name', p.name) || '').trim();
+            if (!n || n === p.name) return;
+            if (window.tournament.players.some(x => x.id !== id && x.name.toLowerCase() === n.toLowerCase())) { window.showToast('That name already exists.', 'error'); return; }
+            p.name = n; window.saveTournament(); window.renderAll();
+        };
         window.removePlayer = function(id) {
             window.tournament.players = window.tournament.players.filter(p => p.id !== id);
             window.saveTournament();
@@ -1957,7 +1783,7 @@
             if (m) {
                 return `<button type="button" onclick="window.openMonsterPicker('${playerId}')" title="${escapeHtml(m.name)} (tap to change)" aria-label="Monster: ${escapeHtml(m.name)}, tap to change" class="${base} font-semibold border-slate-700 bg-slate-800/60 text-slate-400 hover:text-amber-300 hover:border-amber-500/50">${m.code}</button>`;
             }
-            return `<button type="button" onclick="window.openMonsterPicker('${playerId}')" title="Add a monster" aria-label="Add a monster" class="${base} border-dashed border-slate-700 text-slate-500 hover:text-amber-300 hover:border-amber-500/50">+ MON</button>`;
+            return `<button type="button" onclick="window.openMonsterPicker('${playerId}')" title="Add a monster" aria-label="Add a monster" class="${base} border-dashed border-slate-700 text-slate-500 hover:text-amber-300 hover:border-amber-500/50">+ MONSTER</button>`;
         };
 
         let monsterPickerPlayerId = null;
@@ -2086,9 +1912,7 @@
                         <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 font-bold flex items-center justify-center text-[10px]">${idx + 1}</span>
                         <span class="text-slate-200 font-bold">${escapeHtml(player.name)}</span>
                     </div>
-                    <button type="button" onclick="window.removePlayer('${player.id}')" class="text-slate-500 hover:text-rose-400 p-1 transition-colors cursor-pointer" title="Remove Player">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
+                    <div class="flex items-center gap-1"><button type="button" onclick="window.editPlayer('${player.id}')" class="text-slate-500 hover:text-amber-400 p-1 transition-colors cursor-pointer" title="Edit Name"><i class="fa-solid fa-pen"></i></button><button type="button" onclick="window.removePlayer('${player.id}')" class="text-slate-500 hover:text-rose-400 p-1 transition-colors cursor-pointer" title="Remove Player"><i class="fa-solid fa-trash-can"></i></button></div>
                 </div>
             `).join('');
         };
@@ -2155,7 +1979,7 @@
                     ...t,
                     id: `${t.id}_g${g + 1}`,
                     completed: false,
-                    seats: t.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: DEFAULT_HP }))
+                    seats: t.seats.map(seat => ({ playerId: seat.playerId, rank: 0, vp: 0, hp: DEFAULT_HP, scored: seat.scored, tier: seat.tier }))
                 }))
             }));
             return { name, isFinals: !!isFinals, games, tableSize: window.tournament.settings.tableSize, monsters: {} };
@@ -2171,7 +1995,7 @@
             return buildRound("Round 1", templates, gamesPerRound, false);
         }
 
-        const GENERATE_BTN_PRIMARY = "px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
+        const GENERATE_BTN_PRIMARY = "px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
         const GENERATE_BTN_SUBTLE = "px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
 
         // Bright green call-to-action before a tournament exists, subtle once one is underway
@@ -2269,7 +2093,7 @@
 
             // Re-seat everyone by their standings after the whole round
             const standings = window.calculateStandings();
-            let rankedPlayers = standings.map(s => window.tournament.players.find(p => p.id === s.id)).filter(Boolean);
+            let rankedPlayers = standings.map(s => window.tournament.players.find(p => p.id === s.id)).filter(Boolean).filter(p => !p.left);
             if (!standings.some(s => s.gamesPlayed > 0)) rankedPlayers = rankedPlayers.sort(() => 0.5 - Math.random());
             const tableSize = window.tournament.settings.tableSize;
             const tables = partitionPlayersEvenly(rankedPlayers, tableSize);
@@ -2288,6 +2112,41 @@
             window.showToast(`Round ${nextRoundNum} seated by standings. Top seeds meet on Table 1.`, "success");
         };
 
+        window.triggerSemis = function() {
+            const cur = window.getCurrentRound();
+            const size = window.tournament.settings.tableSize || 5;
+            const pool = window.calculateStandings().map(x => window.tournament.players.find(p => p.id === x.id)).filter(p => p && !p.left);
+            if (pool.length < 4) { window.showToast("Not enough players for Semis.", "error"); return; }
+            if (cur) cur.finalsTriggered = true;
+            const top = pool.slice(0, size * 2), A = [], B = [];
+            top.forEach((p, i) => ((i % 4 === 0 || i % 4 === 3) ? A : B).push(p));
+            const single = pool.length <= size;
+            const tables = single ? [(() => {
+                const t = createTableStructure(0, pool, true);
+                t.seedTag = 'Semis Table'; t.isFinalsTable = true;
+                const q = Math.ceil(pool.length / 2);
+                t.seats.forEach((x, i) => { x.tier = i < q ? 'in' : 'out'; });
+                return t;
+            })()] : [A, B].map((g, i) => {
+                const t = createTableStructure(i, g, true);
+                t.seedTag = `Semi ${i + 1}`; t.isFinalsTable = true; return t;
+            });
+            (single ? [] : partitionPlayersEvenly(pool.slice(size * 2), size)).forEach((g, i) => {
+                const t = createTableStructure(i + 2, g, false);
+                t.seedTag = 'Consolation'; t.isFinalsTable = false; tables.push(t);
+            });
+            const gpr = window.tournament.settings.gamesPerRound || 1;
+            const r = buildRound('Semis', tables, Math.min(2, Math.ceil(gpr / 2)), false);
+            r.isSemis = true;
+            r.monsters = { ...((cur && cur.monsters) || {}) };
+            window.tournament.rounds.push(r);
+            window.tournament.currentRound = window.tournament.rounds.length - 1;
+            window.tournament.currentGame = 0;
+            isRoundActive = false;
+            window.saveTournament(); window.renderAll();
+            window.showToast("Semis generated! Two scored tables, the rest are consolation.", "success");
+        };
+
         window.triggerGrandFinals = function() {
             const currentRoundObj = window.getCurrentRound();
             if (currentRoundObj) {
@@ -2303,10 +2162,24 @@
             const targetTableSize = window.tournament.settings.tableSize;
             const rankedPlayers = standings.map(s => window.tournament.players.find(p => p.id === s.id)).filter(Boolean);
 
-            const finalistPlayers = rankedPlayers.slice(0, targetTableSize);
-            const consolationPlayers = rankedPlayers.slice(targetTableSize);
+            const pool = rankedPlayers.filter(p => !p.left);
+            let finalistPlayers, consolationPlayers;
+            if (currentRoundObj && currentRoundObj.isSemis) {
+                const idx = id => pool.findIndex(p => p.id === id);
+                const adv = [];
+                currentRoundObj.games[0].tables.filter(t => t.isFinalsTable).forEach((t, i) => {
+                    const k = Math.ceil(t.seats.length / 2);
+                    t.seats.map(x => x.playerId).filter(id => idx(id) >= 0).sort((a, b) => idx(a) - idx(b)).slice(0, k).forEach(id => adv.push(pool[idx(id)]));
+                });
+                finalistPlayers = pool.filter(p => adv.includes(p)).slice(0, targetTableSize);
+                consolationPlayers = pool.filter(p => !finalistPlayers.includes(p));
+            } else {
+                finalistPlayers = pool.slice(0, targetTableSize);
+                consolationPlayers = pool.slice(targetTableSize);
+            }
 
             const finalTables = [];
+            const single = pool.length <= targetTableSize;
 
             finalTables.push({
                 id: 't_finals_champ_' + Date.now(),
@@ -2319,10 +2192,10 @@
                 iconColor: "text-amber-400",
                 isFinalsTable: true,
                 completed: false,
-                seats: finalistPlayers.map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: DEFAULT_HP }))
+                seats: (single ? pool : finalistPlayers).map(p => ({ playerId: p.id, rank: 0, vp: 0, hp: DEFAULT_HP, scored: single ? finalistPlayers.includes(p) : undefined }))
             });
 
-            if (consolationPlayers.length > 0) {
+            if (consolationPlayers.length > 0 && !single) {
                 const consolationGroups = partitionPlayersEvenly(consolationPlayers, targetTableSize);
                 consolationGroups.forEach((group, idx) => {
                     const tableNum = idx + 2;
@@ -2516,12 +2389,13 @@
                 round.games.forEach((game) => {
                     if (game.skipped) return;
                     game.tables.forEach((table) => {
-                        if (round.isFinals && table.isFinalsTable === false) {
+                        if ((round.isFinals || round.isSemis) && table.isFinalsTable === false) {
                             return;
                         }
 
                         if (table.completed) {
                             table.seats.forEach(seat => {
+                                if (seat.scored === false) return;
                                 const p = stats[seat.playerId];
                                 if (p) {
                                     p.gamesPlayed += 1;
@@ -2570,7 +2444,7 @@
                 return `
                     <tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="py-3 px-4">${rankBadge}</td>
-                        <td class="py-3 px-4 font-bold text-white">${escapeHtml(s.name)}</td>
+                        <td class="py-3 px-4 font-bold text-white">${escapeHtml(s.name)}${(window.tournament.players.find(p => p.id === s.id) || {}).left ? ' <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase">Left</span>' : ''}</td>
                         <td class="py-3 px-4 text-center font-semibold text-slate-400">${s.gamesPlayed}</td>
                         <td class="py-3 px-4 text-center font-bold text-emerald-400">${s.wins}</td>
                         <td class="py-3 px-4 text-center font-extrabold text-amber-400 text-base">${s.pts}</td>
@@ -2658,103 +2532,132 @@
         // Table UI Renderer
         function createTableCard(table, game) {
             const card = document.createElement('div');
-            const isUnstarted = !game.started;
-            const borderColor = table.borderColor || 'border-slate-800';
-            const badgeBg = table.badgeBg || 'bg-slate-800 text-slate-300 border-slate-700';
-            const iconColor = table.iconColor || 'text-amber-500';
-            const tableIcon = table.tableIcon || 'fa-gamepad';
-            const tableTitle = table.tableName || 'Table';
+            const unstarted = !game.started, locked = !!table.completed;
+            const round = window.getCurrentRound();
+            const special = round && (round.isFinals || round.isSemis) && table.isFinalsTable !== false;
+            const accent = round && round.isFinals ? 'border-fuchsia-500/50' : 'border-violet-500/50';
+            const border = locked ? 'border-amber-500/50' : (special ? accent : 'border-slate-700');
             const seedTag = table.seedTag || `Table ${table.tableNumber}`;
-
-            card.className = `bg-slate-950 border ${table.completed ? 'border-emerald-500/40' : borderColor} rounded-2xl p-3 shadow-lg flex flex-col justify-between relative overflow-hidden transition-colors`;
-            
+            const seedCls = special ? (round.isFinals ? 'bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30' : 'bg-violet-500/15 text-violet-300 border-violet-500/30') : 'bg-slate-800 text-slate-300 border-slate-700';
+            const statusTag = locked
+                ? '<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-bold uppercase shrink-0"><i class="fa-solid fa-lock mr-1"></i>Locked</span>'
+                : (unstarted ? '<span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold uppercase shrink-0"><i class="fa-solid fa-hourglass-half mr-1"></i>Waiting</span>'
+                             : '<span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-bold uppercase shrink-0"><i class="fa-solid fa-lock-open mr-1"></i>In Play</span>');
+            card.className = `bg-slate-950 border ${border} rounded-2xl p-3 shadow-lg flex flex-col relative overflow-hidden transition-colors`;
             card.setAttribute('ondragover', 'window.handleDragOver(event)');
             card.setAttribute('ondragleave', 'window.handleDragLeave(event)');
             card.setAttribute('ondrop', `window.handleDrop(event, '${table.id}')`);
 
-            const takenRanks = new Set(table.seats.map(s => parseInt(s.rank)).filter(r => r > 0));
-
             const seatsHTML = table.seats.map((seat, sIdx) => {
                 const playerObj = window.tournament.players.find(p => p.id === seat.playerId) || { name: 'Unknown' };
-                const currentSeatRank = parseInt(seat.rank) || 0;
+                const rank = parseInt(seat.rank) || 0;
                 const bonusCount = window.getBonusCount(seat);
-                
-                let rankOptions = `<option value="0">Rank</option>`;
-                for (let r = 1; r <= table.seats.length; r++) {
-                    const sel = currentSeatRank === r ? 'selected' : '';
-                    const isDisabled = (takenRanks.has(r) && currentSeatRank !== r) ? 'disabled' : '';
-                    const disabledLabel = isDisabled ? ' (Taken)' : '';
-                    rankOptions += `<option value="${r}" ${sel} ${isDisabled}>${r}${getOrdinalSuffix(r)}${disabledLabel}</option>`;
-                }
-
+                const left = !!playerObj.left;
+                const inF = round && round.isFinals, inS = round && round.isSemis;
+                const isOut = (inF && seat.scored === false) || (inS && seat.tier === 'out');
+                let roleTag = '';
+                if (inF && seat.scored !== undefined) roleTag = seat.scored === false
+                    ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Consolation</span>'
+                    : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30 uppercase font-bold">Finalist</span>';
+                else if (inS && seat.tier) roleTag = seat.tier === 'out'
+                    ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Consolation</span>'
+                    : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 uppercase font-bold">Semi</span>';
                 return `
-                    <div draggable="true" 
-                         ondragstart="window.handleDragStart(event, '${table.id}', '${seat.playerId}')" 
-                         ondragend="window.handleDragEnd(event)"
-                         class="flex flex-col gap-1 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors cursor-grab active:cursor-grabbing">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">
-                                <i class="fa-solid fa-grip-vertical text-slate-600 mr-1 text-[8px]"></i>${sIdx + 1}
-                            </span>
-                            <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
-                            ${window.monstersEnabled() ? window.monsterTagHTML(seat.playerId) : ''}
+                    <div draggable="true" ondragstart="window.handleDragStart(event, '${table.id}', '${seat.playerId}')" ondragend="window.handleDragEnd(event)"
+                         class="flex items-center gap-2 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors cursor-grab active:cursor-grabbing ${left ? 'opacity-50' : (isOut ? 'opacity-75 border-dashed' : '')}">
+                        <div class="flex-1 min-w-0 flex flex-col gap-1">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">${rank || (sIdx + 1)}</span>
+                                <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
+                                ${roleTag}
+                                ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId) : '')}
+                            </div>
+                            <div class="flex items-center gap-1.5 flex-wrap" ondragstart="event.stopPropagation()">
+                                <button type="button" title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-amber-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-white text-center">${seat.vp}</span></button>
+                                <button type="button" title="Health Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-rose-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">❤️</span><span class="w-6 text-xs font-bold text-white text-center">${seat.hp}</span></button>
+                                ${window.bonusesEnabled() ? `<button type="button" title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="ml-auto flex items-center gap-1 rounded-lg px-1.5 py-0.5 border text-xs font-bold transition-colors cursor-pointer ${bonusCount > 0 ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-950 border-slate-700 text-slate-400 hover:border-amber-500/50 hover:text-amber-300'}"><span class="text-[11px] leading-none">🎖️</span><span>Bonuses</span>${bonusCount > 0 ? `<span class="text-[10px] font-black">+${bonusCount}</span>` : ''}</button>` : ''}
+                            </div>
                         </div>
-                        
-                        <div class="flex items-center gap-1.5 flex-wrap" ondragstart="event.stopPropagation()">
-                            <select onchange="window.updateSeatScore('${table.id}', '${seat.playerId}', 'rank', this.value)" ${isUnstarted ? 'disabled' : ''} class="w-[4.5rem] bg-slate-950 border border-slate-700 rounded-lg px-1.5 py-0.5 text-xs font-bold text-amber-400 focus:outline-none focus:border-amber-500 disabled:opacity-50">
-                                ${rankOptions}
-                            </select>
-                            
-                            <button type="button" title="Victory Points" aria-label="Victory Points, tap to change" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-amber-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors">
-                                <span class="text-[11px] leading-none">⭐</span>
-                                <span class="w-6 text-xs font-bold text-white text-center">${seat.vp}</span>
-                            </button>
-
-                            <button type="button" title="Health Points" aria-label="Health Points, tap to change" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-rose-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors">
-                                <span class="text-[11px] leading-none">❤️</span>
-                                <span class="w-6 text-xs font-bold text-white text-center">${seat.hp}</span>
-                            </button>
-
-                            ${window.bonusesEnabled() ? `<button type="button" title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="ml-auto flex items-center gap-1 rounded-lg px-1.5 py-0.5 border text-xs font-bold transition-colors cursor-pointer ${bonusCount > 0 ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-950 border-slate-700 text-slate-400 hover:border-amber-500/50 hover:text-amber-300'}">
-                                <span class="text-[11px] leading-none">🎖️</span><span>Bonuses</span>${bonusCount > 0 ? `<span class="text-[10px] font-black">+${bonusCount}</span>` : ''}
-                            </button>` : ''}
-                        </div>
-                    </div>
-                `;
+                        <button type="button" onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="shrink-0 w-9 h-9 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-slate-400 hover:text-amber-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-gear text-sm"></i></button>
+                    </div>`;
             }).join('');
 
             card.innerHTML = `
-                <div>
-                    <div class="flex items-center justify-between mb-2 border-b border-slate-800 pb-2">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <h3 class="font-extrabold text-sm text-white flex items-center gap-1.5 truncate">
-                                <i class="fa-solid ${tableIcon} ${iconColor} shrink-0"></i> <span class="truncate">${escapeHtml(tableTitle)}</span>
-                            </h3>
-                            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeBg} shrink-0">${seedTag}</span>
-                        </div>
-                        
-                        <div class="flex items-center gap-2 shrink-0">
-                            ${table.completed ? 
-                                `<span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase"><i class="fa-solid fa-circle-check mr-1"></i> Submitted</span>` :
-                                `<span class="px-2 py-0.5 rounded-full bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold uppercase">In Play</span>`
-                            }
-                        </div>
+                <div class="flex items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                        ${statusTag}
+                        <h3 class="font-extrabold text-sm text-white truncate">${escapeHtml(table.tableName || 'Table')}</h3>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${seedCls} shrink-0 truncate">${escapeHtml(seedTag)}</span>
                     </div>
-
-                    <div class="space-y-1.5 mb-3">
-                        ${seatsHTML}
-                    </div>
-                </div>
-
-                <div class="pt-2 border-t border-slate-900 flex items-center justify-between gap-2">
-                    <button onclick="window.toggleTableComplete('${table.id}')" ${isUnstarted ? 'disabled' : ''} class="flex-1 py-2 rounded-xl ${table.completed ? 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800' : 'bg-emerald-600 hover:bg-emerald-500 text-white'} font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50">
-                        <i class="fa-solid ${table.completed ? 'fa-pen-to-square' : 'fa-check'}"></i> ${table.completed ? 'Unlock Table Results' : 'Submit Table Results'}
+                    <button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="shrink-0 h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700' : 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25'}">
+                        <i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock' : 'Lock'}
                     </button>
                 </div>
-            `;
-
+                <div class="space-y-1.5">${seatsHTML}</div>`;
             return card;
         }
+
+        // ----- Player settings (cog) -----
+        let pmCtx = null;
+        function pmFind() {
+            const game = window.getCurrentGame();
+            const table = game && pmCtx && game.tables.find(t => t.id === pmCtx.tableId);
+            const seat = table && table.seats.find(s => s.playerId === pmCtx.playerId);
+            const player = pmCtx && window.tournament.players.find(p => p.id === pmCtx.playerId);
+            return { game, table, seat, player };
+        }
+        function renderPlayerModal() {
+            const { table, seat, player } = pmFind();
+            if (!seat || !player) { window.closePlayerMenu(); return; }
+            const opts = (max, cur) => Array.from({ length: max + 1 }, (_, n) => `<option value="${n}" ${n === cur ? 'selected' : ''}>${n}</option>`).join('');
+            const sel = 'w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-amber-500';
+            const lbl = 'block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1';
+            const m = window.getPlayerMonster(player.id);
+            document.getElementById('player-modal-body').innerHTML = `
+                <div><label class="${lbl}">Name</label><input type="text" value="${escapeHtml(player.name)}" maxlength="40" onchange="window.pmRename(this.value)" class="${sel}"></div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div><span class="${lbl}">Rank (auto)</span><div class="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-sm font-extrabold text-amber-400 text-center">${parseInt(seat.rank) > 0 ? seat.rank + getOrdinalSuffix(parseInt(seat.rank)) : '-'}</div></div>
+                    <div><label class="${lbl}">⭐ VPs</label><select onchange="window.pmScore('vp', this.value)" class="${sel}">${opts(20, parseInt(seat.vp) || 0)}</select></div>
+                    <div><label class="${lbl}">❤️ HPs</label><select onchange="window.pmScore('hp', this.value)" class="${sel}">${opts(12, parseInt(seat.hp) || 0)}</select></div>
+                </div>
+                ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.BONUS_TYPES.map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${seat.bonuses && seat.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}"><input type="checkbox" ${seat.bonuses && seat.bonuses[b.key] ? 'checked' : ''} onchange="window.toggleBonus('${b.key}', this.checked); window.pmRefresh()" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
+                ${window.monstersEnabled() ? `<div><span class="${lbl}">Monster</span><button type="button" onclick="window.pmMonster()" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-sm font-bold text-slate-200 flex items-center justify-between cursor-pointer"><span>${m ? escapeHtml(m.name) : 'Choose a monster'}</span><i class="fa-solid fa-chevron-right text-xs text-slate-500"></i></button></div>` : ''}
+                <button type="button" onclick="window.pmLeft()" class="w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors ${player.left ? 'bg-amber-500 hover:bg-amber-400 text-slate-950' : 'bg-rose-600 hover:bg-rose-500 text-white'}"><i class="fa-solid ${player.left ? 'fa-rotate-left' : 'fa-person-walking-arrow-right'}"></i> ${player.left ? 'Player is back' : 'Player has left'}</button>
+                ${player.left ? '<p class="text-[11px] text-slate-500">Left players are out of this round and are left out of future tables.</p>' : ''}`;
+        }
+        window.openPlayerMenu = function(tableId, playerId) {
+            pmCtx = { tableId, playerId };
+            bonusModalCtx = { roundIdx: window.tournament.currentRound, gameIdx: window.tournament.currentGame, tableId, playerId };
+            renderPlayerModal();
+            document.getElementById('player-modal').classList.remove('hidden');
+        };
+        window.closePlayerMenu = function() { document.getElementById('player-modal').classList.add('hidden'); pmCtx = null; bonusModalCtx = null; };
+        window.pmRefresh = function() { renderPlayerModal(); };
+        window.pmRename = function(v) {
+            const { player } = pmFind(); const n = (v || '').trim();
+            if (!player || !n) return;
+            if (window.tournament.players.some(p => p.id !== player.id && p.name.toLowerCase() === n.toLowerCase())) { window.showToast('That name already exists.', 'error'); renderPlayerModal(); return; }
+            player.name = n; window.saveTournament(); window.renderAll(); renderPlayerModal();
+        };
+        window.pmScore = function(field, v) { if (!pmCtx) return; window.updateSeatScore(pmCtx.tableId, pmCtx.playerId, field, v); renderPlayerModal(); };
+        window.pmMonster = function() { const id = pmCtx && pmCtx.playerId; window.closePlayerMenu(); if (id) window.openMonsterPicker(id); };
+        window.pmLeft = function() {
+            const { player } = pmFind(); const round = window.getCurrentRound();
+            if (!player || !round) return;
+            player.left = !player.left;
+            round.games.forEach((g, gi) => {
+                if (gi < window.tournament.currentGame) return;
+                g.tables.forEach(t => {
+                    const seat = t.seats.find(x => x.playerId === player.id);
+                    if (!seat || t.completed) return;
+                    seat.hp = player.left ? 0 : DEFAULT_HP; seat.vp = 0;
+                    if (g.started) rankTable(t); else seat.rank = 0;
+                });
+            });
+            window.saveTournament(); window.renderAll(); renderPlayerModal();
+            window.showToast(player.left ? `${player.name} has left. They won't be seated again.` : `${player.name} is back in.`, 'info');
+        };
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && pmCtx) window.closePlayerMenu(); });
 
         // Drag and Drop Event Handlers
         window.handleDragStart = function(event, tableId, playerId) {
@@ -2862,6 +2765,12 @@
             if (e.key === 'Escape' && numberPickerCtx) window.closeNumberPicker();
         });
 
+        function rankTable(table) {
+            table.seats.map((s, i) => ({ s, i, out: (parseInt(s.hp) || 0) === 0, sc: (parseInt(s.vp) || 0) + (parseInt(s.hp) || 0) }))
+                .sort((a, b) => (a.out - b.out) || (b.sc - a.sc) || (a.i - b.i))
+                .forEach((o, k) => { o.s.rank = k + 1; });
+        }
+
         window.updateSeatScore = function(tableId, playerId, field, value) {
             const game = window.getCurrentGame();
             if (!game) return;
@@ -2879,11 +2788,7 @@
                 }
             }
 
-            const allRanksAssigned = table.seats.length > 0 && table.seats.every(s => parseInt(s.rank) > 0);
-            if (allRanksAssigned && !table.completed) {
-                table.completed = true;
-                window.showToast(`All ranks entered! ${table.tableName} results auto-submitted.`, "success");
-            }
+            if (field === 'vp' || field === 'hp') rankTable(table);
 
             window.saveTournament();
             checkAndAutoPauseRound();
@@ -2897,6 +2802,7 @@
             if (!table) return;
 
             table.completed = !table.completed;
+            if (table.completed) { rankTable(table); table.seats.sort((a, b) => a.rank - b.rank); }
             window.saveTournament();
             checkAndAutoPauseRound();
             window.renderAll();
@@ -2945,13 +2851,13 @@
             if (tab === 'rounds') {
                 roundsView.classList.remove('hidden');
                 standingsView.classList.add('hidden');
-                tabBtnRounds.className = "px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 cursor-pointer";
-                tabBtnStandings.className = "px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
+                tabBtnRounds.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 transition-all flex items-center gap-2 cursor-pointer";
+                tabBtnStandings.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
             } else {
                 roundsView.classList.add('hidden');
                 standingsView.classList.remove('hidden');
-                tabBtnRounds.className = "px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
-                tabBtnStandings.className = "px-4 py-2 text-sm font-bold rounded-xl bg-amber-500 text-slate-950 transition-all flex items-center gap-2 cursor-pointer";
+                tabBtnRounds.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
+                tabBtnStandings.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 transition-all flex items-center gap-2 cursor-pointer";
                 window.renderStandings();
             }
         };
@@ -2974,14 +2880,15 @@
             const goal = t.settings.prelimRounds || 3;
             const gamesPerRound = t.settings.gamesPerRound || 1;
             const entries = t.rounds.map((round, idx) => ({ round, idx }));
-            const prelims = entries.filter(e => !e.round.isFinals);
+            const prelims = entries.filter(e => !e.round.isFinals && !e.round.isSemis);
+            const semis = entries.find(e => e.round.isSemis);
             const finals = entries.find(e => e.round.isFinals);
             const prelimCount = Math.max(prelims.length, goal);
 
             const NODE = 'w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-black shrink-0 transition-all';
             const gameState = (game) => game.skipped ? 'skipped' : (isGameComplete(game) ? 'done' : (game.started ? 'live' : 'ready'));
 
-            const connector = (done) => `<div class="h-0.5 w-4 sm:w-6 rounded shrink-0 ${done ? 'bg-emerald-500/70' : 'bg-slate-700'}"></div>`;
+            const connector = (done) => `<div class="h-0.5 w-4 sm:w-6 rounded shrink-0 ${done ? 'bg-amber-500/70' : 'bg-slate-700'}"></div>`;
             const futureConnector = () => `<div class="h-0.5 w-4 sm:w-6 rounded shrink-0 bg-slate-800"></div>`;
 
             const segments = [];
@@ -2992,8 +2899,9 @@
                     segments.push({ kind: 'round', real: false, label: `Round ${i + 1}`, placeholderCount: gamesPerRound });
                 }
             }
-            segments.push(finals
-                ? { kind: 'finals', real: true, roundIdx: finals.idx, round: finals.round, label: 'Finals' }
+            if (semis) segments.push({ kind: 'semis', real: true, roundIdx: semis.idx, round: semis.round, label: 'Semis' });
+            else if (!finals) segments.push({ kind: 'semis', real: false, label: 'Semis', placeholderCount: Math.min(2, Math.ceil(gamesPerRound / 2)) });
+            segments.push(finals ? { kind: 'finals', real: true, roundIdx: finals.idx, round: finals.round, label: 'Finals' }
                 : { kind: 'finals', real: false, label: 'Finals', placeholderCount: 1 });
 
             let prevSegDone = false;
@@ -3013,8 +2921,8 @@
                     groupCls = 'border-amber-500/40 bg-amber-500/5';
                     labelCls = 'text-amber-400';
                 } else if (segDone) {
-                    groupCls = 'border-emerald-500/25 bg-emerald-500/5';
-                    labelCls = 'text-emerald-400';
+                    groupCls = 'border-amber-500/25 bg-amber-500/5';
+                    labelCls = 'text-amber-400';
                 } else {
                     groupCls = 'border-slate-700 bg-slate-950';
                     labelCls = 'text-slate-400';
@@ -3025,10 +2933,10 @@
                     nodes = seg.round.games.map((game, gi) => {
                         const state = gameState(game);
                         const isCurrent = isCurrentRound && gi === t.currentGame;
-                        const isFinal = seg.kind === 'finals';
+                        const isFinal = seg.kind !== 'round';
                         let cls;
                         if (state === 'skipped') cls = 'bg-slate-800 border-slate-700 text-slate-600';
-                        else if (state === 'done') cls = isFinal ? 'bg-amber-400 border-amber-300 text-slate-950' : 'bg-emerald-500 border-emerald-400 text-slate-950';
+                        else if (state === 'done') cls = isFinal ? 'bg-amber-400 border-amber-300 text-slate-950' : 'bg-amber-500 border-amber-400 text-slate-950';
                         else if (state === 'live') cls = isFinal ? 'bg-purple-500/20 border-purple-400 text-purple-200' : 'bg-amber-500/20 border-amber-400 text-amber-300';
                         else cls = isFinal ? 'bg-slate-900 border-purple-500/50 text-purple-300' : 'bg-slate-900 border-slate-600 text-slate-300';
                         if (isCurrent) cls += ' ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 scale-110' + (state === 'live' ? ' animate-pulse' : '');
@@ -3041,7 +2949,7 @@
                         return (gi > 0 ? connector(prevDone) : '') + node;
                     }).join('');
                 } else {
-                    const isFinal = seg.kind === 'finals';
+                    const isFinal = seg.kind !== 'round';
                     nodes = Array.from({ length: seg.placeholderCount }, (_, gi) => {
                         const node = `<div title="${seg.label} (upcoming)" class="${NODE} border-dashed border-slate-700 text-slate-700">${isFinal ? '<i class="fa-solid fa-crown text-xs"></i>' : (gi + 1)}</div>`;
                         return (gi > 0 ? futureConnector() : '') + node;
@@ -3063,7 +2971,7 @@
 
                 // line between groups, aligned with the centre of the game nodes
                 const link = segIdx > 0
-                    ? `<div class="h-0.5 w-5 sm:w-8 rounded shrink-0 mb-[24px] ${prevSegDone ? 'bg-emerald-500/70' : (seg.real ? 'bg-slate-700' : 'bg-slate-800')}"></div>`
+                    ? `<div class="h-0.5 w-5 sm:w-8 rounded shrink-0 mb-[24px] ${prevSegDone ? 'bg-amber-500/70' : (seg.real ? 'bg-slate-700' : 'bg-slate-800')}"></div>`
                     : '';
                 prevSegDone = segDone;
                 return link + group;
@@ -3082,8 +2990,7 @@
             const previewTotal = estimateMinutes(t.settings.tableSize || 5, t.settings.roundTimerMinutes || 30, prelimCount * gamesPerRound + 1);
             summary.textContent = t.rounds.length === 0
                 ? `Live preview of your settings · about ${formatDuration(previewTotal)} in total`
-                : finals
-                ? 'Finals in progress'
+                : finals ? 'Finals in progress' : semis ? 'Semis in progress'
                 : `${done} of ${goal} round${goal === 1 ? '' : 's'} done${skippedCount ? ` · ${skippedCount} game${skippedCount === 1 ? '' : 's'} skipped` : ''} · ${gamesPerRound} game${gamesPerRound === 1 ? '' : 's'} per round`;
         }
 
@@ -3143,6 +3050,7 @@
 
             const seatingNote = document.getElementById('round-timer-state');
             if (isSkipped) seatingNote.innerText = 'Not played, no points awarded';
+            else if (roundData.isSemis) seatingNote.innerText = gameIndex > 0 ? `Same tables as Game ${gameIndex}` : 'Top players split across two scored tables';
             else if (isGrandFinalsRound) seatingNote.innerText = 'Top seeds vs top seeds';
             else if (gameIndex > 0) seatingNote.innerText = `Same tables as Game ${gameIndex}`;
             else if (currentRoundIndex === 0) seatingNote.innerText = 'Random draw';
@@ -3165,6 +3073,7 @@
             const btnNextGame = document.getElementById('btn-next-game');
             const btnGenerateNext = document.getElementById('btn-generate-next');
             const btnFinals = document.getElementById('btn-trigger-finals');
+            const btnSemis = document.getElementById('btn-trigger-semis');
             const btnCrownChampion = document.getElementById('btn-crown-champion');
             const btnSkip = document.getElementById('btn-skip-game');
             const btnRestore = document.getElementById('btn-restore-game');
@@ -3174,7 +3083,7 @@
 
             // Skipped rounds still count as a round on the way to the finals
             const prelimGoal = window.tournament.settings.prelimRounds || 3;
-            const prelimRoundsPlayed = window.tournament.rounds.filter(r => !r.isFinals).length;
+            const prelimRoundsPlayed = window.tournament.rounds.filter(r => !r.isFinals && !r.isSemis).length;
             const isLatestRound = currentRoundIndex === window.tournament.rounds.length - 1;
             const isGameDone = isGameComplete(game);
             const isLastGame = gameIndex === totalGames - 1;
@@ -3188,27 +3097,29 @@
                 timePlusBtn.classList.remove('opacity-40', 'pointer-events-none');
             }
 
-            [btnNextGame, btnGenerateNext, btnFinals, btnCrownChampion, btnSkip, btnRestore].forEach(b => b.classList.add('hidden'));
+            [btnNextGame, btnGenerateNext, btnSemis, btnFinals, btnCrownChampion, btnSkip, btnRestore].forEach(b => b.classList.add('hidden'));
 
             // Round finished (or skipped): re-seat for another round, or head to the finals once the round goal is met
             const showRoundEndButtons = () => {
                 const isFinalsTriggered = roundData.finalsTriggered || false;
                 const isNextRoundGenerated = roundData.nextRoundGenerated || false;
                 const goalReached = prelimRoundsPlayed >= prelimGoal;
+                if (roundData.isSemis) { if (!isFinalsTriggered) { btnFinals.classList.remove('hidden'); btnFinals.className = BTN_FINALS; } return; }
 
                 if (goalReached && !isFinalsTriggered) {
-                    btnFinals.classList.remove('hidden');
-                    btnFinals.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
+                    const b = needsSemis() ? btnSemis : btnFinals;
+                    b.classList.remove('hidden');
+                    b.className = needsSemis() ? BTN_SEMIS : BTN_FINALS;
                 }
 
                 if (!isNextRoundGenerated) {
                     btnGenerateNext.classList.remove('hidden');
                     if (!goalReached) {
                         document.getElementById('generate-next-label').innerText = "Generate Next Round";
-                        btnGenerateNext.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
+                        btnGenerateNext.className = BTN_PRIMARY;
                     } else {
                         document.getElementById('generate-next-label').innerText = "Add Additional Round";
-                        btnGenerateNext.className = "px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-semibold text-sm transition-all flex items-center gap-2 cursor-pointer";
+                        btnGenerateNext.className = BTN_SECONDARY;
                     }
                 }
             };
@@ -3264,7 +3175,7 @@
                     showRoundEndButtons();
                 } else if (isGameDone && isGrandFinalsRound && isLatestRound) {
                     btnCrownChampion.classList.remove('hidden');
-                    btnCrownChampion.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-sm transition-all flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5";
+                    btnCrownChampion.className = BTN_CROWN;
                     btnCrownChampion.removeAttribute('disabled');
                 }
             }
