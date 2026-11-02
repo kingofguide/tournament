@@ -440,7 +440,9 @@
                 </div>
                 
                 <!-- Round Header & Workflows -->
-                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+<div class="flex flex-wrap items-start justify-between gap-3">
+<div class="space-y-3 min-w-0">
 <div>
 <div class="flex flex-wrap items-center gap-2">
 <h2 id="round-title-display" class="text-2xl font-extrabold text-white tracking-tight">Round 1</h2>
@@ -448,6 +450,19 @@
 <span id="round-status-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-800 text-slate-400 border border-slate-700 uppercase tracking-wider">Waiting</span>
 </div>
 <p id="round-timer-state" class="text-xs text-slate-400 font-medium mt-1"></p>
+</div>
+<div class="inline-flex flex-wrap items-center gap-3 bg-slate-950 border border-slate-800 rounded-xl p-3">
+<div class="flex items-center gap-2"><i id="timer-icon" class="fa-solid fa-hourglass-start text-lg text-slate-400"></i><span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider">30:00</span></div>
+<div id="timer-adjust-group" class="flex flex-col w-14 h-10 rounded-xl overflow-hidden border border-slate-700 bg-slate-800 divide-y divide-slate-700">
+<button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="flex-1 text-[10px] font-extrabold leading-none text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">+5m</button>
+<button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="flex-1 text-[10px] font-extrabold leading-none text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
+</div>
+<div id="sound-controls" class="flex items-center gap-1.5">
+<span class="hidden sm:block w-px h-8 bg-slate-700 mr-1.5"></span>
+<button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i></button>
+<button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Sound options" title="Sound options" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-sm"></i></button>
+</div>
+</div>
 </div>
 <div class="flex flex-wrap items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-3">
 <button id="btn-start-round" onclick="window.startCurrentGame()" class="h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-play"></i> Start</button>
@@ -459,17 +474,11 @@
 <button id="btn-trigger-semis" onclick="window.triggerSemis()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white"><i class="fa-solid fa-medal"></i> Semis</button>
 <button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30"><i class="fa-solid fa-crown"></i> Finals</button>
 <button id="btn-crown-champion" onclick="window.crownChampion()" disabled class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950"><i class="fa-solid fa-award"></i> Champion</button>
-<div id="timer-adjust-group" class="flex items-center gap-1.5">
-<button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="h-10 px-3 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
-<span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider px-1">30:00</span>
-<button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="h-10 px-3 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">+5m</button>
-</div>
-<div id="sound-controls" class="flex items-center gap-1.5">
-<button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i></button>
-<button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Sound options" title="Sound options" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-sm"></i></button>
 </div>
 </div>
 </div>
+
+
 
 
 
@@ -799,8 +808,20 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.33';
+        const APP_VERSION = '2.35';
         const CHANGELOG = [
+            { "version": "2.35", "date": "November 2026", "items": [
+                "Crown The Champion (shown as Champion) now appears, greyed out, as soon as the Finals start, and unlocks once the finalist tables are locked",
+                "Consolation tables in the Finals no longer have to be locked or skipped before the Finals can finish"
+            ]},
+            { "version": "2.34", "date": "November 2026", "items": [
+                "Semis and Finals now pack the finalists onto as few tables as possible, with consolation players filling the remaining seats, and tables are still evenly sized",
+                "Half the field (rounded up) are finalists, shown with tags",
+                "Consolation tables have a Skip button next to Lock, and a skipped table is shown as not played",
+                "Round controls: the action buttons are back on the right in their own panel, and the Timer and Sound options share a second panel with a divider",
+                "-5m and +5m are now one split button",
+                "The timer has an icon and a colour that change between waiting, playing, paused and done"
+            ]},
             { "version": "2.33", "date": "November 2026", "items": [
                 "Semis and Finals now seat every player on evenly balanced tables, so nobody is left alone. Finalists and consolation players are tagged and points work as normal",
                 "Semis and Finals tags and the timeline crowns are readable in light mode",
@@ -1077,7 +1098,10 @@
 
         // A skipped game counts as finished so the round can move on, but nothing in it is scored
         function isGameComplete(game) {
-            return !!game && (!!game.skipped || (game.tables.length > 0 && game.tables.every(t => t.completed)));
+            return !!game && (!!game.skipped || (() => {
+                const blocking = (game.tables || []).filter(t => !(t.seats.length && t.seats.every(x => x.scored === false)));
+                return blocking.length > 0 && blocking.every(t => t.completed || t.skipped);
+            })());
         }
 
         function isRoundComplete(round) {
@@ -2001,12 +2025,13 @@
             const pool = activeStandingsPlayers();
             if (pool.length < 4) { window.showToast("Not enough players for Semis.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
-            const cut = Math.min(size * 2, Math.max(2, Math.ceil(pool.length / 2)));
+            const cut = Math.max(2, Math.ceil(pool.length / 2));
             const inSet = new Set(pool.slice(0, cut).map(p => p.id));
-            const tables = snakeTables(pool, size).map((g, i) => {
+            const tables = partitionPlayersEvenly(pool, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
                 t.seedTag = 'Semis'; t.isFinalsTable = true;
                 t.seats.forEach(x => { x.tier = inSet.has(x.playerId) ? 'in' : 'out'; });
+                t.seedTag = t.seats.some(x => x.tier === 'in') ? 'Semis' : 'Consolation';
                 return t;
             });
             const gpr = window.tournament.settings.gamesPerRound || 1;
@@ -2028,21 +2053,13 @@
             if (pool.length < 4) { window.showToast("Not enough players for Grand Finals.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
             const idx = id => pool.findIndex(p => p.id === id);
-            let fin;
-            if (cur && cur.isSemis) {
-                const adv = [];
-                cur.games[0].tables.forEach(t => {
-                    const ids = t.seats.map(x => x.playerId).filter(id => idx(id) >= 0).sort((a, b) => idx(a) - idx(b));
-                    ids.slice(0, Math.ceil(ids.length / 2)).forEach(id => adv.push(id));
-                });
-                fin = new Set(pool.filter(p => adv.includes(p.id)).slice(0, size).map(p => p.id));
-            } else {
-                fin = new Set(pool.slice(0, Math.min(size, Math.ceil(pool.length / 2))).map(p => p.id));
-            }
-            const tables = snakeTables(pool, size).map((g, i) => {
+            const fin = new Set(pool.slice(0, Math.max(2, Math.ceil(pool.length / 2))).map(p => p.id));
+            const ordered = [...pool.filter(p => fin.has(p.id)), ...pool.filter(p => !fin.has(p.id))];
+            const tables = partitionPlayersEvenly(ordered, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
                 t.seedTag = 'Finals'; t.isFinalsTable = true;
                 t.seats.forEach(x => { x.scored = fin.has(x.playerId); });
+                t.seedTag = t.seats.some(x => x.scored) ? 'Finals' : 'Consolation';
                 return t;
             });
             const r = buildRound('Finals', tables, 1, true);
@@ -2357,13 +2374,21 @@
         }
 
         // Table UI Renderer
+        function isConsolationTable(round, table) {
+            if (!round || !table.seats.length) return false;
+            if (round.isSemis) return table.seats.every(x => x.tier === 'out');
+            if (round.isFinals) return table.seats.every(x => x.scored === false);
+            return false;
+        }
+
         function createTableCard(table, game) {
             const card = document.createElement('div');
             const unstarted = !game.started, locked = !!table.completed;
             const round = window.getCurrentRound();
-            const special = round && (round.isFinals || round.isSemis) && table.isFinalsTable !== false;
+            const skipped = !!table.skipped, cons = isConsolationTable(round, table);
+            const special = round && (round.isFinals || round.isSemis) && table.isFinalsTable !== false && !cons;
             const accent = round && round.isFinals ? 'border-fuchsia-500/50' : 'border-violet-500/50';
-            const border = locked ? 'border-amber-500/50' : (special ? accent : 'border-slate-700');
+            const border = skipped ? 'border-slate-800 border-dashed' : locked ? 'border-amber-500/50' : (special ? accent : 'border-slate-700');
             const seedTag = table.seedTag || `Table ${table.tableNumber}`;
             const seedCls = special ? (round.isFinals ? 'bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30' : 'bg-violet-500/15 text-violet-300 border-violet-500/30') : 'bg-slate-800 text-slate-300 border-slate-700';
             const statusTag = locked
@@ -2415,13 +2440,25 @@
                         <h3 class="font-extrabold text-sm text-white truncate">${escapeHtml(table.tableName || 'Table')}</h3>
                         <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${seedCls} shrink-0 truncate">${escapeHtml(seedTag)}</span>
                     </div>
-                    <button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="shrink-0 h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}">
-                        <i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock' : 'Lock'}
-                    </button>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        ${cons && !locked ? `<button onclick="window.toggleTableSkip('${table.id}')" class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors ${skipped ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'}"><i class="fa-solid ${skipped ? 'fa-rotate-left' : 'fa-forward'}"></i> ${skipped ? 'Unskip' : 'Skip'}</button>` : ''}
+                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}"><i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock' : 'Lock'}</button>`}
+                    </div>
                 </div>
-                <div class="space-y-1.5">${seatsHTML}</div>`;
+                ${skipped ? `<div class="rounded-xl border border-dashed border-slate-700 py-4 px-3 text-center text-xs text-slate-500"><i class="fa-solid fa-forward mr-1"></i> Table skipped, not played<div class="mt-1 text-[11px] text-slate-600 truncate">${table.seats.map(x => escapeHtml((window.tournament.players.find(p => p.id === x.playerId) || {}).name || "")).join(", ")}</div></div>` : `<div class="space-y-1.5">${seatsHTML}</div>`}`;
             return card;
         }
+
+        window.toggleTableSkip = function(tableId) {
+            const game = window.getCurrentGame();
+            const table = game && game.tables.find(t => t.id === tableId);
+            if (!table || table.completed) return;
+            table.skipped = !table.skipped;
+            window.saveTournament();
+            checkAndAutoPauseRound();
+            window.renderAll();
+            window.showToast(table.skipped ? `${table.tableName} skipped. It won't be played.` : `${table.tableName} is back in play.`, "info");
+        };
 
         // ----- Player settings (cog) -----
         let pmCtx = null;
@@ -2924,6 +2961,11 @@
             }
 
             [btnNextGame, btnGenerateNext, btnSemis, btnFinals, btnCrownChampion, btnSkip, btnRestore].forEach(b => b.classList.add('hidden'));
+            if (isGrandFinalsRound && isLatestRound && !isSkipped) {
+                btnCrownChampion.classList.remove('hidden');
+                btnCrownChampion.className = BTN_SECONDARY + ' opacity-50 cursor-not-allowed';
+                btnCrownChampion.setAttribute('disabled', '');
+            }
 
             // Round finished (or skipped): re-seat for another round, or head to the finals once the round goal is met
             const showRoundEndButtons = () => {
@@ -3006,6 +3048,13 @@
                 }
             }
 
+            {
+                const tIcon = document.getElementById('timer-icon'), clk = document.getElementById('round-clock');
+                const st = isSkipped ? 'skipped' : (isGameDone ? 'done' : (!isGameStarted ? 'waiting' : (isRoundActive ? 'playing' : 'paused')));
+                const map = { skipped: ['fa-forward', 'text-slate-500', 'text-slate-500'], done: ['fa-flag-checkered', 'text-indigo-400', 'text-slate-400'], waiting: ['fa-hourglass-start', 'text-slate-400', 'text-slate-300'], playing: ['fa-stopwatch animate-pulse', 'text-amber-400', 'text-amber-400'], paused: ['fa-circle-pause', 'text-rose-400', 'text-slate-400'] }[st];
+                if (tIcon) tIcon.className = 'fa-solid ' + map[0] + ' text-lg ' + map[1];
+                if (clk) clk.className = 'font-mono text-2xl font-black tracking-wider ' + map[2];
+            }
             container.innerHTML = '';
             if (isSkipped) {
                 const canRestore = isLatestRound && !roundData.nextRoundGenerated && !roundData.finalsTriggered;
