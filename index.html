@@ -449,30 +449,37 @@
 </div>
 <p id="round-timer-state" class="text-xs text-slate-400 font-medium mt-1"></p>
 </div>
-<div class="flex flex-wrap items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-3">
-<button id="btn-start-round" onclick="window.startCurrentGame()" class="w-28 h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border bg-amber-500/15 border-amber-400 text-amber-300"><i class="fa-solid fa-play"></i> Start</button>
-<button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden w-28 h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border"><i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span></button>
-<button id="btn-skip-game" onclick="window.skipOrRestore()" title="Skip or restore this game" class="w-28 h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border"><i id="skip-icon" class="fa-solid fa-forward"></i> <span id="skip-label">Skip</span></button>
-<button id="btn-restore-game" onclick="window.restoreGame()" class="hidden"></button>
-<span class="hidden sm:block w-px h-8 bg-slate-700 mx-1"></span>
-<span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider px-1">30:00</span>
+<div class="rounded-xl bg-slate-950 border border-slate-800 p-3 sm:p-4 space-y-3">
+<div class="flex items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<span id="round-clock" class="font-mono text-4xl sm:text-5xl font-black text-amber-400 tracking-wider">30:00</span>
 <div id="timer-adjust-group" class="flex flex-col w-14 h-10 rounded-xl overflow-hidden border border-slate-700 bg-slate-800 divide-y divide-slate-700">
 <button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="flex-1 text-[10px] font-extrabold leading-none text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">+5m</button>
 <button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="flex-1 text-[10px] font-extrabold leading-none text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
 </div>
+</div>
 <div id="sound-controls" class="flex items-center gap-1.5">
-<span class="hidden sm:block w-px h-8 bg-slate-700 mr-1.5"></span>
 <button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i></button>
 <button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Sound options" title="Sound options" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-sm"></i></button>
 </div>
-<span class="hidden lg:block w-px h-8 bg-slate-700 mx-1"></span>
+</div>
+<div class="flex items-center gap-2">
+<button id="btn-start-round" onclick="window.startCurrentGame()" class="h-12 flex-1 sm:flex-none sm:w-48 rounded-xl text-base font-bold flex items-center justify-center gap-2 border bg-amber-500/15 border-amber-400 text-amber-300"><i class="fa-solid fa-play"></i> Start</button>
+<button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden h-12 flex-1 sm:flex-none sm:w-48 rounded-xl text-base font-bold flex items-center justify-center gap-2 border"><i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span></button>
+<button id="btn-skip-game" onclick="window.skipOrRestore()" title="Skip or restore this game" class="h-12 w-24 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border"><i id="skip-icon" class="fa-solid fa-forward"></i> <span id="skip-label">Skip</span></button>
+<button id="btn-restore-game" onclick="window.restoreGame()" class="hidden"></button>
+</div>
+<div class="border-t border-slate-800 pt-3 grid grid-cols-2 sm:grid-cols-5 gap-2">
 <button id="btn-next-game" onclick="window.goToNextGame()" disabled class=""><i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span></button>
 <button id="btn-generate-next" onclick="window.generateNextRound()" disabled class=""><i class="fa-solid fa-forward-step"></i> <span id="generate-next-label">Next Round</span></button>
 <button id="btn-trigger-semis" onclick="window.triggerSemis()" disabled class=""><i class="fa-solid fa-medal"></i> Semis</button>
 <button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" disabled class=""><i class="fa-solid fa-crown"></i> Finals</button>
-<button id="btn-crown-champion" onclick="window.crownChampion()" disabled class=""><i class="fa-solid fa-award"></i> Champion</button>
+<button id="btn-crown-champion" onclick="window.crownChampion()" disabled class="col-span-2 sm:col-span-1"><i class="fa-solid fa-award"></i> Champion</button>
 </div>
 </div>
+</div>
+
+
 
 
 
@@ -662,8 +669,8 @@
 </div>
 
     <!-- Monster Picker -->
-    <div id="monster-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4" onclick="if(event.target===this) window.closeMonsterPicker()">
-        <div class="bg-slate-900 border border-slate-800 w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+    <div id="monster-modal" class="hidden fixed inset-0 z-[60] flex items-start sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-2 sm:p-4" onclick="if(event.target===this) window.closeMonsterPicker()">
+        <div class="bg-slate-900 border border-slate-800 w-full sm:max-w-md rounded-2xl shadow-2xl flex flex-col max-h-full sm:max-h-[85vh] overflow-hidden">
             <div class="flex items-center justify-between gap-3 p-4 border-b border-slate-800">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0"><i class="fa-solid fa-dragon"></i></div>
@@ -682,7 +689,7 @@
                     <input id="monster-search" type="search" autocomplete="off" placeholder="Search name or code" oninput="window.filterMonsters(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors">
                 </div>
             </div>
-            <div id="monster-list" class="p-3 space-y-1.5 overflow-y-auto custom-scrollbar"></div>
+            <div id="monster-list" class="p-3 space-y-1.5 overflow-y-auto custom-scrollbar min-h-0 flex-1"></div>
             <div class="p-3 border-t border-slate-800 flex justify-end">
                 <button id="monster-clear" type="button" onclick="window.clearMonster()" class="hidden px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors cursor-pointer">Remove monster</button>
             </div>
@@ -730,6 +737,8 @@
 
     <div id="player-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4" onclick="if(event.target===this) window.closePlayerMenu()"><div class="bg-slate-900 border border-slate-800 w-full sm:max-w-sm rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar p-4 space-y-4"><div class="flex items-center justify-between"><h3 class="font-extrabold text-white text-sm"><i class="fa-solid fa-gear text-amber-400 mr-1.5"></i>Player Settings</h3><button type="button" onclick="window.closePlayerMenu()" aria-label="Close" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark"></i></button></div><div id="player-modal-body" class="space-y-4"></div></div></div>
 
+    <div id="elim-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4"><div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3"><div><h3 class="font-extrabold text-white text-sm">💥 Who eliminated them?</h3><p id="elim-sub" class="text-[11px] text-slate-400 truncate"></p></div><div id="elim-list" class="space-y-1.5"></div><button type="button" onclick="window.closeElimPicker()" class="w-full h-9 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Not sure, skip</button></div></div>
+
     <!-- Bonus Modal -->
     <div id="bonus-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeBonusModal()">
         <div class="bg-slate-900 border border-slate-800 max-w-sm w-full rounded-2xl p-5 shadow-2xl space-y-4">
@@ -741,6 +750,7 @@
                 <span id="bonus-modal-total" class="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold shrink-0">+0 pts</span>
             </div>
             <div id="bonus-modal-list" class="space-y-2"></div>
+            <p class="text-[11px] text-slate-500">Smasher and Tanker are set automatically when a table is submitted. You can still change them by hand.</p>
             <div class="flex justify-end pt-1">
                 <button onclick="window.closeBonusModal()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors cursor-pointer">Done</button>
             </div>
@@ -778,9 +788,9 @@
         ];
 
         const BTN_PRIMARY = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25", BTN_SECONDARY = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700", BTN_SEMIS = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white", BTN_FINALS = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30", BTN_CROWN = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950";
-        const UNI = c => c.replace('px-4', 'px-2') + ' w-32';
-        const UNI_OFF = 'h-10 w-32 px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap bg-slate-800/60 border border-slate-800 text-slate-600 cursor-not-allowed';
-        const PP_BASE = 'w-28 h-10 px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap transition-colors border ';
+        const UNI = c => c.replace('px-4', 'px-2') + ' w-full';
+        const UNI_OFF = 'h-10 w-full px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap bg-slate-800/60 border border-slate-800 text-slate-600 cursor-not-allowed';
+        const PP_BASE = 'h-12 flex-1 sm:flex-none sm:w-48 px-4 rounded-xl text-base font-bold flex items-center justify-center gap-2 whitespace-nowrap transition-colors border ';
         const PP_GO = PP_BASE + 'bg-amber-500/15 border-amber-400 text-amber-300 hover:bg-amber-500/25 cursor-pointer';
         const PP_PAUSE = PP_BASE + 'bg-rose-500/15 border-rose-400 text-rose-300 hover:bg-rose-500/25 cursor-pointer';
         const PP_OFF = PP_BASE + 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed';
@@ -814,8 +824,17 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.36';
+        const APP_VERSION = '2.37';
         const CHANGELOG = [
+            { "version": "2.37", "date": "November 2026", "items": [
+                "Small tournaments (6 players or fewer) always have 3 finalist positions",
+                "The Semis start call-out now says \"The semi finals has started\"",
+                "Setting a player to 0 HP asks who eliminated them (including themselves), and each player shows a subtle elimination counter",
+                "Smasher and Tanker are awarded automatically when a table is submitted, and can still be changed by hand",
+                "Table button is now Submit & lock (orange) and Unlock & resume (grey)",
+                "Monster search is no longer hidden by the mobile keyboard, and choosing a monster from Player settings returns to Player settings",
+                "Round controls redesigned: a big clock, a large Play / Pause with Skip, and an even grid of stage buttons"
+            ]},
             { "version": "2.36", "date": "November 2026", "items": [
                 "Finals are now always a single table, with at most one table of finalists",
                 "Scoring now uses VPs only: ranks follow VPs, HPs no longer count or break ties, and the leaderboard drops the HP column",
@@ -1733,6 +1752,13 @@
             document.getElementById('monster-clear').classList.toggle('hidden', !current);
         }
 
+        function fitMonsterModal() {
+            const m = document.getElementById('monster-modal'), vv = window.visualViewport;
+            if (!m || !vv || m.classList.contains('hidden')) return;
+            m.style.top = vv.offsetTop + 'px'; m.style.bottom = 'auto'; m.style.height = vv.height + 'px';
+        }
+        if (window.visualViewport) { window.visualViewport.addEventListener('resize', fitMonsterModal); window.visualViewport.addEventListener('scroll', fitMonsterModal); }
+
         window.openMonsterPicker = function(playerId) {
             const player = window.tournament.players.find(p => p.id === playerId);
             if (!player || !window.getCurrentRound()) return;
@@ -1742,6 +1768,7 @@
             search.value = '';
             renderMonsterList('');
             document.getElementById('monster-modal').classList.remove('hidden');
+            fitMonsterModal();
             // Only pop the keyboard open on devices with a mouse, so touch screens keep the whole list in view
             if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) search.focus();
         };
@@ -1750,6 +1777,7 @@
 
         window.closeMonsterPicker = function() {
             document.getElementById('monster-modal').classList.add('hidden');
+            const mm = document.getElementById('monster-modal'); mm.style.top = ''; mm.style.bottom = ''; mm.style.height = '';
             monsterPickerPlayerId = null;
         };
 
@@ -1765,6 +1793,7 @@
             window.closeMonsterPicker();
             window.saveTournament();
             window.renderAll();
+            if (pmCtx) renderPlayerModal();
             if (others.length) window.showToast(`${others.join(', ')} also picked ${m.name}. Roll 1d6 to decide who keeps it.`, "info");
         };
 
@@ -1774,10 +1803,11 @@
             window.closeMonsterPicker();
             window.saveTournament();
             window.renderAll();
+            if (pmCtx) renderPlayerModal();
         };
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && monsterPickerPlayerId) window.closeMonsterPicker();
+            if (e.key === 'Escape' && monsterPickerPlayerId) { e.__monsterClosed = true; window.closeMonsterPicker(); }
         });
 
         window.quickAddSamplePlayers = function() {
@@ -2043,7 +2073,7 @@
             const pool = activeStandingsPlayers();
             if (pool.length < 4) { window.showToast("Not enough players for Semis.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
-            const cut = Math.max(2, Math.ceil(pool.length / 2));
+            const cut = pool.length <= 6 ? Math.min(3, pool.length) : Math.max(2, Math.ceil(pool.length / 2));
             const inSet = new Set(pool.slice(0, cut).map(p => p.id));
             const tables = partitionPlayersEvenly(pool, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
@@ -2071,7 +2101,7 @@
             if (pool.length < 4) { window.showToast("Not enough players for Grand Finals.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
             const idx = id => pool.findIndex(p => p.id === id);
-            const fin = new Set(pool.slice(0, Math.min(size, Math.max(2, Math.ceil(pool.length / 2)))).map(p => p.id));
+            const fin = new Set(pool.slice(0, pool.length <= 6 ? Math.min(3, pool.length) : Math.min(size, Math.max(2, Math.ceil(pool.length / 2)))).map(p => p.id));
             const ordered = [...pool.filter(p => fin.has(p.id)), ...pool.filter(p => !fin.has(p.id))];
             const tables = partitionPlayersEvenly(ordered, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
@@ -2219,6 +2249,7 @@
             if (!found) return;
             if (!found.seat.bonuses) found.seat.bonuses = {};
             found.seat.bonuses[key] = !!checked;
+            found.seat.bonusManual = { ...(found.seat.bonusManual || {}), [key]: true };
             window.saveTournament();
             renderBonusModal();
             window.renderAll();
@@ -2348,8 +2379,7 @@
             window.showToast("Game started! Timer running.", "success");
             game.timerTotal = game.timerRemaining;
             const startRound = window.getCurrentRound();
-            window.speak(startRound && startRound.isFinals
-                ? `The finals have started. ${spokenTime(game.timerRemaining)} on the clock. Good luck.`
+            window.speak(startRound && startRound.isSemis ? (window.tournament.currentGame > 0 ? `Game ${numberWord(window.tournament.currentGame + 1)} of the semi finals has started. ${spokenTime(game.timerRemaining)} on the clock.` : `The semi finals has started. ${spokenTime(game.timerRemaining)} on the clock.`) : startRound && startRound.isFinals ? `The finals have started. ${spokenTime(game.timerRemaining)} on the clock. Good luck.`
                 : `Game ${numberWord(window.tournament.currentGame + 1)} of Round ${numberWord(window.tournament.currentRound + 1)} has started. ${spokenTime(game.timerRemaining)} on the clock.`);
         };
 
@@ -2439,6 +2469,7 @@
                             <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
                             ${roleTag}
                             ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId) : '')}
+                            ${seat.elims > 0 ? `<span title="Eliminations" class="shrink-0 text-[10px] font-bold text-slate-400">💥 +${seat.elims}</span>` : ''}
                         </div>
                         <div class="flex items-center gap-1.5" ondragstart="event.stopPropagation()">
                             <button type="button" title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-amber-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-white text-center">${seat.vp}</span></button>
@@ -2450,19 +2481,70 @@
             }).join('');
 
             card.innerHTML = `
-                <div class="flex items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2 border-b border-slate-800 pb-2">
                     <div class="flex items-center gap-2 min-w-0">
                         <h3 class="font-extrabold text-sm text-white truncate">${escapeHtml(table.tableName || 'Table')}</h3>
                         <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${seedCls} shrink-0 truncate">${escapeHtml(seedTag)}</span>
                     </div>
                     <div class="flex items-center gap-1.5 shrink-0">
                         ${cons && !locked ? `<button onclick="window.toggleTableSkip('${table.id}')" class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors ${skipped ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'}"><i class="fa-solid ${skipped ? 'fa-rotate-left' : 'fa-forward'}"></i> ${skipped ? 'Unskip' : 'Skip'}</button>` : ''}
-                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"><i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock' : 'Lock'}</button>`}
+                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700' : 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25'}"><i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock &amp; resume' : 'Submit &amp; lock'}</button>`}
                     </div>
                 </div>
                 ${skipped ? `<div class="rounded-xl border border-dashed border-slate-700 py-4 px-3 text-center text-xs text-slate-500"><i class="fa-solid fa-forward mr-1"></i> Table skipped, not played<div class="mt-1 text-[11px] text-slate-600 truncate">${table.seats.map(x => escapeHtml((window.tournament.players.find(p => p.id === x.playerId) || {}).name || "")).join(", ")}</div></div>` : `<div class="space-y-1.5">${seatsHTML}</div>`}`;
             return card;
         }
+
+        let elimCtx = null;
+        function undoElim(table, seat) {
+            if (seat.elimBy && seat.elimBy !== seat.playerId) {
+                const k = table.seats.find(x => x.playerId === seat.elimBy);
+                if (k) k.elims = Math.max(0, (k.elims || 0) - 1);
+            }
+            delete seat.elimBy;
+        }
+        function autoBonuses(table) {
+            if (!window.bonusesEnabled()) return;
+            const maxE = Math.max(0, ...table.seats.map(x => x.elims || 0));
+            const maxH = Math.max(0, ...table.seats.map(x => parseInt(x.hp) || 0));
+            table.seats.forEach(x => {
+                x.bonuses = x.bonuses || {};
+                const man = x.bonusManual || {};
+                if (!man.smasher) x.bonuses.smasher = maxE > 0 && (x.elims || 0) === maxE;
+                if (!man.tanker) x.bonuses.tanker = maxH > 0 && (parseInt(x.hp) || 0) === maxH;
+            });
+        }
+        window.openElimPicker = function(tableId, playerId) {
+            const game = window.getCurrentGame();
+            const table = game && game.tables.find(t => t.id === tableId);
+            const victim = table && table.seats.find(x => x.playerId === playerId);
+            if (!victim) return;
+            elimCtx = { tableId, playerId };
+            const nameOf = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
+            document.getElementById('elim-sub').textContent = nameOf(playerId) + ' was eliminated';
+            const btn = 'w-full px-3 py-2 rounded-xl border text-left text-sm font-bold cursor-pointer transition-colors bg-slate-950 border-slate-700 text-slate-200 hover:border-amber-500/60 hover:text-amber-300';
+            document.getElementById('elim-list').innerHTML = table.seats.filter(x => x.playerId !== playerId).map(x =>
+                `<button type="button" onclick="window.pickEliminator('${x.playerId}')" class="${btn}">${escapeHtml(nameOf(x.playerId))}</button>`).join('')
+                + `<button type="button" onclick="window.pickEliminator('self')" class="${btn}">Themselves</button>`;
+            document.getElementById('elim-modal').classList.remove('hidden');
+        };
+        window.closeElimPicker = function() { document.getElementById('elim-modal').classList.add('hidden'); elimCtx = null; };
+        window.pickEliminator = function(k) {
+            if (!elimCtx) return;
+            const game = window.getCurrentGame();
+            const table = game && game.tables.find(t => t.id === elimCtx.tableId);
+            const victim = table && table.seats.find(x => x.playerId === elimCtx.playerId);
+            if (victim) {
+                undoElim(table, victim);
+                if (k === 'self') victim.elimBy = victim.playerId;
+                else {
+                    const killer = table.seats.find(x => x.playerId === k);
+                    if (killer) { killer.elims = (killer.elims || 0) + 1; victim.elimBy = k; }
+                }
+            }
+            window.closeElimPicker();
+            window.saveTournament(); window.renderAll();
+        };
 
         window.toggleTableSkip = function(tableId) {
             const game = window.getCurrentGame();
@@ -2527,7 +2609,7 @@
         };
         window.pmBonus = function(k, on) { if (pmDraft) { pmDraft.bonuses[k] = !!on; renderPlayerModal(); } };
         window.pmToggleLeft = function() { if (pmDraft) { pmDraft.left = !pmDraft.left; renderPlayerModal(); } };
-        window.pmMonster = function() { const id = pmCtx && pmCtx.playerId; window.closePlayerMenu(); if (id) window.openMonsterPicker(id); };
+        window.pmMonster = function() { if (pmCtx) window.openMonsterPicker(pmCtx.playerId); };
         window.pmSave = function() {
             const { game, table, seat, player } = pmFind(); const d = pmDraft;
             if (!seat || !player || !d) return;
@@ -2536,8 +2618,13 @@
                 if (window.tournament.players.some(p => p.id !== player.id && p.name.toLowerCase() === name.toLowerCase())) { window.showToast('That name already exists.', 'error'); return; }
                 player.name = name;
             }
+            seat.bonusManual = { ...(seat.bonusManual || {}) };
+            Object.keys(d.bonuses).forEach(k => { if (!!d.bonuses[k] !== !!(seat.bonuses && seat.bonuses[k])) seat.bonusManual[k] = true; });
             seat.bonuses = { ...d.bonuses };
+            const prevHp = parseInt(seat.hp) || 0;
             seat.hp = d.hp; seat.vp = d.hp === 0 ? 0 : d.vp;
+            if (d.hp > 0 && prevHp === 0) undoElim(table, seat);
+            const askElim = d.hp === 0 && prevHp > 0 && !d.left;
             if (d.left !== !!player.left) {
                 const round = window.getCurrentRound();
                 player.left = d.left;
@@ -2562,10 +2649,12 @@
                 }
                 rankTable(table);
             }
+            const tid = table.id, pid = seat.playerId;
             window.saveTournament(); window.closePlayerMenu(); window.renderAll();
+            if (askElim) setTimeout(() => window.openElimPicker(tid, pid), 0);
             window.showToast('Player settings saved', 'success');
         };
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && pmCtx) window.closePlayerMenu(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && pmCtx && !e.__monsterClosed) window.closePlayerMenu(); });
 
         // Drag and Drop Event Handlers
         window.handleDragStart = function(event, tableId, playerId) {
@@ -2696,6 +2785,7 @@
             if (!table) return;
 
             const seat = table.seats.find(s => s.playerId === playerId);
+            const prevHp = seat ? (parseInt(seat.hp) || 0) : 0;
             if (seat) {
                 if (field === 'vp') {
                     seat[field] = seat.hp === 0 ? 0 : Math.min(20, Math.max(0, parseInt(value) || 0));
@@ -2708,6 +2798,10 @@
             }
 
             if (field === 'vp' || field === 'hp') rankTable(table);
+            if (field === 'hp' && seat) {
+                if (seat.hp === 0 && prevHp > 0) setTimeout(() => window.openElimPicker(tableId, playerId), 0);
+                else if (seat.hp > 0 && prevHp === 0) undoElim(table, seat);
+            }
 
             window.saveTournament();
             checkAndAutoPauseRound();
@@ -2721,7 +2815,7 @@
             if (!table) return;
 
             table.completed = !table.completed;
-            if (table.completed) { rankTable(table); table.seats.sort((a, b) => a.rank - b.rank); }
+            if (table.completed) { autoBonuses(table); rankTable(table); table.seats.sort((a, b) => a.rank - b.rank); }
             window.saveTournament();
             checkAndAutoPauseRound();
             window.renderAll();
@@ -2978,9 +3072,9 @@
             const clockEl = document.getElementById('round-clock');
             if (isSkipped) {
                 clockEl.innerText = '--:--';
-                clockEl.className = 'font-mono text-2xl font-black text-slate-500 tracking-wider';
+                clockEl.className = 'font-mono text-4xl sm:text-5xl font-black text-slate-500 tracking-wider';
             } else {
-                clockEl.className = 'font-mono text-2xl font-black text-amber-400 tracking-wider';
+                clockEl.className = 'font-mono text-4xl sm:text-5xl font-black text-amber-400 tracking-wider';
                 updateTimerDisplay(game.timerRemaining != null ? game.timerRemaining : 1800);
             }
             document.getElementById('timer-adjust-group').classList.toggle('hidden', isSkipped);
@@ -3112,14 +3206,14 @@
                 const skipOn = canSkip || canRestore;
                 btnSkip.classList.remove('hidden');
                 btnSkip.disabled = !skipOn;
-                btnSkip.className = 'w-28 h-10 px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap border transition-colors ' + (skipOn ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 cursor-pointer' : 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed');
+                btnSkip.className = 'h-12 w-24 sm:w-28 px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap border transition-colors ' + (skipOn ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 cursor-pointer' : 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed');
                 document.getElementById('skip-label').innerText = isSkipped ? 'Restore' : 'Skip';
                 document.getElementById('skip-icon').className = isSkipped ? 'fa-solid fa-rotate-left' : 'fa-solid fa-forward';
                 [[btnNextGame, BTN_PRIMARY], [btnGenerateNext, BTN_PRIMARY], [btnSemis, BTN_SEMIS], [btnFinals, BTN_FINALS], [btnCrownChampion, BTN_CROWN]].forEach(([b, c]) => {
                     const on = !b.classList.contains('hidden');
                     b.classList.remove('hidden');
                     if (on) b.removeAttribute('disabled'); else b.setAttribute('disabled', '');
-                    b.className = on ? UNI(c) : UNI_OFF;
+                    b.className = (on ? UNI(c) : UNI_OFF) + (b === btnCrownChampion ? ' col-span-2 sm:col-span-1' : '');
                 });
             }
             {
@@ -3127,7 +3221,7 @@
                 const st = isSkipped ? 'skipped' : (isGameDone ? 'done' : (!isGameStarted ? 'waiting' : (isRoundActive ? 'playing' : 'paused')));
                 const map = { skipped: ['fa-forward', 'text-slate-500', 'text-slate-500'], done: ['fa-flag-checkered', 'text-indigo-400', 'text-slate-400'], waiting: ['fa-hourglass-start', 'text-slate-400', 'text-slate-300'], playing: ['fa-stopwatch animate-pulse', 'text-amber-400', 'text-amber-400'], paused: ['fa-circle-pause', 'text-rose-400', 'text-slate-400'] }[st];
                 if (tIcon) tIcon.className = 'fa-solid ' + map[0] + ' text-lg ' + map[1];
-                if (clk) clk.className = 'font-mono text-2xl font-black tracking-wider ' + map[2];
+                if (clk) clk.className = 'font-mono text-4xl sm:text-5xl font-black tracking-wider ' + map[2];
             }
             container.innerHTML = '';
             if (isSkipped) {
