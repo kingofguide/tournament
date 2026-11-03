@@ -167,6 +167,9 @@
     html.light .text-violet-300, html.light .text-violet-200 { color: rgb(109 40 217); }
         html.light .text-fuchsia-300, html.light .text-fuchsia-200 { color: rgb(162 28 175); }
         html.light .text-purple-200 { color: rgb(107 33 168); }
+    .mon-tag { color: var(--mc); background-color: color-mix(in srgb, var(--mc) 15%, transparent); border-color: color-mix(in srgb, var(--mc) 55%, transparent); }
+        button.mon-tag:hover { background-color: color-mix(in srgb, var(--mc) 28%, transparent); }
+        html.light .mon-tag { color: color-mix(in srgb, var(--mc) 60%, #000); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
@@ -534,6 +537,7 @@
                                 <th class="py-3 px-4 text-center">Points</th>
                                 <th id="th-bonus" class="py-3 px-4 text-center" title="Bonus Points">🎖️</th>
                                 <th class="py-3 px-4 text-center" title="Total Victory Points">⭐</th>
+                                <th class="py-3 px-4 text-center" title="Total Eliminations">💥</th>
                                 
                             </tr>
                         </thead>
@@ -824,8 +828,17 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.37';
+        const APP_VERSION = '2.38';
         const CHANGELOG = [
+            { "version": "2.38", "date": "November 2026", "items": [
+                "Leaderboard now shows eliminations per player",
+                "Monsters already picked by another player are greyed out in the monster picker",
+                "Table buttons are now Submit Results and Unlock Results. A submitted table turns every VP, HP, Bonus and Elimination chip orange and locks all of its buttons until it is unlocked",
+                "Semi tag now reads Semi Finalist",
+                "Eliminations counter now sits in line with VPs, HPs and Bonuses with the same look",
+                "The elimination picker shows each player's monster tag",
+                "Every monster has one emoji and its own tag colour, set in one easy-to-edit list in the code"
+            ]},
             { "version": "2.37", "date": "November 2026", "items": [
                 "Small tournaments (6 players or fewer) always have 3 finalist positions",
                 "The Semis start call-out now says \"The semi finals has started\"",
@@ -1661,40 +1674,45 @@
         // Every monster with official Evolution cards (promo monsters without evolution cards are not included).
         // The 3 letter code is the short tag shown next to a player's name.
         const MONSTERS = [
-            { name: 'Alienoid',        code: 'ALN', group: 'Tokyo' },
-            { name: 'Baby Gigazaur',   code: 'BGZ', group: 'Micro' },
-            { name: 'Cyber Bunny',     code: 'CBN', group: 'Tokyo' },
-            { name: 'Cyber Kitty',     code: 'CKT', group: 'Tokyo' },
-            { name: 'Gigazaur',        code: 'GZR', group: 'Tokyo' },
-            { name: 'Kraken',          code: 'KRN', group: 'Tokyo' },
-            { name: 'Meka Dragon',     code: 'MKD', group: 'Tokyo' },
-            { name: 'Space Penguin',   code: 'SPG', group: 'Tokyo' },
-            { name: 'The King',        code: 'KNG', group: 'Tokyo' },
-            { name: 'Boogie Woogie',   code: 'BWG', group: 'Spooky' },
-            { name: 'Pumpkin Jack',    code: 'PJK', group: 'Spooky' },
-            { name: 'Captain Fish',    code: 'CFH', group: 'New York' },
-            { name: 'Drakonis',        code: 'DRK', group: 'New York' },
-            { name: 'Kong',            code: 'KON', group: 'New York' },
-            { name: 'Mantis',          code: 'MNT', group: 'New York' },
-            { name: 'Rob',             code: 'ROB', group: 'New York' },
-            { name: 'Sheriff',         code: 'SHF', group: 'New York' },
-            { name: 'Pandakaï',        code: 'PDK', group: 'Power Up' },
-            { name: 'Mega Shark',      code: 'MSK', group: 'Power Up' },
-            { name: 'Anubis',          code: 'ANU', group: 'Monster Pack' },
-            { name: 'Cthulhu',         code: 'CTH', group: 'Monster Pack' },
-            { name: 'Cybertooth',      code: 'CYT', group: 'Monster Pack' },
-            { name: 'King Kong',       code: 'KKG', group: 'Monster Pack' },
-            { name: 'Luchador',        code: 'LCH', group: 'Monster Pack' },
-            { name: 'Master Mindbug',  code: 'MBG', group: 'Mindbug' },
-            { name: 'Sharky Crab-Dog Mummypus-Zilla', code: 'SHZ', group: 'Mindbug' },
-            { name: 'Gigasnail Hydra', code: 'GSH', group: 'Mindbug' },
-            { name: 'Godzilla',        code: 'GDZ', group: 'Godzilla' },
-            { name: 'Hedorah',         code: 'HDR', group: 'Godzilla' },
-            { name: 'King Ghidorah',   code: 'KGH', group: 'Godzilla' },
-            { name: 'Mechagodzilla',   code: 'MGZ', group: 'Godzilla' },
-            { name: 'Mothra',          code: 'MTH', group: 'Godzilla' },
-            { name: 'Rodan',           code: 'RDN', group: 'Godzilla' }
+            // EDIT HERE: name, 3 letter code, one emoji, tag colour (any hex), and group.
+            { name: 'Alienoid', code: 'ALN', emoji: '👽', color: '#a3e635', group: 'Tokyo' },
+            { name: 'Baby Gigazaur', code: 'BGZ', emoji: '🦕', color: '#4ade80', group: 'Micro' },
+            { name: 'Cyber Bunny', code: 'CBN', emoji: '🐰', color: '#f472b6', group: 'Tokyo' },
+            { name: 'Cyber Kitty', code: 'CKT', emoji: '🐱', color: '#22d3ee', group: 'Tokyo' },
+            { name: 'Gigazaur', code: 'GZR', emoji: '🦖', color: '#16a34a', group: 'Tokyo' },
+            { name: 'Kraken', code: 'KRN', emoji: '🦑', color: '#6366f1', group: 'Tokyo' },
+            { name: 'Meka Dragon', code: 'MKD', emoji: '🐉', color: '#ef4444', group: 'Tokyo' },
+            { name: 'Space Penguin', code: 'SPG', emoji: '🐧', color: '#7dd3fc', group: 'Tokyo' },
+            { name: 'The King', code: 'KNG', emoji: '👑', color: '#fbbf24', group: 'Tokyo' },
+            { name: 'Boogie Woogie', code: 'BWG', emoji: '👻', color: '#c4b5fd', group: 'Spooky' },
+            { name: 'Pumpkin Jack', code: 'PJK', emoji: '🎃', color: '#ea580c', group: 'Spooky' },
+            { name: 'Captain Fish', code: 'CFH', emoji: '🐟', color: '#14b8a6', group: 'New York' },
+            { name: 'Drakonis', code: 'DRK', emoji: '🐲', color: '#be123c', group: 'New York' },
+            { name: 'Kong', code: 'KON', emoji: '🐒', color: '#92400e', group: 'New York' },
+            { name: 'Mantis', code: 'MNT', emoji: '🦗', color: '#4d7c0f', group: 'New York' },
+            { name: 'Rob', code: 'ROB', emoji: '🤖', color: '#64748b', group: 'New York' },
+            { name: 'Sheriff', code: 'SHF', emoji: '🤠', color: '#a16207', group: 'New York' },
+            { name: 'Pandakaï', code: 'PDK', emoji: '🐼', color: '#d1d5db', group: 'Power Up' },
+            { name: 'Mega Shark', code: 'MSK', emoji: '🦈', color: '#0ea5e9', group: 'Power Up' },
+            { name: 'Anubis', code: 'ANU', emoji: '🐺', color: '#eab308', group: 'Monster Pack' },
+            { name: 'Cthulhu', code: 'CTH', emoji: '🐙', color: '#059669', group: 'Monster Pack' },
+            { name: 'Cybertooth', code: 'CYT', emoji: '🐅', color: '#0e7490', group: 'Monster Pack' },
+            { name: 'King Kong', code: 'KKG', emoji: '🦍', color: '#57534e', group: 'Monster Pack' },
+            { name: 'Luchador', code: 'LCH', emoji: '🤼', color: '#e11d48', group: 'Monster Pack' },
+            { name: 'Master Mindbug', code: 'MBG', emoji: '🐛', color: '#7c3aed', group: 'Mindbug' },
+            { name: 'Sharky Crab-Dog Mummypus-Zilla', code: 'SHZ', emoji: '🦀', color: '#fb7185', group: 'Mindbug' },
+            { name: 'Gigasnail Hydra', code: 'GSH', emoji: '🐌', color: '#a855f7', group: 'Mindbug' },
+            { name: 'Godzilla', code: 'GDZ', emoji: '☢️', color: '#1d4ed8', group: 'Godzilla' },
+            { name: 'Hedorah', code: 'HDR', emoji: '☣️', color: '#854d0e', group: 'Godzilla' },
+            { name: 'King Ghidorah', code: 'KGH', emoji: '⚡', color: '#fde047', group: 'Godzilla' },
+            { name: 'Mechagodzilla', code: 'MGZ', emoji: '⚙️', color: '#71717a', group: 'Godzilla' },
+            { name: 'Mothra', code: 'MTH', emoji: '🦋', color: '#f0abfc', group: 'Godzilla' },
+            { name: 'Rodan', code: 'RDN', emoji: '🦅', color: '#fb923c', group: 'Godzilla' },
         ];
+        // Small coloured tag (emoji + code). The colour comes from the monster's "color" above.
+        function monsterBadge(m, extra) {
+            return `<span class="mon-tag shrink-0 rounded-md border font-mono text-[10px] leading-none tracking-wider font-bold px-1.5 py-1 ${extra || ''}" style="--mc:${m.color}">${m.emoji} ${m.code}</span>`;
+        }
         MONSTERS.forEach(m => { m.key = m.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-'); });
         const monsterByKey = (key) => MONSTERS.find(m => m.key === key) || null;
         const searchText = (t) => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -1710,13 +1728,12 @@
             return key ? monsterByKey(key) : null;
         };
 
-        window.monsterTagHTML = function(playerId) {
+        window.monsterTagHTML = function(playerId, locked) {
             const m = window.getPlayerMonster(playerId);
-            const base = 'shrink-0 rounded-md border font-mono text-[10px] leading-none tracking-wider cursor-pointer transition-colors px-1.5 py-1 ';
             if (m) {
-                return `<button type="button" onclick="window.openMonsterPicker('${playerId}')" title="${escapeHtml(m.name)} (tap to change)" aria-label="Monster: ${escapeHtml(m.name)}, tap to change" class="${base} font-semibold border-slate-700 bg-slate-800/60 text-slate-400 hover:text-amber-300 hover:border-amber-500/50">${m.code}</button>`;
+                return `<button type="button" ${locked ? 'disabled' : ''} onclick="window.openMonsterPicker('${playerId}')" title="${escapeHtml(m.name)}${locked ? '' : ' (tap to change)'}" aria-label="Monster: ${escapeHtml(m.name)}" style="--mc:${m.color}" class="mon-tag shrink-0 rounded-md border font-mono text-[10px] leading-none tracking-wider font-bold px-1.5 py-1 transition-colors ${locked ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}">${m.emoji} ${m.code}</button>`;
             }
-            return `<button type="button" onclick="window.openMonsterPicker('${playerId}')" title="Add a monster" aria-label="Add a monster" class="${base} border-dashed border-slate-700 text-slate-500 hover:text-amber-300 hover:border-amber-500/50">+ MONSTER</button>`;
+            return `<button type="button" ${locked ? 'disabled' : ''} onclick="window.openMonsterPicker('${playerId}')" title="Add a monster" aria-label="Add a monster" class="shrink-0 rounded-md border border-dashed border-slate-700 text-slate-500 font-mono text-[10px] leading-none tracking-wider px-1.5 py-1 transition-colors ${locked ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-amber-300 hover:border-amber-500/50'}">+ MONSTER</button>`;
         };
 
         let monsterPickerPlayerId = null;
@@ -1738,14 +1755,15 @@
                 .map(m => {
                     const selected = m.key === current;
                     const taken = holders[m.key];
-                    const cls = selected ? 'bg-amber-500/15 border-amber-500/50' : 'bg-slate-950 border-slate-800 hover:border-amber-500/40';
-                    return `<button type="button" onclick="window.pickMonster('${m.key}')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl border text-left transition-colors cursor-pointer ${cls}">
-                        <span class="shrink-0 w-11 text-center font-mono text-[11px] font-bold tracking-wider px-1.5 py-1 rounded-md border border-slate-700 bg-slate-800/60 text-slate-300">${m.code}</span>
+                    const blocked = taken && !selected;
+                    const cls = selected ? 'bg-amber-500/15 border-amber-500/50 cursor-pointer' : (blocked ? 'bg-slate-900 border-slate-800 opacity-40 cursor-not-allowed' : 'bg-slate-950 border-slate-800 hover:border-amber-500/40 cursor-pointer');
+                    return `<button type="button" ${blocked ? 'disabled' : ''} onclick="window.pickMonster('${m.key}')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl border text-left transition-colors ${cls}">
+                        ${monsterBadge(m, 'w-14 text-center')}
                         <span class="min-w-0 flex-1">
                             <span class="block text-sm font-bold text-slate-100 truncate">${escapeHtml(m.name)}</span>
-                            <span class="block text-[10px] text-slate-500 truncate">${m.group}${taken ? ' · also picked by ' + escapeHtml(taken.join(', ')) : ''}</span>
+                            <span class="block text-[10px] text-slate-500 truncate">${m.group}${taken ? ' · picked by ' + escapeHtml(taken.join(', ')) : ''}</span>
                         </span>
-                        ${selected ? '<i class="fa-solid fa-check text-amber-400 text-xs shrink-0"></i>' : ''}
+                        ${selected ? '<i class="fa-solid fa-check text-amber-400 text-xs shrink-0"></i>' : (blocked ? '<i class="fa-solid fa-ban text-slate-600 text-xs shrink-0"></i>' : '')}
                     </button>`;
                 }).join('');
             document.getElementById('monster-list').innerHTML = rows || '<p class="text-center text-xs text-slate-500 py-8">No monsters match that search.</p>';
@@ -2271,7 +2289,8 @@
                     pts: 0,
                     bonusTotal: 0,
                     vpTotal: 0,
-                    hpTotal: 0
+                    hpTotal: 0,
+                    elimTotal: 0
                 };
             });
 
@@ -2299,6 +2318,7 @@
                                     p.bonusTotal += bonus;
                                     p.vpTotal += (parseInt(seat.vp) || 0);
                                     p.hpTotal += (parseInt(seat.hp) || 0);
+                                    p.elimTotal += (seat.elims || 0);
                                 }
                             });
                         }
@@ -2324,7 +2344,7 @@
                 : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs as the tiebreaker.';
 
             if (standings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${bonusesOn ? 7 : 6}" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${bonusesOn ? 8 : 7}" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
                 return;
             }
 
@@ -2343,6 +2363,7 @@
                         <td class="py-3 px-4 text-center font-extrabold text-amber-400 text-base">${s.pts}</td>
                         ${bonusesOn ? `<td class="py-3 px-4 text-center font-bold text-slate-300">${s.bonusTotal || 0}</td>` : ''}
                         <td class="py-3 px-4 text-center font-bold text-blue-400">${s.vpTotal}</td>
+                        <td class="py-3 px-4 text-center font-bold text-slate-300">${s.elimTotal || 0}</td>
                     </tr>
                 `;
             }).join('');
@@ -2460,22 +2481,25 @@
                     : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30 uppercase font-bold">Finalist</span>';
                 else if (inS && seat.tier) roleTag = seat.tier === 'out'
                     ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Consolation</span>'
-                    : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 uppercase font-bold">Semi</span>';
+                    : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 uppercase font-bold">Semi Finalist</span>';
+                const chip = locked ? 'bg-amber-500/15 border-amber-400 cursor-not-allowed' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60 cursor-pointer';
+                const val = locked ? 'text-amber-300' : 'text-white';
+                const dis = locked ? 'disabled' : '';
                 return `
-                    <div draggable="true" ondragstart="window.handleDragStart(event, '${table.id}', '${seat.playerId}')" ondragend="window.handleDragEnd(event)"
-                         class="flex flex-col gap-1 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors cursor-grab active:cursor-grabbing ${left ? 'opacity-50' : (isOut ? 'opacity-75 border-dashed' : '')}">
+                    <div draggable="${locked ? 'false' : 'true'}" ondragstart="window.handleDragStart(event, '${table.id}', '${seat.playerId}')" ondragend="window.handleDragEnd(event)"
+                         class="flex flex-col gap-1 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors ${locked ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'} ${left ? 'opacity-50' : (isOut ? 'opacity-75 border-dashed' : '')}">
                         <div class="flex items-center gap-2 min-w-0">
                             <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">${rank || (sIdx + 1)}</span>
                             <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
                             ${roleTag}
-                            ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId) : '')}
-                            ${seat.elims > 0 ? `<span title="Eliminations" class="shrink-0 text-[10px] font-bold text-slate-400">💥 +${seat.elims}</span>` : ''}
+                            ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId, locked) : '')}
                         </div>
                         <div class="flex items-center gap-1.5" ondragstart="event.stopPropagation()">
-                            <button type="button" title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-amber-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-white text-center">${seat.vp}</span></button>
-                            <button type="button" title="Health Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-rose-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">${(parseInt(seat.hp) || 0) === 0 ? '💀' : '❤️'}</span><span class="w-6 text-xs font-bold text-white text-center">${seat.hp}</span></button>
-                            ${window.bonusesEnabled() ? `<button type="button" title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 cursor-pointer transition-colors ${bonusCount > 0 ? 'bg-amber-500/15 border-amber-400 hover:bg-amber-500/25' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60'}"><span class="text-[11px] leading-none">🎖️</span><span class="w-6 text-xs font-bold text-center ${bonusCount > 0 ? 'text-amber-300' : 'text-white'}">${bonusCount}</span></button>` : ''}
-                            <button type="button" onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="ml-auto bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-slate-400 hover:text-amber-300 rounded-lg px-2 py-1 cursor-pointer transition-colors"><i class="fa-solid fa-gear text-[11px]"></i></button>
+                            <button type="button" ${dis} title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.vp}</span></button>
+                            <button type="button" ${dis} title="Health Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">${(parseInt(seat.hp) || 0) === 0 ? '💀' : '❤️'}</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.hp}</span></button>
+                            ${window.bonusesEnabled() ? `<button type="button" ${dis} title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">🎖️</span><span class="w-6 text-xs font-bold text-center ${locked ? 'text-amber-300' : (bonusCount > 0 ? 'text-amber-300' : 'text-white')}">${bonusCount}</span></button>` : ''}
+                            <span title="Eliminations" class="flex items-center gap-1 border rounded-lg px-2 py-1 ${locked ? 'bg-amber-500/15 border-amber-400' : 'bg-slate-950 border-slate-700'}"><span class="text-[11px] leading-none">💥</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.elims || 0}</span></span>
+                            <button type="button" ${dis} onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="ml-auto border rounded-lg px-2 py-1 transition-colors ${locked ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60 text-slate-400 hover:text-amber-300 cursor-pointer'}"><i class="fa-solid fa-gear text-[11px]"></i></button>
                         </div>
                     </div>`;
             }).join('');
@@ -2488,7 +2512,7 @@
                     </div>
                     <div class="flex items-center gap-1.5 shrink-0">
                         ${cons && !locked ? `<button onclick="window.toggleTableSkip('${table.id}')" class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors ${skipped ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'}"><i class="fa-solid ${skipped ? 'fa-rotate-left' : 'fa-forward'}"></i> ${skipped ? 'Unskip' : 'Skip'}</button>` : ''}
-                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700' : 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25'}"><i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock &amp; resume' : 'Submit &amp; lock'}</button>`}
+                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700' : 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25'}"><i class="fa-solid ${locked ? 'fa-lock' : 'fa-lock-open'}"></i> ${locked ? 'Unlock Results' : 'Submit Results'}</button>`}
                     </div>
                 </div>
                 ${skipped ? `<div class="rounded-xl border border-dashed border-slate-700 py-4 px-3 text-center text-xs text-slate-500"><i class="fa-solid fa-forward mr-1"></i> Table skipped, not played<div class="mt-1 text-[11px] text-slate-600 truncate">${table.seats.map(x => escapeHtml((window.tournament.players.find(p => p.id === x.playerId) || {}).name || "")).join(", ")}</div></div>` : `<div class="space-y-1.5">${seatsHTML}</div>`}`;
@@ -2524,7 +2548,7 @@
             document.getElementById('elim-sub').textContent = nameOf(playerId) + ' was eliminated';
             const btn = 'w-full px-3 py-2 rounded-xl border text-left text-sm font-bold cursor-pointer transition-colors bg-slate-950 border-slate-700 text-slate-200 hover:border-amber-500/60 hover:text-amber-300';
             document.getElementById('elim-list').innerHTML = table.seats.filter(x => x.playerId !== playerId).map(x =>
-                `<button type="button" onclick="window.pickEliminator('${x.playerId}')" class="${btn}">${escapeHtml(nameOf(x.playerId))}</button>`).join('')
+                `<button type="button" onclick="window.pickEliminator('${x.playerId}')" class="${btn} flex items-center justify-between gap-2"><span class="truncate">${escapeHtml(nameOf(x.playerId))}</span>${(() => { const mm = window.getPlayerMonster(x.playerId); return mm ? monsterBadge(mm) : ''; })()}</button>`).join('')
                 + `<button type="button" onclick="window.pickEliminator('self')" class="${btn}">Themselves</button>`;
             document.getElementById('elim-modal').classList.remove('hidden');
         };
@@ -2696,6 +2720,7 @@
             const sourceTable = game.tables.find(t => t.id === sourceTableId);
             const targetTable = game.tables.find(t => t.id === targetTableId);
             if (!sourceTable || !targetTable) return;
+            if (sourceTable.completed || targetTable.completed) { window.showToast('Unlock the table first.', 'error'); return; }
             if (!sourceTable.seats.some(s => s.playerId === playerId)) return;
 
             // Seating is shared across the round, so the move applies to this game and every later game in the round
