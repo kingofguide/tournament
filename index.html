@@ -346,9 +346,10 @@
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-trophy text-slate-500 mr-1"></i> Tournament Mode</label>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button type="button" data-mode="points" onclick="window.setMode(false)" class="mode-btn px-2 py-2.5 rounded-xl border text-xs font-extrabold transition-colors cursor-pointer">Highest Points Wins</button>
-                            <button type="button" data-mode="wta" onclick="window.setMode(true)" class="mode-btn px-2 py-2.5 rounded-xl border text-xs font-extrabold transition-colors cursor-pointer">Winner Takes All</button>
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <button type="button" data-mode="points" onclick="window.setMode('points')" class="mode-btn"></button>
+                            <button type="button" data-mode="wta" onclick="window.setMode('wta')" class="mode-btn"></button>
+                            <button type="button" data-mode="kills" onclick="window.setMode('kills')" class="mode-btn"></button>
                         </div>
                         <p id="mode-help" class="text-[10px] text-slate-500 mt-1.5 leading-snug"></p>
                     </div>
@@ -743,9 +744,9 @@
 
     <div id="player-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closePlayerMenu()"><div class="bg-slate-900 border border-slate-800 w-full sm:max-w-md rounded-2xl shadow-2xl max-h-[88vh] overflow-y-auto custom-scrollbar p-4 space-y-4"><div class="flex items-center justify-between"><h3 class="font-extrabold text-white text-sm"><i class="fa-solid fa-gear text-amber-400 mr-1.5"></i>Player Settings</h3><button type="button" onclick="window.closePlayerMenu()" aria-label="Close" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark"></i></button></div><div id="player-modal-body" class="space-y-4"></div></div></div>
 
-    <div id="elim-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4"><div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3"><div><h3 class="font-extrabold text-white text-sm">💥 Who eliminated them?</h3><p id="elim-sub" class="text-[11px] text-slate-400 truncate"></p></div><div id="elim-list" class="space-y-1.5"></div><button type="button" onclick="window.closeElimPicker()" class="w-full h-9 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Not sure, skip</button></div></div>
+    <div id="elim-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4"><div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3"><div><h3 class="font-extrabold text-white text-sm">💥 Who eliminated them?</h3><p id="elim-sub" class="text-[11px] text-slate-400"></p></div><div id="elim-list" class="space-y-1.5"></div><button type="button" onclick="window.closeElimPicker()" class="w-full h-9 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Not sure, skip</button></div></div>
 
-    <div id="kills-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4"><div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3"><div><h3 class="font-extrabold text-white text-sm">💥 Who did they eliminate?</h3><p id="kills-sub" class="text-[11px] text-slate-400 truncate"></p></div><div id="kills-list" class="space-y-1.5"></div><button type="button" onclick="window.closeKillsPicker()" class="w-full h-9 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400 cursor-pointer">Done</button></div></div>
+    <div id="kills-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4"><div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3"><div><h3 class="font-extrabold text-white text-sm">💥 Who did they eliminate?</h3><p id="kills-sub" class="text-[11px] text-slate-400"></p></div><div id="kills-list" class="space-y-1.5"></div><button type="button" onclick="window.closeKillsPicker()" class="w-full h-9 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400 cursor-pointer">Done</button></div></div>
 
     <!-- Bonus Modal -->
     <div id="bonus-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeBonusModal()">
@@ -832,8 +833,18 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.40';
+        const APP_VERSION = '2.41';
         const CHANGELOG = [
+            { "version": "2.41", "date": "November 2026", "items": [
+                "Fixed inflated points: Tanker was being given to every player on a table when health was tied, which stacked up over games. Tanker now needs a real difference in health, and Smasher and Tanker update live",
+                "Points are now calculated in one place, so tables, the Player settings and the leaderboard always agree",
+                "Every seat shows a live points chip: points for this game, with the tournament total in brackets",
+                "Player settings cog moved into the name row as a plain icon, and it stays usable on submitted tables for last-minute changes",
+                "Submitted tables grey out their stats instead of turning orange",
+                "New Most Kills Wins mode: 1 point per elimination plus bonuses, VPs and places do not score",
+                "Winner Takes All now works as a crown on the Finals winner, with scoring unchanged; the crowned player shows 👑",
+                "Elimination pickers show the player's monster tag next to their name"
+            ]},
             { "version": "2.40", "date": "November 2026", "items": [
                 "2 and 3 player tournaments now go through the Semis: everyone is a semi finalist, then 2 players reach the Finals",
                 "New Tournament Mode setting: Highest Points Wins (default) or Winner Takes All, where the Finals winner takes 1st place on the leaderboard. It is saved with the Custom template",
@@ -1249,7 +1260,7 @@
                     roundTimerMinutes: parseInt(document.getElementById('setting-round-timer').value) || 30,
                     bonusesEnabled: document.getElementById('setting-bonuses').checked,
                     monstersEnabled: document.getElementById('setting-monsters').checked,
-                    winnerTakesAll: !!window.tournament.settings.winnerTakesAll
+                    winnerTakesAll: !!window.tournament.settings.winnerTakesAll, mode: window.getMode()
                 },
                 players: [],
                 rounds: [],
@@ -1339,7 +1350,7 @@
                 timer: readSetting('setting-round-timer'),
                 bonuses: document.getElementById('setting-bonuses').checked,
                 monsters: document.getElementById('setting-monsters').checked,
-                mode: window.tournament.settings.winnerTakesAll ? 'wta' : 'points', sfx: soundPrefs.enabled, sfxVoice: soundPrefs.voice || '', sfxRate: soundPrefs.rate, sfxPitch: soundPrefs.pitch, sfxVol: soundPrefs.volume
+                mode: window.getMode(), sfx: soundPrefs.enabled, sfxVoice: soundPrefs.voice || '', sfxRate: soundPrefs.rate, sfxPitch: soundPrefs.pitch, sfxVol: soundPrefs.volume
             };
         }
 
@@ -1419,7 +1430,7 @@
             const secondsPerTurn = (timer * 60) / (size * TURNS_EACH);
             const totalMinutes = estimateMinutes(size, timer, totalGames);
             const n = window.tournament.players.length;
-            const wta = !!window.tournament.settings.winnerTakesAll;
+            const mode = window.getMode();
             const strong = (t) => `<strong class="text-amber-400">${t}</strong>`;
             const counts = n >= 2
                 ? `With ${strong(n + ' players')} there will be ${strong(semiCount(n) + ' semi finalists')} and ${strong(finalCount(n, size) + ' finalists')}.`
@@ -1427,8 +1438,8 @@
             el.innerHTML =
                 `<span class="block">Your tournament will have ${strong(totalGames + ' games')}: ${roundGames} in the rounds (${rounds} x ${gamesPerRound}), ${semis} in the semis and 1 final. That is roughly ${strong(formatDuration(totalMinutes))} in total, with about ${strong(formatTurnTime(secondsPerTurn))} per turn (around ${TURNS_EACH} turns each).</span>` +
                 `<span class="block mt-2">Everyone plays every game. After the rounds, players are seeded by standings into the Semis and then the Finals, so nobody sits out. ${counts}</span>` +
-                `<span class="block mt-2">Places score 3, 2 and 1 points by VPs, plus bonuses if enabled. Eliminated players do not rank. Consolation players keep their stats but earn no tournament points.</span>` +
-                `<span class="block mt-2">Mode: ${strong(wta ? 'Winner Takes All' : 'Highest Points Wins')}. ${wta ? 'The Finals winner takes 1st place overall.' : 'The most points after the Finals wins.'}</span>`;
+                `<span class="block mt-2">${mode === 'kills' ? 'Points come from eliminations (1 each), plus bonuses if enabled. VPs and places do not score.' : 'Places score 3, 2 and 1 points by VPs, plus bonuses if enabled.'} Eliminated players do not rank. Consolation players keep their stats but earn no tournament points.</span>` +
+                `<span class="block mt-2">Mode: ${strong({ points: 'Highest Points Wins', wta: 'Winner Takes All', kills: 'Most Kills Wins' }[mode])}. ${{ points: 'The most points after the Finals wins.', wta: 'Scoring is unchanged, but the Finals winner takes the crown and 1st place overall.', kills: 'The most eliminations (plus bonuses) wins.' }[mode]}</span>`;
         }
 
         // Keeps slider fill, value badges and the option buttons in step with the inputs
@@ -1449,14 +1460,16 @@
 
             renderTournamentOverview();
             (function () {
-                const wta = !!window.tournament.settings.winnerTakesAll;
+                const mode = window.getMode();
+                const labels = { points: 'Highest Points Wins', wta: 'Winner Takes All', kills: 'Most Kills Wins' };
                 document.querySelectorAll('.mode-btn').forEach(btn => {
-                    const active = (btn.dataset.mode === 'wta') === wta;
-                    btn.className = 'mode-btn px-2 py-2.5 rounded-xl border text-xs font-extrabold transition-colors cursor-pointer ' +
+                    const active = btn.dataset.mode === mode;
+                    btn.textContent = labels[btn.dataset.mode];
+                    btn.className = 'mode-btn px-1.5 py-2 min-h-[3rem] rounded-xl border text-[11px] leading-tight font-extrabold transition-colors cursor-pointer ' +
                         (active ? 'bg-amber-500/15 border-amber-400 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-amber-500/50 hover:text-amber-300');
                 });
                 const h = document.getElementById('mode-help');
-                if (h) h.textContent = wta ? 'The Finals still score as normal, but whoever wins the Finals game takes 1st place on the leaderboard.' : 'The player with the most tournament points after the Finals wins.';
+                if (h) h.textContent = ({ points: 'The player with the most tournament points after the Finals wins.', wta: 'Scoring is unchanged, but whoever wins the Finals game takes the crown and shows first on the leaderboard.', kills: 'Points come from eliminations (1 each) plus bonuses. VPs and places do not score. Most points wins.' })[mode];
             })();
             renderTemplateButtons();
             syncCustomSaveButton();
@@ -1612,7 +1625,7 @@
                 document.getElementById('setting-bonuses').checked = saved.bonuses !== false;
                 document.getElementById('setting-monsters').checked = saved.monsters !== false;
                 soundPrefs.enabled = saved.sfx !== false;
-                window.tournament.settings.winnerTakesAll = saved.mode === 'wta';
+                window.tournament.settings.mode = saved.mode || 'points'; window.tournament.settings.winnerTakesAll = saved.mode === 'wta';
                 soundPrefs.voice = saved.sfxVoice || ''; soundPrefs.rate = saved.sfxRate || 1; soundPrefs.pitch = saved.sfxPitch || 1; soundPrefs.volume = saved.sfxVol != null ? saved.sfxVol : 0.8;
                 if (typeof populateVoices === 'function') populateVoices();
                 saveSoundPrefs();
@@ -1629,8 +1642,9 @@
             window.updateSettings();
         };
 
-        window.setMode = function(wta) {
-            window.tournament.settings.winnerTakesAll = !!wta;
+        window.setMode = function(mode) {
+            window.tournament.settings.mode = mode;
+            window.tournament.settings.winnerTakesAll = mode === 'wta';
             window.updateSettings();
         };
 
@@ -2350,68 +2364,61 @@
         });
 
         // Standings & Scoring Calculations
-        window.calculateStandings = function() {
+        window.getMode = function() { const st = window.tournament.settings || {}; return st.mode || (st.winnerTakesAll ? 'wta' : 'points'); };
+        window.seatGamePoints = function(seat, round) {
+            const cons = seat.scored === false || (round && round.isSemis && seat.tier === 'out');
+            if (cons) return 0;
+            const rank = parseInt(seat.rank) || 0;
+            const base = window.getMode() === 'kills' ? (seat.elims || 0) : ([0, 3, 2, 1][rank] || 0);
+            return base + window.getBonusCount(seat);
+        };
+
+        window.calculateStandings = function(excludeTableId) {
             const stats = {};
             window.tournament.players.forEach(p => {
-                stats[p.id] = {
-                    id: p.id,
-                    name: p.name,
-                    gamesPlayed: 0,
-                    wins: 0,
-                    pts: 0,
-                    bonusTotal: 0,
-                    vpTotal: 0,
-                    hpTotal: 0,
-                    elimTotal: 0
-                };
+                stats[p.id] = { id: p.id, name: p.name, gamesPlayed: 0, wins: 0, pts: 0, bonusTotal: 0, vpTotal: 0, hpTotal: 0, elimTotal: 0, crown: false };
             });
-
-            // Scoring rule: 3 pts for 1st, 2 pts for 2nd, 1 pt for 3rd, plus 1 pt per bonus
-            const ptsLookup = [0, 3, 2, 1];
-
-            window.tournament.rounds.forEach((round) => {
-                round.games.forEach((game) => {
+            window.tournament.rounds.forEach(round => {
+                round.games.forEach(game => {
                     if (game.skipped) return;
-                    game.tables.forEach((table) => {
-                        if ((round.isFinals || round.isSemis) && table.isFinalsTable === false) {
-                            return;
-                        }
-
-                        if (table.completed) {
-                            table.seats.forEach(seat => {
-                                const cons = seat.scored === false || (round.isSemis && seat.tier === 'out');
-                                const p = stats[seat.playerId];
-                                if (p) {
-                                    p.gamesPlayed += 1;
-                                    const rank = parseInt(seat.rank) || 0;
-                                    if (rank === 1) p.wins += 1;
-                                    const bonus = window.getBonusCount(seat);
-                                    p.pts += (ptsLookup[rank] || 0) + bonus;
-                                    p.bonusTotal += bonus;
-                                    p.vpTotal += (parseInt(seat.vp) || 0);
-                                    p.hpTotal += (parseInt(seat.hp) || 0);
-                                    p.elimTotal += (seat.elims || 0);
-                                    if (cons) { p.pts -= (ptsLookup[rank] || 0) + bonus; if (rank === 1) p.wins -= 1; }
-                                }
-                            });
-                        }
+                    game.tables.forEach(table => {
+                        if (!table.completed || table.skipped || table.id === excludeTableId) return;
+                        if ((round.isFinals || round.isSemis) && table.isFinalsTable === false) return;
+                        table.seats.forEach(seat => {
+                            const p = stats[seat.playerId];
+                            if (!p) return;
+                            const cons = seat.scored === false || (round.isSemis && seat.tier === 'out');
+                            p.gamesPlayed += 1;
+                            p.bonusTotal += window.getBonusCount(seat);
+                            p.vpTotal += parseInt(seat.vp) || 0;
+                            p.hpTotal += parseInt(seat.hp) || 0;
+                            p.elimTotal += seat.elims || 0;
+                            if (cons) return;
+                            if ((parseInt(seat.rank) || 0) === 1) p.wins += 1;
+                            p.pts += window.seatGamePoints(seat, round);
+                        });
                     });
                 });
             });
-
+            const kills = window.getMode() === 'kills';
             const list = Object.values(stats).sort((a, b) => {
                 if (b.pts !== a.pts) return b.pts - a.pts;
+                if (kills && b.elimTotal !== a.elimTotal) return b.elimTotal - a.elimTotal;
                 if (b.wins !== a.wins) return b.wins - a.wins;
-                if (b.vpTotal !== a.vpTotal) return b.vpTotal - a.vpTotal;
-                return 0;
+                if (!kills && b.vpTotal !== a.vpTotal) return b.vpTotal - a.vpTotal;
+                return b.elimTotal - a.elimTotal;
             });
-            const cid = wtaChampionId();
-            if (cid) { const i = list.findIndex(x => x.id === cid); if (i > 0) list.unshift(list.splice(i, 1)[0]); }
+            const cid = excludeTableId ? null : wtaChampionId();
+            if (cid) {
+                stats[cid].crown = true;
+                const i = list.findIndex(x => x.id === cid);
+                if (i > 0) list.unshift(list.splice(i, 1)[0]);
+            }
             return list;
         };
 
         function wtaChampionId() {
-            if (!window.tournament.settings.winnerTakesAll) return null;
+            if (window.getMode() !== 'wta') return null;
             const fr = window.tournament.rounds.find(r => r.isFinals);
             if (!fr) return null;
             const tbls = fr.games[0].tables.filter(t => t.seats.some(x => x.scored !== false));
@@ -2431,8 +2438,8 @@
             const bonusesOn = window.bonusesEnabled();
             document.getElementById('th-bonus').classList.toggle('hidden', !bonusesOn);
             document.getElementById('standings-rules-text').textContent = bonusesOn
-                ? 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs as the tiebreaker.' + (window.tournament.settings.winnerTakesAll ? ' Winner Takes All: the Finals winner takes 1st place overall.' : '')
-                : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs as the tiebreaker.' + (window.tournament.settings.winnerTakesAll ? ' Winner Takes All: the Finals winner takes 1st place overall.' : '');
+                ? 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs as the tiebreaker.' + (window.tournament.settings.winnerTakesAll ? ' Winner Takes All: the Finals winner takes the crown and 1st place overall.' : '') + (window.getMode() === 'kills' ? ' Most Kills Wins: 1 point per elimination plus bonuses. VPs do not score.' : '')
+                : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs as the tiebreaker.' + (window.tournament.settings.winnerTakesAll ? ' Winner Takes All: the Finals winner takes the crown and 1st place overall.' : '') + (window.getMode() === 'kills' ? ' Most Kills Wins: 1 point per elimination plus bonuses. VPs do not score.' : '');
 
             if (standings.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="${bonusesOn ? 8 : 7}" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
@@ -2448,7 +2455,7 @@
                 return `
                     <tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="py-3 px-4">${rankBadge}</td>
-                        <td class="py-3 px-4 font-bold text-white">${escapeHtml(s.name)}${(window.tournament.players.find(p => p.id === s.id) || {}).left ? ' <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase">Left</span>' : ''}</td>
+                        <td class="py-3 px-4 font-bold text-white">${escapeHtml(s.name)}${s.crown ? ' 👑' : ''}${(window.tournament.players.find(p => p.id === s.id) || {}).left ? ' <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase">Left</span>' : ''}</td>
                         <td class="py-3 px-4 text-center font-semibold text-slate-400">${s.gamesPlayed}</td>
                         <td class="py-3 px-4 text-center font-bold text-emerald-400">${s.wins}</td>
                         <td class="py-3 px-4 text-center font-extrabold text-amber-400 text-base">${s.pts}</td>
@@ -2544,7 +2551,7 @@
             const card = document.createElement('div');
             const unstarted = !game.started, locked = !!table.completed;
             const standMap = {};
-            if (locked) window.calculateStandings().forEach(x => { standMap[x.id] = x; });
+            window.calculateStandings(table.id).forEach(x => { standMap[x.id] = x; });
             const round = window.getCurrentRound();
             const skipped = !!table.skipped, cons = isConsolationTable(round, table);
             const special = round && (round.isFinals || round.isSemis) && table.isFinalsTable !== false && !cons;
@@ -2566,6 +2573,8 @@
                 const rank = parseInt(seat.rank) || 0;
                 const bonusCount = window.getBonusCount(seat);
                 const left = !!playerObj.left;
+                const gp = window.seatGamePoints(seat, round);
+                const tot = ((standMap[seat.playerId] || { pts: 0 }).pts) + gp;
                 const inF = round && round.isFinals, inS = round && round.isSemis;
                 const isOut = (inF && seat.scored === false) || (inS && seat.tier === 'out');
                 let roleTag = '';
@@ -2576,8 +2585,8 @@
                     ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Consolation</span>'
                     : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 uppercase font-bold">Semi Finalist</span>';
                 if (roleTag && !locked) roleTag = roleTag.replace('<span ', `<button type="button" onclick="window.toggleRole('${table.id}', '${seat.playerId}')" title="Tap to move between finalist and consolation" `).replace('</span>', '</button>');
-                const chip = locked ? 'bg-amber-500/15 border-amber-400 cursor-not-allowed' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60 cursor-pointer';
-                const val = locked ? 'text-amber-300' : 'text-white';
+                const chip = locked ? 'bg-slate-900 border-slate-800 cursor-not-allowed' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60 cursor-pointer';
+                const val = locked ? 'text-slate-500' : 'text-white';
                 const dis = locked ? 'disabled' : '';
                 return `
                     <div draggable="${locked ? 'false' : 'true'}" ondragstart="window.handleDragStart(event, '${table.id}', '${seat.playerId}')" ondragend="window.handleDragEnd(event)"
@@ -2587,14 +2596,14 @@
                             <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
                             ${roleTag}
                             ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId, locked) : '')}
+                            <button type="button" onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="ml-auto shrink-0 text-slate-500 hover:text-amber-300 cursor-pointer transition-colors"><i class="fa-solid fa-gear text-sm"></i></button>
                         </div>
                         <div class="flex flex-wrap items-center gap-1.5" ondragstart="event.stopPropagation()">
                             <button type="button" ${dis} title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.vp}</span></button>
                             <button type="button" ${dis} title="Health Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">${(parseInt(seat.hp) || 0) === 0 ? '💀' : '❤️'}</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.hp}</span></button>
-                            ${window.bonusesEnabled() ? `<button type="button" ${dis} title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">🎖️</span><span class="w-6 text-xs font-bold text-center ${locked ? 'text-amber-300' : (bonusCount > 0 ? 'text-amber-300' : 'text-white')}">${bonusCount}</span></button>` : ''}
+                            ${window.bonusesEnabled() ? `<button type="button" ${dis} title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">🎖️</span><span class="w-6 text-xs font-bold text-center ${locked ? 'text-slate-500' : (bonusCount > 0 ? 'text-amber-300' : 'text-white')}">${bonusCount}</span></button>` : ''}
                             <button type="button" ${dis} title="Eliminations: tap to choose who this player eliminated" onclick="window.openKillsPicker('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">💥</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.elims || 0}</span></button>
-                            ${locked ? `<span title="Overall tournament points" class="flex items-center gap-1 border rounded-lg px-2 py-1 bg-amber-500/15 border-amber-400"><span class="text-[11px] leading-none">🏆</span><span class="w-6 text-xs font-bold text-center text-amber-300">${(standMap[seat.playerId] || { pts: 0 }).pts}</span></span>` : ''}
-                            <button type="button" ${dis} onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="ml-auto border rounded-lg px-2 py-1 transition-colors ${locked ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60 text-slate-400 hover:text-amber-300 cursor-pointer'}"><i class="fa-solid fa-gear text-[11px]"></i></button>
+                            <span title="Points: ${gp} this game, ${tot} in the tournament so far" class="flex items-center gap-1 border rounded-lg px-2 py-1 bg-amber-500/10 border-amber-500/50"><span class="text-[11px] leading-none">🏅</span><span class="text-xs font-extrabold text-amber-300">+${gp}</span><span class="text-[10px] font-bold text-amber-200/70">(${tot})</span></span>
                         </div>
                     </div>`;
             }).join('');
@@ -2624,7 +2633,7 @@
             round.games.forEach((g, gi) => {
                 if (gi < fromGame) return;
                 g.tables.forEach(t => t.seats.forEach(x => {
-                    if (x.playerId !== playerId || t.completed) return;
+                    if (x.playerId !== playerId) return;
                     if (round.isSemis && x.tier !== undefined) x.tier = fin ? 'in' : 'out';
                     if (round.isFinals && x.scored !== undefined) x.scored = fin;
                 }));
@@ -2653,11 +2662,12 @@
             if (!window.bonusesEnabled()) return;
             const maxE = Math.max(0, ...table.seats.map(x => x.elims || 0));
             const maxH = Math.max(0, ...table.seats.map(x => parseInt(x.hp) || 0));
+            const allSameHp = table.seats.every(x => (parseInt(x.hp) || 0) === (parseInt(table.seats[0].hp) || 0));
             table.seats.forEach(x => {
                 x.bonuses = x.bonuses || {};
                 const man = x.bonusManual || {};
                 if (!man.smasher) x.bonuses.smasher = maxE > 0 && (x.elims || 0) === maxE;
-                if (!man.tanker) x.bonuses.tanker = maxH > 0 && (parseInt(x.hp) || 0) === maxH;
+                if (!man.tanker) x.bonuses.tanker = !allSameHp && maxH > 0 && (parseInt(x.hp) || 0) === maxH;
             });
         }
         window.openElimPicker = function(tableId, playerId) {
@@ -2667,7 +2677,7 @@
             if (!victim) return;
             elimCtx = { tableId, playerId };
             const nameOf = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
-            document.getElementById('elim-sub').textContent = nameOf(playerId) + ' was eliminated';
+            { const mm0 = window.getPlayerMonster(playerId); document.getElementById('elim-sub').innerHTML = `<span class="inline-flex items-center gap-1.5">${escapeHtml(nameOf(playerId))} ${mm0 ? monsterBadge(mm0) : ''} <span>was eliminated</span></span>`; }
             const btn = 'w-full px-3 py-2 rounded-xl border text-left text-sm font-bold cursor-pointer transition-colors bg-slate-950 border-slate-700 text-slate-200 hover:border-amber-500/60 hover:text-amber-300';
             document.getElementById('elim-list').innerHTML = table.seats.filter(x => x.playerId !== playerId).map(x =>
                 `<button type="button" onclick="window.pickEliminator('${x.playerId}')" class="${btn} flex items-center justify-between gap-2"><span class="truncate">${escapeHtml(nameOf(x.playerId))}</span>${(() => { const mm = window.getPlayerMonster(x.playerId); return mm ? monsterBadge(mm) : ''; })()}</button>`).join('')
@@ -2685,6 +2695,7 @@
                 if (k === 'self') victim.elimBy = victim.playerId;
                 else if (table.seats.some(x => x.playerId === k)) victim.elimBy = k;
                 recomputeElims(table);
+                autoBonuses(table);
             }
             window.closeElimPicker();
             window.saveTournament(); window.renderAll();
@@ -2697,7 +2708,7 @@
             const killer = table && table.seats.find(x => x.playerId === killsCtx.playerId);
             if (!killer) { window.closeKillsPicker(); return; }
             const nameOf = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
-            document.getElementById('kills-sub').textContent = nameOf(killer.playerId) + ' · ' + (killer.elims || 0) + ' eliminated';
+            { const mm0 = window.getPlayerMonster(killer.playerId); document.getElementById('kills-sub').innerHTML = `<span class="inline-flex items-center gap-1.5">${escapeHtml(nameOf(killer.playerId))} ${mm0 ? monsterBadge(mm0) : ''} <span>· ${killer.elims || 0} eliminated</span></span>`; }
             document.getElementById('kills-list').innerHTML = table.seats.filter(x => x.playerId !== killer.playerId).map(x => {
                 const on = x.elimBy === killer.playerId;
                 const other = x.elimBy && x.elimBy !== killer.playerId;
@@ -2708,7 +2719,7 @@
         window.openKillsPicker = function(tableId, playerId) {
             const game = window.getCurrentGame();
             const table = game && game.tables.find(t => t.id === tableId);
-            if (!table || table.completed) return;
+            if (!table) return;
             killsCtx = { tableId, playerId };
             renderKillsPicker();
             document.getElementById('kills-modal').classList.remove('hidden');
@@ -2723,6 +2734,7 @@
             else { victim.elimBy = killsCtx.playerId; victim.hp = 0; victim.vp = 0; }
             recomputeElims(table);
             if (game.started) rankTable(table);
+            autoBonuses(table);
             window.saveTournament(); window.renderAll();
             renderKillsPicker();
         };
@@ -2759,7 +2771,8 @@
             const desc = (max, cur, skull) => { let o = ''; for (let n = max; n >= 0; n--) o += `<option value="${n}" ${n === cur ? 'selected' : ''}>${skull && n === 0 ? '💀 0 (eliminated)' : n}</option>`; return o; };
             const rankOpts = '<option value="0"' + (d.rank === 0 ? ' selected' : '') + '>Auto</option>' + Array.from({ length: table.seats.length }, (_, i) => `<option value="${i + 1}" ${d.rank === i + 1 ? 'selected' : ''}>${i + 1}${getOrdinalSuffix(i + 1)}</option>`).join('');
             const m = window.getPlayerMonster(player.id);
-            const st = window.calculateStandings();
+            const st = window.calculateStandings(table.id);
+            const gp = window.seatGamePoints(seat, window.getCurrentRound());
             const pos = st.findIndex(x => x.id === player.id);
             const me = st[pos] || { pts: 0 };
             const nameOf = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
@@ -2768,9 +2781,9 @@
             document.getElementById('player-modal-body').innerHTML = `
                 <div class="flex items-center justify-between gap-3">
                     <div class="min-w-0"><div class="font-extrabold text-white text-base truncate">${escapeHtml(player.name)}</div><div class="text-[11px] text-slate-400">${escapeHtml(table.tableName || 'Table')}</div></div>
-                    <div class="shrink-0 text-right"><div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Overall</div><div class="text-sm font-extrabold text-amber-400">🏅 ${me.pts} pts <span class="text-slate-500 font-bold">· ${pos >= 0 ? pos + 1 + getOrdinalSuffix(pos + 1) : '-'}</span></div></div>
+                    <div class="shrink-0 text-right"><div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Points</div><div class="text-sm font-extrabold text-amber-400">🏅 +${gp} <span class="text-slate-400 font-bold">game · ${(me.pts || 0) + gp} total</span></div></div>
                 </div>
-                ${locked ? '<p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">This table is submitted. Unlock it to change results.</p>' : ''}
+                ${locked ? '<p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">This table is submitted. Changes saved here update the submitted results.</p>' : ''}
                 <div class="${card}">${head('Player')}
                     <div><label class="${lbl}">Name</label><input type="text" value="${escapeHtml(d.name)}" maxlength="40" oninput="pmDraft.name = this.value" class="${sel}"></div>
                     ${window.monstersEnabled() ? `<div><label class="${lbl}">Monster <span class="normal-case font-semibold text-slate-500">· saves straight away</span></label><button type="button" onclick="window.pmMonster()" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/60 text-sm font-bold text-slate-200 flex items-center justify-between gap-2 cursor-pointer"><span class="flex items-center gap-2 min-w-0">${m ? monsterBadge(m) : '<i class="fa-solid fa-dragon text-amber-400"></i>'}<span class="truncate">${m ? escapeHtml(m.name) : 'No monster yet'}</span></span><span class="shrink-0 text-xs text-amber-300">${m ? 'Change monster' : 'Choose monster'} <i class="fa-solid fa-chevron-right ml-1"></i></span></button></div>` : ''}
@@ -2783,8 +2796,8 @@
                     </div>
                     ${d.hp === 0 ? '<p class="text-[11px] text-slate-500">0 HP eliminates this player and sets their VPs to 0.</p>' : ''}
                     <div class="grid grid-cols-2 gap-2">
-                        <button type="button" onclick="window.pmKills()" ${locked ? 'disabled' : ''} class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">💥 Eliminated ${seat.elims || 0}</button>
-                        <button type="button" onclick="window.pmElimBy()" ${locked || (parseInt(seat.hp) || 0) > 0 ? 'disabled' : ''} class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">${by ? 'By ' + escapeHtml(by) : '💀 Eliminated by'}</button>
+                        <button type="button" onclick="window.pmKills()" class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">💥 Eliminated ${seat.elims || 0}</button>
+                        <button type="button" onclick="window.pmElimBy()" ${(parseInt(seat.hp) || 0) > 0 ? 'disabled' : ''} class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">${by ? 'By ' + escapeHtml(by) : '💀 Eliminated by'}</button>
                     </div>
                     ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.BONUS_TYPES.map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${d.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-300'}"><input type="checkbox" ${d.bonuses[b.key] ? 'checked' : ''} onchange="window.pmBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
                 </div>
@@ -2859,6 +2872,7 @@
                 }
                 rankTable(table);
             }
+            autoBonuses(table);
             const tid = table.id, pid = seat.playerId;
             window.saveTournament(); window.closePlayerMenu(); window.renderAll();
             if (askElim) setTimeout(() => window.openElimPicker(tid, pid), 0);
@@ -3009,7 +3023,7 @@
                 }
             }
 
-            if (field === 'vp' || field === 'hp') rankTable(table);
+            if (field === 'vp' || field === 'hp') { rankTable(table); autoBonuses(table); }
             if (field === 'hp' && seat) {
                 if (seat.hp === 0 && prevHp > 0) setTimeout(() => window.openElimPicker(tableId, playerId), 0);
                 else if (seat.hp > 0 && prevHp === 0) undoElim(table, seat);
