@@ -440,9 +440,7 @@
                 </div>
                 
                 <!-- Round Header & Workflows -->
-                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
-<div class="flex flex-wrap items-start justify-between gap-3">
-<div class="space-y-3 min-w-0">
+                <div id="round-header" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
 <div>
 <div class="flex flex-wrap items-center gap-2">
 <h2 id="round-title-display" class="text-2xl font-extrabold text-white tracking-tight">Round 1</h2>
@@ -451,8 +449,13 @@
 </div>
 <p id="round-timer-state" class="text-xs text-slate-400 font-medium mt-1"></p>
 </div>
-<div class="inline-flex flex-wrap items-center gap-3 bg-slate-950 border border-slate-800 rounded-xl p-3">
-<div class="flex items-center gap-2"><i id="timer-icon" class="fa-solid fa-hourglass-start text-lg text-slate-400"></i><span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider">30:00</span></div>
+<div class="flex flex-wrap items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-3">
+<button id="btn-start-round" onclick="window.startCurrentGame()" class="w-28 h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border bg-amber-500/15 border-amber-400 text-amber-300"><i class="fa-solid fa-play"></i> Start</button>
+<button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden w-28 h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border"><i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span></button>
+<button id="btn-skip-game" onclick="window.skipOrRestore()" title="Skip or restore this game" class="w-28 h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border"><i id="skip-icon" class="fa-solid fa-forward"></i> <span id="skip-label">Skip</span></button>
+<button id="btn-restore-game" onclick="window.restoreGame()" class="hidden"></button>
+<span class="hidden sm:block w-px h-8 bg-slate-700 mx-1"></span>
+<span id="round-clock" class="font-mono text-2xl font-black text-amber-400 tracking-wider px-1">30:00</span>
 <div id="timer-adjust-group" class="flex flex-col w-14 h-10 rounded-xl overflow-hidden border border-slate-700 bg-slate-800 divide-y divide-slate-700">
 <button id="btn-time-plus" onclick="window.adjustGameTime(5)" title="+5 min" class="flex-1 text-[10px] font-extrabold leading-none text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">+5m</button>
 <button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="flex-1 text-[10px] font-extrabold leading-none text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
@@ -462,21 +465,16 @@
 <button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i></button>
 <button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Sound options" title="Sound options" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-sm"></i></button>
 </div>
+<span class="hidden lg:block w-px h-8 bg-slate-700 mx-1"></span>
+<button id="btn-next-game" onclick="window.goToNextGame()" disabled class=""><i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span></button>
+<button id="btn-generate-next" onclick="window.generateNextRound()" disabled class=""><i class="fa-solid fa-forward-step"></i> <span id="generate-next-label">Next Round</span></button>
+<button id="btn-trigger-semis" onclick="window.triggerSemis()" disabled class=""><i class="fa-solid fa-medal"></i> Semis</button>
+<button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" disabled class=""><i class="fa-solid fa-crown"></i> Finals</button>
+<button id="btn-crown-champion" onclick="window.crownChampion()" disabled class=""><i class="fa-solid fa-award"></i> Champion</button>
 </div>
 </div>
-<div class="flex flex-wrap items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-3">
-<button id="btn-start-round" onclick="window.startCurrentGame()" class="h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-play"></i> Start</button>
-<button id="btn-pause-round" onclick="window.togglePauseCurrentGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i id="pause-icon" class="fa-solid fa-pause"></i> <span id="pause-text">Pause</span></button>
-<button id="btn-skip-game" onclick="window.skipGame()" title="Skip this game" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"><i class="fa-solid fa-forward"></i> Skip</button>
-<button id="btn-restore-game" onclick="window.restoreGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"><i class="fa-solid fa-rotate-left"></i> Restore Game</button>
-<button id="btn-next-game" onclick="window.goToNextGame()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-arrow-right"></i> <span id="next-game-label">Next Game</span></button>
-<button id="btn-generate-next" onclick="window.generateNextRound()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25"><i class="fa-solid fa-forward-step"></i> <span id="generate-next-label">Generate Next Round</span></button>
-<button id="btn-trigger-semis" onclick="window.triggerSemis()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white"><i class="fa-solid fa-medal"></i> Semis</button>
-<button id="btn-trigger-finals" onclick="window.triggerGrandFinals()" class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30"><i class="fa-solid fa-crown"></i> Finals</button>
-<button id="btn-crown-champion" onclick="window.crownChampion()" disabled class="hidden h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950"><i class="fa-solid fa-award"></i> Champion</button>
-</div>
-</div>
-</div>
+
+
 
 
 
@@ -512,7 +510,7 @@
                         <!-- Tooltip Popup -->
                         <div class="absolute right-0 top-full mt-2 w-64 p-3 bg-slate-950 border border-slate-700 rounded-xl shadow-2xl text-xs text-slate-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all z-50">
                             <p id="standings-rules-text" class="leading-relaxed">
-                                Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs and HP tiebreakers.
+                                Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs as the tiebreaker.
                             </p>
                         </div>
                     </div>
@@ -529,7 +527,7 @@
                                 <th class="py-3 px-4 text-center">Points</th>
                                 <th id="th-bonus" class="py-3 px-4 text-center" title="Bonus Points">🎖️</th>
                                 <th class="py-3 px-4 text-center" title="Total Victory Points">⭐</th>
-                                <th class="py-3 px-4 text-center" title="Total Health Points">❤️</th>
+                                
                             </tr>
                         </thead>
                         <tbody id="standings-table-body" class="divide-y divide-slate-800/60 font-medium">
@@ -591,7 +589,7 @@
     <!-- Toast Notification Overlay -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRulesModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-book-open text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Rules &amp; Guidelines</h3><p class="text-xs text-slate-400">Rules, scoring and clarifications</p></div></div><button onclick="window.closeRulesModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4"><span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span><p class="font-bold text-white text-sm">Battle to claim first place podium.</p></div><p><strong class="text-slate-200">Guides:</strong> Find Monster guides at <a href="https://kingofguide.github.io/tokyo" target="_blank" rel="noopener" class="text-amber-400 underline">kingofguide.github.io/tokyo</a></p><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Rules</h4><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Play</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Play each game as per normal rules except the following:</li><li>The Power Up expansion must be used.</li><li>A maximum of 8 dice is allowed per player despite monster abilities.</li><li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Drafting</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Players select one monster from the pool.</li><li>After each round, players may draft a different monster from the pool.</li><li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Rounds</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Set the number of games per round, the recommended is 1-2.</li><li>Set the number of total rounds in the tournament, recommended is 2-3.</li><li>Once a round is complete, the top seed players will move to the same table. This is repeated for the low seed players.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Scoring</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Once a player is about to win, they finish their turn, claim first place and the game is over.</li><li>Second and third places are determined by VPs + Health, highest wins. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>If a player is eliminated, they do not score VPs and HPs.</li><li>All the players places, VPs and HPs should be entered into the Manager App.</li><li><strong class="text-slate-200">Places:</strong> 1st = 3pts, 2nd = 2pts, 3rd = 1pt, 4th-6th = 0pt</li><li><strong class="text-slate-200">Bonuses (optional):</strong> Smasher = 1pt (most kills), Tanker = 1pt (most health), Collector = 1pt (most cards), Harvester = 1pt (most energy)</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Clarifications</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.</li><li><strong class="text-slate-200">Bonuses:</strong> optional points awarded to players at the end of the game.</li><li><strong class="text-slate-200">Smasher:</strong> granted to the player with the most kills, a kill is when an enemy is eliminated, the active player is awarded that kill.</li><li><strong class="text-slate-200">Tanker, Collector, or Harvester:</strong> granted to the player who has the most Health, Power Cards, or Energy, respectively at the end state of the game. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li><strong class="text-slate-200">Expansions:</strong> the Power Up must be used, all other expansions are up to the Tournament Managers.</li><li><strong class="text-slate-200">Cards:</strong> It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">General</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Rules:</strong> players should always follow the rules to their utmost ability.</li><li><strong class="text-slate-200">Missed abilities:</strong> in case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible as a fun atmosphere should be the priority over simply gaining an edge.</li><li><strong class="text-slate-200">Cheating:</strong> in cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.</li><li><strong class="text-slate-200">Tips and Tricks:</strong> Follow the dice, let your first roll guide your turn. Follow your first Power Up, let it guide your play style. Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Disclaimer</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>The Power Tournament format is a work in progress and can be updated at any time, including during live games.</li><li>Decisions will be made by the Tournament Managers and are final.</li><li>Feedback is welcome, please email kingofguide(at)outlook(dot)com.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
+    <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRulesModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-book-open text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Rules &amp; Guidelines</h3><p class="text-xs text-slate-400">Rules, scoring and clarifications</p></div></div><button onclick="window.closeRulesModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4"><span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span><p class="font-bold text-white text-sm">Battle to claim first place podium.</p></div><p><strong class="text-slate-200">Guides:</strong> Find Monster guides at <a href="https://kingofguide.github.io/tokyo" target="_blank" rel="noopener" class="text-amber-400 underline">kingofguide.github.io/tokyo</a></p><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Rules</h4><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Play</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Play each game as per normal rules except the following:</li><li>The Power Up expansion must be used.</li><li>A maximum of 8 dice is allowed per player despite monster abilities.</li><li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Drafting</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Players select one monster from the pool.</li><li>After each round, players may draft a different monster from the pool.</li><li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Rounds</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Set the number of games per round, the recommended is 1-2.</li><li>Set the number of total rounds in the tournament, recommended is 2-3.</li><li>Once a round is complete, the top seed players will move to the same table. This is repeated for the low seed players.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Scoring</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Once a player is about to win, they finish their turn, claim first place and the game is over.</li><li>Second and third places are determined by VPs, highest wins. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>If a player is eliminated (0 HP), their VPs are set to 0 and they finish last.</li><li>All the players places, VPs and HPs should be entered into the Manager App.</li><li><strong class="text-slate-200">Places:</strong> 1st = 3pts, 2nd = 2pts, 3rd = 1pt, 4th-6th = 0pt</li><li><strong class="text-slate-200">Bonuses (optional):</strong> Smasher = 1pt (most kills), Tanker = 1pt (most health), Collector = 1pt (most cards), Harvester = 1pt (most energy)</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Clarifications</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.</li><li><strong class="text-slate-200">Bonuses:</strong> optional points awarded to players at the end of the game.</li><li><strong class="text-slate-200">Smasher:</strong> granted to the player with the most kills, a kill is when an enemy is eliminated, the active player is awarded that kill.</li><li><strong class="text-slate-200">Tanker, Collector, or Harvester:</strong> granted to the player who has the most Health, Power Cards, or Energy, respectively at the end state of the game. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li><strong class="text-slate-200">Expansions:</strong> the Power Up must be used, all other expansions are up to the Tournament Managers.</li><li><strong class="text-slate-200">Cards:</strong> It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">General</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Rules:</strong> players should always follow the rules to their utmost ability.</li><li><strong class="text-slate-200">Missed abilities:</strong> in case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible as a fun atmosphere should be the priority over simply gaining an edge.</li><li><strong class="text-slate-200">Cheating:</strong> in cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.</li><li><strong class="text-slate-200">Tips and Tricks:</strong> Follow the dice, let your first roll guide your turn. Follow your first Power Up, let it guide your play style. Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Disclaimer</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>The Power Tournament format is a work in progress and can be updated at any time, including during live games.</li><li>Decisions will be made by the Tournament Managers and are final.</li><li>Feedback is welcome, please email kingofguide(at)outlook(dot)com.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 <div id="about-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeAboutModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-circle-question text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">About</h3><p class="text-xs text-slate-400">A note from the creator</p></div></div><button onclick="window.closeAboutModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><p class="font-bold text-white text-sm">Welcome fellow Kaiju battler,</p><p>I'm the creator of this Tournament Manager. It's a fun project I've been working on leading up to a tournament with friends.</p><p>While writing scores down on paper and organising brackets in real time is doable. I'd really rather not. Especially if I'm playing, it's the last thing I want to manage.</p><p>Enter this app! Where it does all that for me... and more.</p><p>Thanks to Claude, I vibe coded this sucker in no time. But my brain has got the best of me. "What if I add this? What if I make that?"</p><p>So welcome to my current obsession.</p></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeAboutModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 <!-- Update Log Modal -->
     <div id="log-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeLogModal()">
@@ -655,10 +653,11 @@
 <div><div class="flex items-center justify-between mb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider"><span><i class="fa-solid fa-microphone-lines mr-1"></i> Voice</span></div>
 <select id="voice-select" onchange="window.setVoice(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-200 focus:outline-none focus:border-amber-500"><option value="">Auto</option></select></div>
 <div><div class="flex items-center justify-between mb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider"><span><i class="fa-solid fa-gauge-high mr-1"></i> Speed</span><span id="rate-value" class="text-amber-400">1.0x</span></div>
-<input type="range" id="rate-slider" class="kot-range" min="0.5" max="1.5" step="0.1" value="1" oninput="window.setRate(this.value)" onchange="window.testVoice()" aria-label="Speed"></div>
+<input type="range" id="rate-slider" class="kot-range" min="0.5" max="2" step="0.1" value="1" oninput="window.setRate(this.value)" onchange="window.testVoice()" aria-label="Speed"></div>
 <div><div class="flex items-center justify-between mb-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider"><span><i class="fa-solid fa-music mr-1"></i> Pitch</span><span id="pitch-value" class="text-amber-400">1.0</span></div>
-<input type="range" id="pitch-slider" class="kot-range" min="0.5" max="1.5" step="0.1" value="1" oninput="window.setPitch(this.value)" onchange="window.testVoice()" aria-label="Pitch"></div>
-<div class="flex gap-2"><button type="button" onclick="window.testVoice()" class="flex-1 h-9 rounded-lg bg-amber-500/15 border border-amber-400 text-amber-300 text-xs font-bold cursor-pointer"><i class="fa-solid fa-play mr-1"></i> Test</button>
+<input type="range" id="pitch-slider" class="kot-range" min="0.5" max="2" step="0.1" value="1" oninput="window.setPitch(this.value)" onchange="window.testVoice()" aria-label="Pitch"></div>
+<p class="text-[10px] text-slate-500 leading-snug">Some voices ignore speed or pitch. Try another voice if nothing changes.</p>
+<div class="flex gap-2"><button type="button" onclick="window.testVoice()" class="flex-1 h-9 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold cursor-pointer"><i class="fa-solid fa-play mr-1"></i> Test</button>
 <button type="button" onclick="window.resetSound()" class="flex-1 h-9 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold cursor-pointer"><i class="fa-solid fa-rotate-left mr-1"></i> Reset</button></div>
 </div>
 
@@ -779,6 +778,13 @@
         ];
 
         const BTN_PRIMARY = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25", BTN_SECONDARY = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700", BTN_SEMIS = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white", BTN_FINALS = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500 hover:from-fuchsia-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30", BTN_CROWN = "h-10 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950";
+        const UNI = c => c.replace('px-4', 'px-2') + ' w-32';
+        const UNI_OFF = 'h-10 w-32 px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap bg-slate-800/60 border border-slate-800 text-slate-600 cursor-not-allowed';
+        const PP_BASE = 'w-28 h-10 px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap transition-colors border ';
+        const PP_GO = PP_BASE + 'bg-amber-500/15 border-amber-400 text-amber-300 hover:bg-amber-500/25 cursor-pointer';
+        const PP_PAUSE = PP_BASE + 'bg-rose-500/15 border-rose-400 text-rose-300 hover:bg-rose-500/25 cursor-pointer';
+        const PP_OFF = PP_BASE + 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed';
+        window.skipOrRestore = function() { const g = window.getCurrentGame(); if (g && g.skipped) window.restoreGame(); else window.skipGame(); };
         window.activePlayers = () => window.tournament.players.filter(p => !p.left);
         function needsSemis() { return window.activePlayers().length >= 4; }
 
@@ -808,8 +814,19 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.35';
+        const APP_VERSION = '2.36';
         const CHANGELOG = [
+            { "version": "2.36", "date": "November 2026", "items": [
+                "Finals are now always a single table, with at most one table of finalists",
+                "Scoring now uses VPs only: ranks follow VPs, HPs no longer count or break ties, and the leaderboard drops the HP column",
+                "Setting a player to 0 HP eliminates them: VPs go to 0, they rank last, and the VP picker is greyed out",
+                "VP and HP pickers now count down from the highest number, with a skull for 0 HP",
+                "Player settings: rank can be overridden by hand (or set back to Auto), and changes are applied with Save changes",
+                "Smaller cog and a matching Bonuses button sit in line with VPs and HPs",
+                "Sound options: speed and pitch work with a wider range, the test line is Settings check, and the Custom template now saves your sound settings",
+                "Lock and Unlock buttons (settings and tables) stay grey in both states",
+                "Round controls rebuilt: Start / Play / Pause and Skip lead the row in fixed-width buttons, and Next Game, Next Round, Semis, Finals and Champion stay in place greyed out until they are available"
+            ]},
             { "version": "2.35", "date": "November 2026", "items": [
                 "Crown The Champion (shown as Champion) now appears, greyed out, as soon as the Finals start, and unlocks once the finalist tables are locked",
                 "Consolation tables in the Finals no longer have to be locked or skipped before the Finals can finish"
@@ -1211,12 +1228,12 @@
 
         // ----- Custom template: the user's own preset, saved on this device (includes the Options toggles) -----
         const CUSTOM_TEMPLATE_KEY = 'kot_custom_template';
-        const DEFAULT_SNAPSHOT = { players: 5, games: 2, rounds: 3, timer: 30, bonuses: true, monsters: true, sfx: true };
+        const DEFAULT_SNAPSHOT = { players: 5, games: 2, rounds: 3, timer: 30, bonuses: true, monsters: true, sfx: true, sfxVoice: '', sfxRate: 1, sfxPitch: 1, sfxVol: 0.8 };
 
         function loadCustomTemplate() {
             try {
                 const c = JSON.parse(localStorage.getItem(CUSTOM_TEMPLATE_KEY) || 'null');
-                if (c && [c.players, c.games, c.rounds, c.timer].every(n => Number.isFinite(n))) return c;
+                if (c && [c.players, c.games, c.rounds, c.timer].every(n => Number.isFinite(n))) return { ...DEFAULT_SNAPSHOT, ...c };
             } catch (e) {}
             return null;
         }
@@ -1229,12 +1246,12 @@
                 timer: readSetting('setting-round-timer'),
                 bonuses: document.getElementById('setting-bonuses').checked,
                 monsters: document.getElementById('setting-monsters').checked,
-                sfx: soundPrefs.enabled
+                sfx: soundPrefs.enabled, sfxVoice: soundPrefs.voice || '', sfxRate: soundPrefs.rate, sfxPitch: soundPrefs.pitch, sfxVol: soundPrefs.volume
             };
         }
 
         function sameSnapshot(a, b) {
-            return ['players', 'games', 'rounds', 'timer', 'bonuses', 'monsters', 'sfx'].every(k => a[k] === b[k]);
+            return ['players', 'games', 'rounds', 'timer', 'bonuses', 'monsters', 'sfx', 'sfxVoice', 'sfxRate', 'sfxPitch', 'sfxVol'].every(k => a[k] === b[k]);
         }
 
         // The save button is only clickable once the settings differ from what is saved (or from the defaults, if nothing is saved yet)
@@ -1267,7 +1284,7 @@
             host.innerHTML = items.map((t, i) => {
                 const empty = t.isCustom && !t.saved;
                 const sameCore = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
-                const active = !empty && sameCore && (!t.isCustom || (t.bonuses === cur.bonuses && t.monsters === cur.monsters && t.sfx === cur.sfx));
+                const active = !empty && sameCore && (!t.isCustom || (t.bonuses === cur.bonuses && t.monsters === cur.monsters && t.sfx === cur.sfx && t.sfxVoice === cur.sfxVoice && t.sfxRate === cur.sfxRate && t.sfxPitch === cur.sfxPitch && t.sfxVol === cur.sfxVol));
                 const cls = active
                     ? 'bg-amber-500/15 border-amber-400 text-amber-300'
                     : (empty ? 'bg-slate-950 border-dashed border-slate-700 text-slate-500 hover:border-amber-500/50 hover:text-amber-300'
@@ -1433,8 +1450,7 @@
                 btn.title = label;
                 btn.setAttribute('aria-label', label);
                 btn.className = 'w-8 h-8 rounded-lg border flex items-center justify-center transition-colors cursor-pointer shrink-0 ' +
-                    (locked ? 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-500/40 text-amber-400'
-                            : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-400');
+                    'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-400';
             }
         }
 
@@ -1489,6 +1505,8 @@
                 document.getElementById('setting-bonuses').checked = saved.bonuses !== false;
                 document.getElementById('setting-monsters').checked = saved.monsters !== false;
                 soundPrefs.enabled = saved.sfx !== false;
+                soundPrefs.voice = saved.sfxVoice || ''; soundPrefs.rate = saved.sfxRate || 1; soundPrefs.pitch = saved.sfxPitch || 1; soundPrefs.volume = saved.sfxVol != null ? saved.sfxVol : 0.8;
+                if (typeof populateVoices === 'function') populateVoices();
                 saveSoundPrefs();
                 syncSoundUI();
             }
@@ -2053,7 +2071,7 @@
             if (pool.length < 4) { window.showToast("Not enough players for Grand Finals.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
             const idx = id => pool.findIndex(p => p.id === id);
-            const fin = new Set(pool.slice(0, Math.max(2, Math.ceil(pool.length / 2))).map(p => p.id));
+            const fin = new Set(pool.slice(0, Math.min(size, Math.max(2, Math.ceil(pool.length / 2)))).map(p => p.id));
             const ordered = [...pool.filter(p => fin.has(p.id)), ...pool.filter(p => !fin.has(p.id))];
             const tables = partitionPlayersEvenly(ordered, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
@@ -2261,7 +2279,7 @@
                 if (b.pts !== a.pts) return b.pts - a.pts;
                 if (b.wins !== a.wins) return b.wins - a.wins;
                 if (b.vpTotal !== a.vpTotal) return b.vpTotal - a.vpTotal;
-                return b.hpTotal - a.hpTotal;
+                return 0;
             });
         };
 
@@ -2271,11 +2289,11 @@
             const bonusesOn = window.bonusesEnabled();
             document.getElementById('th-bonus').classList.toggle('hidden', !bonusesOn);
             document.getElementById('standings-rules-text').textContent = bonusesOn
-                ? 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs and HP tiebreakers.'
-                : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs and HP tiebreakers.';
+                ? 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs as the tiebreaker.'
+                : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs as the tiebreaker.';
 
             if (standings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${bonusesOn ? 8 : 7}" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${bonusesOn ? 7 : 6}" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
                 return;
             }
 
@@ -2294,7 +2312,6 @@
                         <td class="py-3 px-4 text-center font-extrabold text-amber-400 text-base">${s.pts}</td>
                         ${bonusesOn ? `<td class="py-3 px-4 text-center font-bold text-slate-300">${s.bonusTotal || 0}</td>` : ''}
                         <td class="py-3 px-4 text-center font-bold text-blue-400">${s.vpTotal}</td>
-                        <td class="py-3 px-4 text-center font-bold text-rose-400">${s.hpTotal}</td>
                     </tr>
                 `;
             }).join('');
@@ -2416,21 +2433,19 @@
                     : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 uppercase font-bold">Semi</span>';
                 return `
                     <div draggable="true" ondragstart="window.handleDragStart(event, '${table.id}', '${seat.playerId}')" ondragend="window.handleDragEnd(event)"
-                         class="flex items-center gap-2 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors cursor-grab active:cursor-grabbing ${left ? 'opacity-50' : (isOut ? 'opacity-75 border-dashed' : '')}">
-                        <div class="flex-1 min-w-0 flex flex-col gap-1">
-                            <div class="flex items-center gap-2 min-w-0">
-                                <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">${rank || (sIdx + 1)}</span>
-                                <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
-                                ${roleTag}
-                                ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId) : '')}
-                            </div>
-                            <div class="flex items-center gap-1.5 flex-wrap" ondragstart="event.stopPropagation()">
-                                <button type="button" title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-amber-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-white text-center">${seat.vp}</span></button>
-                                <button type="button" title="Health Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-rose-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">❤️</span><span class="w-6 text-xs font-bold text-white text-center">${seat.hp}</span></button>
-                                ${window.bonusesEnabled() ? `<button type="button" title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="ml-auto flex items-center gap-1 rounded-lg px-1.5 py-0.5 border text-xs font-bold transition-colors cursor-pointer ${bonusCount > 0 ? 'bg-amber-500/15 border-amber-500/40 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-950 border-slate-700 text-slate-400 hover:border-amber-500/50 hover:text-amber-300'}"><span class="text-[11px] leading-none">🎖️</span><span>Bonuses</span>${bonusCount > 0 ? `<span class="text-[10px] font-black">+${bonusCount}</span>` : ''}</button>` : ''}
-                            </div>
+                         class="flex flex-col gap-1 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors cursor-grab active:cursor-grabbing ${left ? 'opacity-50' : (isOut ? 'opacity-75 border-dashed' : '')}">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">${rank || (sIdx + 1)}</span>
+                            <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
+                            ${roleTag}
+                            ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId) : '')}
                         </div>
-                        <button type="button" onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="shrink-0 w-9 h-9 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-slate-400 hover:text-amber-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-gear text-sm"></i></button>
+                        <div class="flex items-center gap-1.5" ondragstart="event.stopPropagation()">
+                            <button type="button" title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-amber-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-white text-center">${seat.vp}</span></button>
+                            <button type="button" title="Health Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 bg-slate-950 border border-slate-700 hover:border-rose-500/60 rounded-lg px-2 py-1 cursor-pointer transition-colors"><span class="text-[11px] leading-none">${(parseInt(seat.hp) || 0) === 0 ? '💀' : '❤️'}</span><span class="w-6 text-xs font-bold text-white text-center">${seat.hp}</span></button>
+                            ${window.bonusesEnabled() ? `<button type="button" title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 cursor-pointer transition-colors ${bonusCount > 0 ? 'bg-amber-500/15 border-amber-400 hover:bg-amber-500/25' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60'}"><span class="text-[11px] leading-none">🎖️</span><span class="w-6 text-xs font-bold text-center ${bonusCount > 0 ? 'text-amber-300' : 'text-white'}">${bonusCount}</span></button>` : ''}
+                            <button type="button" onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="ml-auto bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-slate-400 hover:text-amber-300 rounded-lg px-2 py-1 cursor-pointer transition-colors"><i class="fa-solid fa-gear text-[11px]"></i></button>
+                        </div>
                     </div>`;
             }).join('');
 
@@ -2442,7 +2457,7 @@
                     </div>
                     <div class="flex items-center gap-1.5 shrink-0">
                         ${cons && !locked ? `<button onclick="window.toggleTableSkip('${table.id}')" class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors ${skipped ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'}"><i class="fa-solid ${skipped ? 'fa-rotate-left' : 'fa-forward'}"></i> ${skipped ? 'Unskip' : 'Skip'}</button>` : ''}
-                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700'}"><i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock' : 'Lock'}</button>`}
+                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"><i class="fa-solid ${locked ? 'fa-lock-open' : 'fa-lock'}"></i> ${locked ? 'Unlock' : 'Lock'}</button>`}
                     </div>
                 </div>
                 ${skipped ? `<div class="rounded-xl border border-dashed border-slate-700 py-4 px-3 text-center text-xs text-slate-500"><i class="fa-solid fa-forward mr-1"></i> Table skipped, not played<div class="mt-1 text-[11px] text-slate-600 truncate">${table.seats.map(x => escapeHtml((window.tournament.players.find(p => p.id === x.playerId) || {}).name || "")).join(", ")}</div></div>` : `<div class="space-y-1.5">${seatsHTML}</div>`}`;
@@ -2461,7 +2476,7 @@
         };
 
         // ----- Player settings (cog) -----
-        let pmCtx = null;
+        let pmCtx = null, pmDraft = null;
         function pmFind() {
             const game = window.getCurrentGame();
             const table = game && pmCtx && game.tables.find(t => t.id === pmCtx.tableId);
@@ -2470,55 +2485,85 @@
             return { game, table, seat, player };
         }
         function renderPlayerModal() {
-            const { table, seat, player } = pmFind();
-            if (!seat || !player) { window.closePlayerMenu(); return; }
-            const opts = (max, cur) => Array.from({ length: max + 1 }, (_, n) => `<option value="${n}" ${n === cur ? 'selected' : ''}>${n}</option>`).join('');
-            const sel = 'w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-amber-500';
+            const { game, table, seat, player } = pmFind();
+            if (!seat || !player || !pmDraft) { window.closePlayerMenu(); return; }
+            const d = pmDraft;
+            const sel = 'w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-amber-500 disabled:opacity-40 disabled:cursor-not-allowed';
             const lbl = 'block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1';
+            const desc = (max, cur, skull) => { let o = ''; for (let n = max; n >= 0; n--) o += `<option value="${n}" ${n === cur ? 'selected' : ''}>${skull && n === 0 ? '💀 0 (eliminated)' : n}</option>`; return o; };
+            const rankOpts = '<option value="0"' + (d.rank === 0 ? ' selected' : '') + '>Auto</option>' + Array.from({ length: table.seats.length }, (_, i) => `<option value="${i + 1}" ${d.rank === i + 1 ? 'selected' : ''}>${i + 1}${getOrdinalSuffix(i + 1)}</option>`).join('');
             const m = window.getPlayerMonster(player.id);
             document.getElementById('player-modal-body').innerHTML = `
-                <div><label class="${lbl}">Name</label><input type="text" value="${escapeHtml(player.name)}" maxlength="40" onchange="window.pmRename(this.value)" class="${sel}"></div>
+                <div><label class="${lbl}">Name</label><input type="text" value="${escapeHtml(d.name)}" maxlength="40" oninput="pmDraft.name = this.value" class="${sel}"></div>
                 <div class="grid grid-cols-3 gap-2">
-                    <div><span class="${lbl}">Rank (auto)</span><div class="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-sm font-extrabold text-amber-400 text-center">${parseInt(seat.rank) > 0 ? seat.rank + getOrdinalSuffix(parseInt(seat.rank)) : '-'}</div></div>
-                    <div><label class="${lbl}">⭐ VPs</label><select onchange="window.pmScore('vp', this.value)" class="${sel}">${opts(20, parseInt(seat.vp) || 0)}</select></div>
-                    <div><label class="${lbl}">❤️ HPs</label><select onchange="window.pmScore('hp', this.value)" class="${sel}">${opts(12, parseInt(seat.hp) || 0)}</select></div>
+                    <div><label class="${lbl}">Rank</label><select onchange="window.pmSet('rank', this.value)" ${game.started ? '' : 'disabled'} class="${sel}">${rankOpts}</select></div>
+                    <div><label class="${lbl}">⭐ VPs</label><select onchange="window.pmSet('vp', this.value)" ${d.hp === 0 ? 'disabled' : ''} class="${sel}">${desc(20, d.vp, false)}</select></div>
+                    <div><label class="${lbl}">❤️ HPs</label><select onchange="window.pmSet('hp', this.value)" class="${sel}">${desc(12, d.hp, true)}</select></div>
                 </div>
-                ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.BONUS_TYPES.map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${seat.bonuses && seat.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}"><input type="checkbox" ${seat.bonuses && seat.bonuses[b.key] ? 'checked' : ''} onchange="window.toggleBonus('${b.key}', this.checked); window.pmRefresh()" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
+                ${d.hp === 0 ? '<p class="text-[11px] text-slate-500">0 HP eliminates this player and sets their VPs to 0.</p>' : ''}
+                ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.BONUS_TYPES.map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${d.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}"><input type="checkbox" ${d.bonuses[b.key] ? 'checked' : ''} onchange="window.pmBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
                 ${window.monstersEnabled() ? `<div><span class="${lbl}">Monster</span><button type="button" onclick="window.pmMonster()" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-sm font-bold text-slate-200 flex items-center justify-between cursor-pointer"><span>${m ? escapeHtml(m.name) : 'Choose a monster'}</span><i class="fa-solid fa-chevron-right text-xs text-slate-500"></i></button></div>` : ''}
-                <button type="button" onclick="window.pmLeft()" class="w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors ${player.left ? 'bg-amber-500 hover:bg-amber-400 text-slate-950' : 'bg-rose-600 hover:bg-rose-500 text-white'}"><i class="fa-solid ${player.left ? 'fa-rotate-left' : 'fa-person-walking-arrow-right'}"></i> ${player.left ? 'Player is back' : 'Player has left'}</button>
-                ${player.left ? '<p class="text-[11px] text-slate-500">Left players are out of this round and are left out of future tables.</p>' : ''}`;
+                <button type="button" onclick="window.pmToggleLeft()" class="w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"><i class="fa-solid ${d.left ? 'fa-rotate-left' : 'fa-person-walking-arrow-right'}"></i> ${d.left ? 'Player is back' : 'Player has left'}</button>
+                ${d.left ? '<p class="text-[11px] text-slate-500">Left players are out of this round and are left out of future tables.</p>' : ''}
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="window.closePlayerMenu()" class="flex-1 h-10 rounded-xl text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Cancel</button>
+                    <button type="button" onclick="window.pmSave()" class="flex-1 h-10 rounded-xl text-sm font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400 cursor-pointer"><i class="fa-solid fa-floppy-disk mr-1"></i> Save changes</button>
+                </div>`;
         }
         window.openPlayerMenu = function(tableId, playerId) {
             pmCtx = { tableId, playerId };
-            bonusModalCtx = { roundIdx: window.tournament.currentRound, gameIdx: window.tournament.currentGame, tableId, playerId };
+            const { table, seat, player } = pmFind();
+            if (!seat || !player) { pmCtx = null; return; }
+            pmDraft = { name: player.name, vp: parseInt(seat.vp) || 0, hp: parseInt(seat.hp) || 0, bonuses: { ...(seat.bonuses || {}) }, left: !!player.left, rank: Array.isArray(table.manualOrder) ? (parseInt(seat.rank) || 0) : 0 };
             renderPlayerModal();
             document.getElementById('player-modal').classList.remove('hidden');
         };
-        window.closePlayerMenu = function() { document.getElementById('player-modal').classList.add('hidden'); pmCtx = null; bonusModalCtx = null; };
-        window.pmRefresh = function() { renderPlayerModal(); };
-        window.pmRename = function(v) {
-            const { player } = pmFind(); const n = (v || '').trim();
-            if (!player || !n) return;
-            if (window.tournament.players.some(p => p.id !== player.id && p.name.toLowerCase() === n.toLowerCase())) { window.showToast('That name already exists.', 'error'); renderPlayerModal(); return; }
-            player.name = n; window.saveTournament(); window.renderAll(); renderPlayerModal();
+        window.closePlayerMenu = function() { document.getElementById('player-modal').classList.add('hidden'); pmCtx = null; pmDraft = null; };
+        window.pmSet = function(field, v) {
+            if (!pmDraft) return;
+            pmDraft[field] = parseInt(v) || 0;
+            if (field === 'hp' && pmDraft.hp === 0) pmDraft.vp = 0;
+            renderPlayerModal();
         };
-        window.pmScore = function(field, v) { if (!pmCtx) return; window.updateSeatScore(pmCtx.tableId, pmCtx.playerId, field, v); renderPlayerModal(); };
+        window.pmBonus = function(k, on) { if (pmDraft) { pmDraft.bonuses[k] = !!on; renderPlayerModal(); } };
+        window.pmToggleLeft = function() { if (pmDraft) { pmDraft.left = !pmDraft.left; renderPlayerModal(); } };
         window.pmMonster = function() { const id = pmCtx && pmCtx.playerId; window.closePlayerMenu(); if (id) window.openMonsterPicker(id); };
-        window.pmLeft = function() {
-            const { player } = pmFind(); const round = window.getCurrentRound();
-            if (!player || !round) return;
-            player.left = !player.left;
-            round.games.forEach((g, gi) => {
-                if (gi < window.tournament.currentGame) return;
-                g.tables.forEach(t => {
-                    const seat = t.seats.find(x => x.playerId === player.id);
-                    if (!seat || t.completed) return;
-                    seat.hp = player.left ? 0 : DEFAULT_HP; seat.vp = 0;
-                    if (g.started) rankTable(t); else seat.rank = 0;
+        window.pmSave = function() {
+            const { game, table, seat, player } = pmFind(); const d = pmDraft;
+            if (!seat || !player || !d) return;
+            const name = (d.name || '').trim();
+            if (name && name !== player.name) {
+                if (window.tournament.players.some(p => p.id !== player.id && p.name.toLowerCase() === name.toLowerCase())) { window.showToast('That name already exists.', 'error'); return; }
+                player.name = name;
+            }
+            seat.bonuses = { ...d.bonuses };
+            seat.hp = d.hp; seat.vp = d.hp === 0 ? 0 : d.vp;
+            if (d.left !== !!player.left) {
+                const round = window.getCurrentRound();
+                player.left = d.left;
+                round.games.forEach((g, gi) => {
+                    if (gi < window.tournament.currentGame) return;
+                    g.tables.forEach(t => {
+                        const sx = t.seats.find(x => x.playerId === player.id);
+                        if (!sx || t.completed) return;
+                        sx.hp = d.left ? 0 : DEFAULT_HP; sx.vp = 0;
+                        if (g.started) rankTable(t); else sx.rank = 0;
+                    });
                 });
-            });
-            window.saveTournament(); window.renderAll(); renderPlayerModal();
-            window.showToast(player.left ? `${player.name} has left. They won't be seated again.` : `${player.name} is back in.`, 'info');
+            }
+            if (game.started) {
+                if (d.rank > 0) {
+                    rankTable(table);
+                    const ids = [...table.seats].sort((a, b) => a.rank - b.rank).map(x => x.playerId).filter(id => id !== seat.playerId);
+                    ids.splice(d.rank - 1, 0, seat.playerId);
+                    table.manualOrder = ids;
+                } else {
+                    delete table.manualOrder;
+                }
+                rankTable(table);
+            }
+            window.saveTournament(); window.closePlayerMenu(); window.renderAll();
+            window.showToast('Player settings saved', 'success');
         };
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && pmCtx) window.closePlayerMenu(); });
 
@@ -2602,12 +2647,15 @@
             document.getElementById('number-picker-title').textContent = field === 'vp' ? '⭐ Victory Points' : '❤️ Health Points';
             document.getElementById('number-picker-sub').textContent = (player ? player.name : 'Player') + ' · 0 to ' + max;
             let tiles = '';
-            for (let n = 0; n <= max; n++) {
-                const cls = n === current
-                    ? 'bg-amber-500 border-amber-400 text-slate-950'
-                    : 'bg-slate-950 border-slate-700 text-slate-200 hover:border-amber-500/60 hover:text-amber-300';
-                tiles += `<button type="button" onclick="window.pickNumber(${n})" class="h-11 rounded-xl border text-sm font-extrabold transition-colors cursor-pointer ${cls}">${n}</button>`;
+            const eliminated = field === 'vp' && (parseInt(seat.hp) || 0) === 0;
+            for (let n = max; n >= 0; n--) {
+                const skull = field === 'hp' && n === 0;
+                let cls = n === current ? 'bg-amber-500/15 border-amber-400 text-amber-300' : 'bg-slate-950 border-slate-700 text-slate-200 hover:border-amber-500/60 hover:text-amber-300';
+                if (skull && n !== current) cls = 'bg-slate-950 border-slate-700 text-rose-400 hover:border-rose-500/60';
+                if (eliminated) cls = 'bg-slate-900 border-slate-800 text-slate-600 opacity-50 cursor-not-allowed';
+                tiles += `<button type="button" ${eliminated ? 'disabled' : ''} ${skull ? 'title="This will eliminate this player and set their VPs to 0"' : ''} onclick="window.pickNumber(${n})" class="h-11 rounded-xl border text-sm font-extrabold transition-colors ${eliminated ? '' : 'cursor-pointer'} ${cls}">${skull ? '<i class="fa-solid fa-skull mr-1"></i>0' : n}</button>`;
             }
+            if (eliminated) document.getElementById('number-picker-sub').textContent += ' · Eliminated';
             document.getElementById('number-picker-grid').innerHTML = tiles;
             document.getElementById('number-picker').classList.remove('hidden');
         };
@@ -2629,9 +2677,16 @@
         });
 
         function rankTable(table) {
-            table.seats.map((s, i) => ({ s, i, out: (parseInt(s.hp) || 0) === 0, sc: (parseInt(s.vp) || 0) + (parseInt(s.hp) || 0) }))
-                .sort((a, b) => (a.out - b.out) || (b.sc - a.sc) || (a.i - b.i))
-                .forEach((o, k) => { o.s.rank = k + 1; });
+            const items = table.seats.map((s, i) => ({ s, i, out: (parseInt(s.hp) || 0) === 0, sc: (parseInt(s.vp) || 0) }));
+            const manual = Array.isArray(table.manualOrder) ? table.manualOrder : null;
+            items.sort((a, b) => {
+                if (manual) {
+                    const ia = manual.indexOf(a.s.playerId), ib = manual.indexOf(b.s.playerId);
+                    if (ia !== -1 && ib !== -1) return ia - ib;
+                }
+                return (a.out - b.out) || (b.sc - a.sc) || (a.i - b.i);
+            });
+            items.forEach((o, k) => { o.s.rank = k + 1; });
         }
 
         window.updateSeatScore = function(tableId, playerId, field, value) {
@@ -2643,9 +2698,10 @@
             const seat = table.seats.find(s => s.playerId === playerId);
             if (seat) {
                 if (field === 'vp') {
-                    seat[field] = Math.min(20, Math.max(0, parseInt(value) || 0));
+                    seat[field] = seat.hp === 0 ? 0 : Math.min(20, Math.max(0, parseInt(value) || 0));
                 } else if (field === 'hp') {
                     seat[field] = Math.min(12, Math.max(0, parseInt(value) || 0));
+                    if (seat.hp === 0) seat.vp = 0;
                 } else {
                     seat[field] = parseInt(value) || 0;
                 }
@@ -2961,11 +3017,6 @@
             }
 
             [btnNextGame, btnGenerateNext, btnSemis, btnFinals, btnCrownChampion, btnSkip, btnRestore].forEach(b => b.classList.add('hidden'));
-            if (isGrandFinalsRound && isLatestRound && !isSkipped) {
-                btnCrownChampion.classList.remove('hidden');
-                btnCrownChampion.className = BTN_SECONDARY + ' opacity-50 cursor-not-allowed';
-                btnCrownChampion.setAttribute('disabled', '');
-            }
 
             // Round finished (or skipped): re-seat for another round, or head to the finals once the round goal is met
             const showRoundEndButtons = () => {
@@ -2983,10 +3034,10 @@
                 if (!isNextRoundGenerated) {
                     btnGenerateNext.classList.remove('hidden');
                     if (!goalReached) {
-                        document.getElementById('generate-next-label').innerText = "Generate Next Round";
+                        document.getElementById('generate-next-label').innerText = "Next Round";
                         btnGenerateNext.className = BTN_PRIMARY;
                     } else {
-                        document.getElementById('generate-next-label').innerText = "Add Additional Round";
+                        document.getElementById('generate-next-label').innerText = "Add Round";
                         btnGenerateNext.className = BTN_SECONDARY;
                     }
                 }
@@ -2999,7 +3050,7 @@
                 btnPause.classList.add('hidden');
                 if (isLatestRound) {
                     if (!isLastGame) {
-                        document.getElementById('next-game-label').innerText = `Next Game (${gameIndex + 2} of ${totalGames})`;
+                        document.getElementById('next-game-label').innerText = 'Next Game';
                         btnNextGame.classList.remove('hidden');
                     } else if (roundDone) {
                         showRoundEndButtons();
@@ -3037,7 +3088,7 @@
 
                 if (isGameDone && !isGrandFinalsRound && !isLastGame) {
                     // More games to play at these same tables
-                    document.getElementById('next-game-label').innerText = `Next Game (${gameIndex + 2} of ${totalGames})`;
+                    document.getElementById('next-game-label').innerText = 'Next Game';
                     btnNextGame.classList.remove('hidden');
                 } else if (isGameDone && !isGrandFinalsRound && isLastGame && roundDone && isLatestRound) {
                     showRoundEndButtons();
@@ -3048,6 +3099,29 @@
                 }
             }
 
+            {
+                btnRestore.classList.add('hidden');
+                const showStart = !isGameStarted || isSkipped;
+                btnStart.classList.toggle('hidden', !showStart);
+                btnPause.classList.toggle('hidden', showStart);
+                if (showStart) { btnStart.disabled = isSkipped; btnStart.className = isSkipped ? PP_OFF : PP_GO; }
+                else if (isGameDone) { btnPause.disabled = true; btnPause.className = PP_OFF; pauseIcon.className = 'fa-solid fa-flag-checkered'; pauseText.innerText = 'Done'; }
+                else { btnPause.disabled = false; btnPause.className = isRoundActive ? PP_PAUSE : PP_GO; pauseIcon.className = isRoundActive ? 'fa-solid fa-pause' : 'fa-solid fa-play'; pauseText.innerText = isRoundActive ? 'Pause' : 'Play'; }
+                const canSkip = !isSkipped && !isGrandFinalsRound && isLatestRound && isGamePristine(game);
+                const canRestore = isSkipped && isLatestRound && !roundData.nextRoundGenerated && !roundData.finalsTriggered;
+                const skipOn = canSkip || canRestore;
+                btnSkip.classList.remove('hidden');
+                btnSkip.disabled = !skipOn;
+                btnSkip.className = 'w-28 h-10 px-2 rounded-xl text-sm font-bold flex items-center justify-center gap-2 whitespace-nowrap border transition-colors ' + (skipOn ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700 cursor-pointer' : 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed');
+                document.getElementById('skip-label').innerText = isSkipped ? 'Restore' : 'Skip';
+                document.getElementById('skip-icon').className = isSkipped ? 'fa-solid fa-rotate-left' : 'fa-solid fa-forward';
+                [[btnNextGame, BTN_PRIMARY], [btnGenerateNext, BTN_PRIMARY], [btnSemis, BTN_SEMIS], [btnFinals, BTN_FINALS], [btnCrownChampion, BTN_CROWN]].forEach(([b, c]) => {
+                    const on = !b.classList.contains('hidden');
+                    b.classList.remove('hidden');
+                    if (on) b.removeAttribute('disabled'); else b.setAttribute('disabled', '');
+                    b.className = on ? UNI(c) : UNI_OFF;
+                });
+            }
             {
                 const tIcon = document.getElementById('timer-icon'), clk = document.getElementById('round-clock');
                 const st = isSkipped ? 'skipped' : (isGameDone ? 'done' : (!isGameStarted ? 'waiting' : (isRoundActive ? 'playing' : 'paused')));
@@ -3081,6 +3155,7 @@
 
         function saveSoundPrefs() {
             try { localStorage.setItem('kot_sound', JSON.stringify(soundPrefs)); } catch (e) {}
+            try { renderTemplateButtons(); syncCustomSaveButton(); } catch (e) {}
         }
 
         function numberWord(n) {
@@ -3106,15 +3181,16 @@
             if (!SPEECH_OK || !soundPrefs.enabled || soundPrefs.muted || soundPrefs.volume <= 0) return false;
             try {
                 const synth = window.speechSynthesis;
-                if (synth.speaking || synth.pending) synth.cancel();
-                const utterance = new window.SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.rate = soundPrefs.rate || 1;
-                utterance.pitch = soundPrefs.pitch || 1;
-                utterance.volume = soundPrefs.volume;
+                const busy = synth.speaking || synth.pending;
+                if (busy) synth.cancel();
+                const u = new window.SpeechSynthesisUtterance(text);
                 const voice = pickVoice();
-                if (voice) { utterance.voice = voice; utterance.lang = voice.lang; }
-                synth.speak(utterance);
+                if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-US'; }
+                u.rate = soundPrefs.rate || 1;
+                u.pitch = soundPrefs.pitch || 1;
+                u.volume = soundPrefs.volume;
+                window.__kotUtterance = u;
+                if (busy) setTimeout(() => synth.speak(u), 80); else synth.speak(u);
                 return true;
             } catch (e) { return false; }
         };
@@ -3202,7 +3278,7 @@
             syncSoundUI();
         };
 
-        window.testVolume = function() { window.speak('Volume check.'); };
+        window.testVolume = function() { window.speak('Settings check'); };
 
         window.toggleVolumePopover = function() {
             const pop = document.getElementById('volume-popover');
@@ -3227,8 +3303,8 @@
                 const el = document.getElementById(id); if (el) { el.value = v; el.style.setProperty('--pct', ((v - min) / (max - min) * 100) + '%'); }
                 const l = document.getElementById(lab); if (l) l.textContent = txt;
             };
-            set('rate-slider', soundPrefs.rate, 0.5, 1.5, 'rate-value', soundPrefs.rate.toFixed(1) + 'x');
-            set('pitch-slider', soundPrefs.pitch, 0.5, 1.5, 'pitch-value', soundPrefs.pitch.toFixed(1));
+            set('rate-slider', soundPrefs.rate, 0.5, 2, 'rate-value', soundPrefs.rate.toFixed(1) + 'x');
+            set('pitch-slider', soundPrefs.pitch, 0.5, 2, 'pitch-value', soundPrefs.pitch.toFixed(1));
         }
         function populateVoices() {
             const sel = document.getElementById('voice-select');
@@ -3241,9 +3317,9 @@
         }
         if (SPEECH_OK) { try { window.speechSynthesis.onvoiceschanged = populateVoices; } catch (e) {} }
         window.setVoice = function(n) { soundPrefs.voice = n || ''; saveSoundPrefs(); window.testVoice(); };
-        window.setRate = function(v) { soundPrefs.rate = Math.min(1.5, Math.max(0.5, parseFloat(v) || 1)); saveSoundPrefs(); syncVoicePanel(); };
-        window.setPitch = function(v) { soundPrefs.pitch = Math.min(1.5, Math.max(0.5, parseFloat(v) || 1)); saveSoundPrefs(); syncVoicePanel(); };
-        window.testVoice = function() { window.speak('Ten minutes remaining.'); };
+        window.setRate = function(v) { soundPrefs.rate = Math.min(2, Math.max(0.5, parseFloat(v) || 1)); saveSoundPrefs(); syncVoicePanel(); };
+        window.setPitch = function(v) { soundPrefs.pitch = Math.min(2, Math.max(0.5, parseFloat(v) || 1)); saveSoundPrefs(); syncVoicePanel(); };
+        window.testVoice = function() { window.speak('Settings check'); };
         window.resetSound = function() { soundPrefs.voice = ''; soundPrefs.rate = 1; soundPrefs.pitch = 1; soundPrefs.volume = 0.8; saveSoundPrefs(); syncSoundUI(); populateVoices(); };
 
         // Light / Dark theme (saved separately from tournament data)
