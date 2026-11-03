@@ -205,32 +205,25 @@
                     </button>
 
                     <!-- Dropdown Menu -->
-                    <div id="header-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 py-1 text-xs divide-y divide-slate-800">
-                        <div class="py-1">
-                            <button id="menu-theme-toggle" type="button" onclick="window.toggleTheme(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-400 w-4"></i> <span id="theme-toggle-label">Light Mode</span>
-                            </button>
-                            <button onclick="window.openRulesModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-book-open text-amber-400 w-4"></i> Rules
-                            </button>
-                            <button onclick="window.openLogModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-clock-rotate-left text-amber-400 w-4"></i> Updates
-<button onclick="window.openAboutModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i class="fa-solid fa-circle-question text-amber-400 w-4"></i> About</button>
-                        </div>
-                        <div class="py-1">
-                            <button onclick="window.exportTournamentData(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-download text-blue-400 w-4"></i> Export Data
-                            </button>
-                            <button onclick="document.getElementById('import-file-input').click(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-upload text-emerald-400 w-4"></i> Import Data
-                            </button>
-                        </div>
-                        <div class="py-1">
-                            <button onclick="window.openResetModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-rose-500/10 text-rose-400 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer">
-                                <i class="fa-solid fa-rotate-left w-4"></i> Reset Tournament
-                            </button>
-                        </div>
-                    </div>
+                    <div id="header-dropdown-menu" class="hidden absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 py-1 text-xs divide-y divide-slate-800">
+<div class="py-1"><div class="px-4 pt-1.5 pb-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Tournament</div>
+<button id="menu-undo" disabled onclick="window.undoLast(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer disabled:cursor-not-allowed"><i class="fa-solid fa-rotate-left text-amber-400 w-4"></i> Undo</button>
+<button  onclick="window.openTournamentLog(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-terminal text-emerald-400 w-4"></i> Tournament Log</button>
+<button  onclick="window.exportTournamentData(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-download text-blue-400 w-4"></i> Export Data</button>
+<button  onclick="document.getElementById('import-file-input').click(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-upload text-emerald-400 w-4"></i> Import Data</button>
+</div>
+<div class="py-1"><div class="px-4 pt-1.5 pb-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Help</div>
+<button  onclick="window.openRulesModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-book-open text-amber-400 w-4"></i> Rules</button>
+<button  onclick="window.openAboutModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-circle-question text-amber-400 w-4"></i> About</button>
+<button  onclick="window.openLogModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-clock-rotate-left text-amber-400 w-4"></i> Updates</button>
+</div>
+<div class="py-1"><div class="px-4 pt-1.5 pb-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Display</div>
+<button id="menu-theme-toggle" type="button" onclick="window.toggleTheme(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-400 w-4"></i> <span id="theme-toggle-label">Light Mode</span></button>
+</div>
+<div class="py-1">
+<button onclick="window.openResetModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-rose-500/10 text-rose-400 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i class="fa-solid fa-trash-can w-4"></i> Reset Tournament</button>
+</div>
+</div>
                 </div>
             </div>
             <input type="file" id="import-file-input" class="hidden" accept=".json" onchange="window.importTournamentData(event)">
@@ -562,13 +555,11 @@
                     This tournament app is open source and community driven. Found a bug, have an idea for a feature, or want to improve the rules?
                 </p>
                 <div>
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-bold text-amber-400 hover:text-amber-300 transition-colors">
+                    <a href="https://github.com/kingofguide/tournament" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-bold text-amber-400 hover:text-amber-300 transition-colors">
                         View on GitHub <i class="fa-solid fa-arrow-right text-[10px]"></i>
                     </a>
                 </div>
-                <p class="text-slate-500 italic text-[11px]">
-                    Note: This is an unofficial fan-made tournament app. Content and code generated with the assistance of AI, reviewed and curated by the author(s).
-                </p>
+                <p class="leading-relaxed">Found a bug or have feedback? We'd love to hear it at <span class="text-slate-300 font-mono">kingofguide[at]outlook[dot]com</span></p>
             </div>
 
             <div class="space-y-3">
@@ -578,9 +569,7 @@
                 <p class="leading-relaxed">
                     This app is a fan-made helper for running King of Tokyo tournaments. Scoring, timing estimates and seating are guides only, and the Tournament Managers always have the final say.
                 </p>
-                <p class="leading-relaxed">
-                    Found a bug or have feedback? We'd love to hear it at <span class="text-slate-300 font-mono">kingofguide[at]outlook[dot]com</span>
-                </p>
+                <p class="text-slate-500 italic text-[11px]">Note: This is an unofficial fan-made tournament app. Content and code generated with the assistance of AI, reviewed and curated by the author(s).</p>
             </div>
 
             <div class="space-y-3">
@@ -601,8 +590,10 @@
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRulesModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-book-open text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Rules &amp; Guidelines</h3><p class="text-xs text-slate-400">Rules, scoring and clarifications</p></div></div><button onclick="window.closeRulesModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4"><span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span><p class="font-bold text-white text-sm">Battle to claim first place podium.</p></div><p><strong class="text-slate-200">Guides:</strong> Find Monster guides at <a href="https://kingofguide.github.io/tokyo" target="_blank" rel="noopener" class="text-amber-400 underline">kingofguide.github.io/tokyo</a></p><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Rules</h4><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Play</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Play each game as per normal rules except the following:</li><li>The Power Up expansion must be used.</li><li>A maximum of 8 dice is allowed per player despite monster abilities.</li><li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Drafting</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Players select one monster from the pool.</li><li>After each round, players may draft a different monster from the pool.</li><li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Rounds</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Set the number of games per round, the recommended is 1-2.</li><li>Set the number of total rounds in the tournament, recommended is 2-3.</li><li>Once a round is complete, the top seed players will move to the same table. This is repeated for the low seed players.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Scoring</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Once a player is about to win, they finish their turn, claim first place and the game is over.</li><li>Second and third places are determined by VPs, highest wins. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>If a player is eliminated (0 HP), their VPs are set to 0 and they finish last.</li><li>All the players places, VPs and HPs should be entered into the Manager App.</li><li><strong class="text-slate-200">Places:</strong> 1st = 3pts, 2nd = 2pts, 3rd = 1pt, 4th-6th = 0pt</li><li><strong class="text-slate-200">Bonuses (optional):</strong> Smasher = 1pt (most kills), Tanker = 1pt (most health), Collector = 1pt (most cards), Harvester = 1pt (most energy)</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Clarifications</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.</li><li><strong class="text-slate-200">Bonuses:</strong> optional points awarded to players at the end of the game.</li><li><strong class="text-slate-200">Smasher:</strong> granted to the player with the most kills, a kill is when an enemy is eliminated, the active player is awarded that kill.</li><li><strong class="text-slate-200">Tanker, Collector, or Harvester:</strong> granted to the player who has the most Health, Power Cards, or Energy, respectively at the end state of the game. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li><strong class="text-slate-200">Expansions:</strong> the Power Up must be used, all other expansions are up to the Tournament Managers.</li><li><strong class="text-slate-200">Cards:</strong> It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">General</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Rules:</strong> players should always follow the rules to their utmost ability.</li><li><strong class="text-slate-200">Missed abilities:</strong> in case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible as a fun atmosphere should be the priority over simply gaining an edge.</li><li><strong class="text-slate-200">Cheating:</strong> in cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.</li><li><strong class="text-slate-200">Tips and Tricks:</strong> Follow the dice, let your first roll guide your turn. Follow your first Power Up, let it guide your play style. Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Disclaimer</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>The Power Tournament format is a work in progress and can be updated at any time, including during live games.</li><li>Decisions will be made by the Tournament Managers and are final.</li><li>Feedback is welcome, please email kingofguide(at)outlook(dot)com.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
-<div id="about-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeAboutModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-circle-question text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">About</h3><p class="text-xs text-slate-400">A note from the creator</p></div></div><button onclick="window.closeAboutModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><p class="font-bold text-white text-sm">Welcome fellow Kaiju battler,</p><p>I'm the creator of this Tournament Manager. It's a fun project I've been working on leading up to a tournament with friends.</p><p>While writing scores down on paper and organising brackets in real time is doable. I'd really rather not. Especially if I'm playing, it's the last thing I want to manage.</p><p>Enter this app! Where it does all that for me... and more.</p><p>Thanks to Claude, I vibe coded this sucker in no time. But my brain has got the best of me. "What if I add this? What if I make that?"</p><p>So welcome to my current obsession.</p></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeAboutModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
-<!-- Update Log Modal -->
+<div id="about-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeAboutModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-circle-question text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">About</h3><p class="text-xs text-slate-400">A note from the creator</p></div></div><button onclick="window.closeAboutModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><p class="font-bold text-white text-sm">Welcome fellow Kaiju battler,</p><p>I'm the creator of this Tournament Manager. It's a fun project I've been working on leading up to a tournament with friends.</p><p>While writing scores down on paper and organising brackets in real time is doable. I'd really rather not. Especially if I'm playing, it's the last thing I want to manage.</p><p>Enter this app! Where it does all that for me... and more.</p><p>Thanks to Claude, I vibe coded this sucker in no time. But my brain has got the best of me. "What if I add this? What if I make that?"</p><p>So welcome to my current obsession.</p><p>Just a note on the tournament system as it's a bit of everything. I'm calling it a hybrid tournament as I think it combines elimination-like brackets with swiss-like pairing. The thinking is to keep all players included while still building towards a pressure cooker finals. I love King of Tokyo, but I don't love that elimination games leave people out. So I didn't want a whole tournament isolating players. This is a casual approach to a competitive tournament. I hope it works!</p></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeAboutModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
+<div id="tlog-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeTournamentLog()"><div class="w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden" style="background:#0b0f14;border:1px solid #30363d"><div class="flex items-center justify-between px-4 py-2.5" style="background:#161b22;border-bottom:1px solid #30363d"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:#ff5f56"></span><span class="w-3 h-3 rounded-full" style="background:#ffbd2e"></span><span class="w-3 h-3 rounded-full" style="background:#27c93f"></span><span class="ml-2 font-mono text-xs" style="color:#8b949e">kot@tournament: ~/tournament.log</span></div><button onclick="window.closeTournamentLog()" aria-label="Close" class="cursor-pointer" style="color:#8b949e"><i class="fa-solid fa-xmark"></i></button></div><div class="px-4 pt-3 font-mono text-[11px]" style="color:#7ee787">$ tail -f tournament.log</div><div id="tlog-body" class="px-4 py-3 overflow-y-auto font-mono text-[11px] leading-relaxed space-y-0.5 flex-1" style="min-height:12rem"></div><div class="flex items-center justify-end gap-2 px-4 py-2.5 font-mono text-[11px]" style="border-top:1px solid #30363d"><button onclick="window.copyTournamentLog()" class="px-3 py-1.5 rounded cursor-pointer" style="background:#21262d;color:#c9d1d9;border:1px solid #30363d">copy</button><button onclick="window.clearTournamentLog()" class="px-3 py-1.5 rounded cursor-pointer" style="background:#21262d;color:#ff7b72;border:1px solid #30363d">clear</button><button onclick="window.closeTournamentLog()" class="px-3 py-1.5 rounded cursor-pointer" style="background:#21262d;color:#c9d1d9;border:1px solid #30363d">close</button></div></div></div>
+
+    <!-- Update Log Modal -->
     <div id="log-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeLogModal()">
         <div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
 
@@ -800,7 +791,7 @@
         const PP_OFF = PP_BASE + 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed';
         window.skipOrRestore = function() { const g = window.getCurrentGame(); if (g && g.skipped) window.restoreGame(); else window.skipGame(); };
         window.activePlayers = () => window.tournament.players.filter(p => !p.left);
-        function needsSemis() { return window.activePlayers().length >= 4; }
+        function needsSemis() { return window.activePlayers().length >= 3; }
 
         // Header Dropdown Menu Controls
         window.toggleHeaderMenu = function(event) {
@@ -828,8 +819,19 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.38';
+        const APP_VERSION = '2.39';
         const CHANGELOG = [
+            { "version": "2.39", "date": "November 2026", "items": [
+                "Small single-table tournaments now trim the spots instead of the tables: 6 players go 5 semi finalists then 4 finalists, 5 or 4 players go 4 then 3, and 3 players go 3 then 2",
+                "Consolation players keep their stats (VPs, HPs, eliminations, bonuses) on the leaderboard but earn no tournament points",
+                "Eliminated players no longer rank. A lone survivor takes 1st and everyone else is unranked",
+                "Players can be moved between finalist and consolation from their seat tag or the player settings",
+                "Undo: notifications now have an Undo button, and the Menu has Undo",
+                "New Tournament Log in the Menu, styled like a terminal log",
+                "Menu reorganised into Tournament, Help, Display and a separate Reset group",
+                "Footer note moved under Disclaimer, feedback email moved under Contribute, and the GitHub link points to the real repo",
+                "About page now explains the hybrid tournament system"
+            ]},
             { "version": "2.38", "date": "November 2026", "items": [
                 "Leaderboard now shows eliminations per player",
                 "Monsters already picked by another player are greyed out in the monster picker",
@@ -1073,13 +1075,49 @@
         let draggedPlayerInfo = null;
 
         // Persistence & Storage
+        let undoStack = [], lastSnap = null, lastKey = null, lastPushAt = 0, restoring = false;
+        const snapKey = j => j.replace(/"timerRemaining":\d+/g, '').replace(/"timerTotal":\d+/g, '');
+        function updateUndoUI() {
+            const b = document.getElementById('menu-undo');
+            if (!b) return;
+            b.disabled = undoStack.length === 0;
+            b.classList.toggle('opacity-40', undoStack.length === 0);
+            b.classList.toggle('cursor-not-allowed', undoStack.length === 0);
+        }
         window.saveTournament = function() {
             try {
-                localStorage.setItem('kot_tournament_state', JSON.stringify(window.tournament));
-            } catch(e) {
-                console.error('Storage error:', e);
-            }
+                const snap = JSON.stringify(window.tournament), key = snapKey(snap);
+                if (!restoring && lastSnap !== null && key !== lastKey) {
+                    undoStack.push(lastSnap);
+                    if (undoStack.length > 40) undoStack.shift();
+                    lastPushAt = Date.now();
+                    updateUndoUI();
+                }
+                lastSnap = snap; lastKey = key;
+                localStorage.setItem('kot_tournament_state', snap);
+            } catch (e) { console.error('Storage error:', e); }
         };
+        window.undoLast = function() {
+            if (!undoStack.length) { window.showToast('Nothing to undo.', 'info', { noUndo: true }); return; }
+            const prev = undoStack.pop(), cur = window.tournament;
+            restoring = true;
+            const t = window.migrateTournament(JSON.parse(prev));
+            t.rounds.forEach((r, ri) => r.games.forEach((g, gi) => {
+                const cg = cur.rounds[ri] && cur.rounds[ri].games[gi];
+                if (cg && cg.started && g.started) { g.timerRemaining = cg.timerRemaining; g.timerTotal = cg.timerTotal; }
+            }));
+            window.tournament = t;
+            isRoundActive = false;
+            window.applySettingsToUI();
+            window.saveTournament();
+            restoring = false;
+            window.closeNumberPicker && window.closeNumberPicker();
+            window.renderAll();
+            updateUndoUI();
+            window.logEvent('Undid the last change', 'WARN');
+            window.showToast('Last change undone', 'info', { noUndo: true });
+        };
+
 
         // Upgrades older saves (one set of tables per round) to the games-per-round structure
         window.migrateTournament = function(t) {
@@ -1558,32 +1596,20 @@
             window.updateSettings();
         };
 
-        window.showToast = function(message, type = 'info') {
+        window.showToast = function(message, type = 'info', opts) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
             let bg = 'bg-slate-900 border-slate-700 text-slate-200';
             let icon = 'fa-circle-info text-blue-400';
-            if (type === 'success') {
-                bg = 'bg-emerald-950/90 border-emerald-500/40 text-emerald-200';
-                icon = 'fa-circle-check text-emerald-400';
-            } else if (type === 'error') {
-                bg = 'bg-rose-950/90 border-rose-500/40 text-rose-200';
-                icon = 'fa-triangle-exclamation text-rose-400';
-            }
-
-            toast.className = `px-4 py-3 rounded-xl border shadow-xl flex items-center gap-3 text-xs font-bold transition-all transform translate-y-2 opacity-0 ${bg}`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${escapeHtml(message)}</span>`;
-            
+            if (type === 'success') { bg = 'bg-emerald-950/90 border-emerald-500/40 text-emerald-200'; icon = 'fa-circle-check text-emerald-400'; }
+            else if (type === 'error') { bg = 'bg-rose-950/90 border-rose-500/40 text-rose-200'; icon = 'fa-triangle-exclamation text-rose-400'; }
+            const canUndo = type !== 'error' && !(opts && opts.noUndo) && undoStack.length > 0 && (Date.now() - lastPushAt) < 2500;
+            toast.className = `px-4 py-3 rounded-xl border shadow-xl flex items-center gap-3 text-xs font-bold transition-all transform translate-y-2 opacity-0 ${bg} ${canUndo ? 'pointer-events-auto' : ''}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${escapeHtml(message)}</span>` +
+                (canUndo ? `<button type="button" onclick="window.undoLast(); this.parentElement.remove()" class="ml-1 px-2 py-0.5 rounded-md border border-current text-[11px] font-extrabold uppercase hover:bg-white/10 cursor-pointer"><i class="fa-solid fa-rotate-left mr-1"></i>Undo</button>` : '');
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+            setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, canUndo ? 6000 : 3500);
         };
 
         function escapeHtml(str) {
@@ -2074,6 +2100,9 @@
             window.showToast(`Round ${nextRoundNum} seated by standings. Top seeds meet on Table 1.`, "success");
         };
 
+        function semiCount(n) { if (n <= 6) return ({ 6: 5, 5: 4, 4: 4, 3: 3 })[n] || n; return Math.max(2, Math.ceil(n / 2)); }
+        function finalCount(n, size) { if (n <= 6) return ({ 6: 4, 5: 3, 4: 3, 3: 2 })[n] || n; return Math.min(size, Math.max(2, Math.ceil(n / 2))); }
+
         function snakeTables(ordered, size) {
             const T = Math.max(1, Math.ceil(ordered.length / size));
             const groups = Array.from({ length: T }, () => []);
@@ -2089,9 +2118,9 @@
             const cur = window.getCurrentRound();
             const size = window.tournament.settings.tableSize || 5;
             const pool = activeStandingsPlayers();
-            if (pool.length < 4) { window.showToast("Not enough players for Semis.", "error"); return; }
+            if (pool.length < 2) { window.showToast("Not enough players for Semis.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
-            const cut = pool.length <= 6 ? Math.min(3, pool.length) : Math.max(2, Math.ceil(pool.length / 2));
+            const cut = semiCount(pool.length);
             const inSet = new Set(pool.slice(0, cut).map(p => p.id));
             const tables = partitionPlayersEvenly(pool, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
@@ -2116,10 +2145,10 @@
             const cur = window.getCurrentRound();
             const size = window.tournament.settings.tableSize || 5;
             const pool = activeStandingsPlayers();
-            if (pool.length < 4) { window.showToast("Not enough players for Grand Finals.", "error"); return; }
+            if (pool.length < 2) { window.showToast("Not enough players for Grand Finals.", "error"); return; }
             if (cur) cur.finalsTriggered = true;
             const idx = id => pool.findIndex(p => p.id === id);
-            const fin = new Set(pool.slice(0, pool.length <= 6 ? Math.min(3, pool.length) : Math.min(size, Math.max(2, Math.ceil(pool.length / 2)))).map(p => p.id));
+            const fin = new Set(pool.slice(0, finalCount(pool.length, size)).map(p => p.id));
             const ordered = [...pool.filter(p => fin.has(p.id)), ...pool.filter(p => !fin.has(p.id))];
             const tables = partitionPlayersEvenly(ordered, size).map((g, i) => {
                 const t = createTableStructure(i, g, true);
@@ -2307,7 +2336,7 @@
 
                         if (table.completed) {
                             table.seats.forEach(seat => {
-                                if (seat.scored === false) return;
+                                const cons = seat.scored === false || (round.isSemis && seat.tier === 'out');
                                 const p = stats[seat.playerId];
                                 if (p) {
                                     p.gamesPlayed += 1;
@@ -2319,6 +2348,7 @@
                                     p.vpTotal += (parseInt(seat.vp) || 0);
                                     p.hpTotal += (parseInt(seat.hp) || 0);
                                     p.elimTotal += (seat.elims || 0);
+                                    if (cons) { p.pts -= (ptsLookup[rank] || 0) + bonus; if (rank === 1) p.wins -= 1; }
                                 }
                             });
                         }
@@ -2482,6 +2512,7 @@
                 else if (inS && seat.tier) roleTag = seat.tier === 'out'
                     ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Consolation</span>'
                     : '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-violet-500/15 text-violet-300 border border-violet-500/30 uppercase font-bold">Semi Finalist</span>';
+                if (roleTag && !locked) roleTag = roleTag.replace('<span ', `<button type="button" onclick="window.toggleRole('${table.id}', '${seat.playerId}')" title="Tap to move between finalist and consolation" `).replace('</span>', '</button>');
                 const chip = locked ? 'bg-amber-500/15 border-amber-400 cursor-not-allowed' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60 cursor-pointer';
                 const val = locked ? 'text-amber-300' : 'text-white';
                 const dis = locked ? 'disabled' : '';
@@ -2489,7 +2520,7 @@
                     <div draggable="${locked ? 'false' : 'true'}" ondragstart="window.handleDragStart(event, '${table.id}', '${seat.playerId}')" ondragend="window.handleDragEnd(event)"
                          class="flex flex-col gap-1 px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors ${locked ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'} ${left ? 'opacity-50' : (isOut ? 'opacity-75 border-dashed' : '')}">
                         <div class="flex items-center gap-2 min-w-0">
-                            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">${rank || (sIdx + 1)}</span>
+                            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black flex items-center justify-center shrink-0">${(parseInt(seat.hp) || 0) === 0 && game.started ? '✕' : (rank || (sIdx + 1))}</span>
                             <span class="font-bold text-sm text-slate-100 truncate" title="${escapeHtml(playerObj.name)}">${escapeHtml(playerObj.name)}</span>
                             ${roleTag}
                             ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId, locked) : '')}
@@ -2518,6 +2549,36 @@
                 ${skipped ? `<div class="rounded-xl border border-dashed border-slate-700 py-4 px-3 text-center text-xs text-slate-500"><i class="fa-solid fa-forward mr-1"></i> Table skipped, not played<div class="mt-1 text-[11px] text-slate-600 truncate">${table.seats.map(x => escapeHtml((window.tournament.players.find(p => p.id === x.playerId) || {}).name || "")).join(", ")}</div></div>` : `<div class="space-y-1.5">${seatsHTML}</div>`}`;
             return card;
         }
+
+        function roleOf(seat) {
+            const r = window.getCurrentRound();
+            if (r && r.isSemis && seat.tier !== undefined) return seat.tier === 'in';
+            if (r && r.isFinals && seat.scored !== undefined) return seat.scored !== false;
+            return null;
+        }
+        function setPlayerRole(round, playerId, fin, fromGame) {
+            round.games.forEach((g, gi) => {
+                if (gi < fromGame) return;
+                g.tables.forEach(t => t.seats.forEach(x => {
+                    if (x.playerId !== playerId || t.completed) return;
+                    if (round.isSemis && x.tier !== undefined) x.tier = fin ? 'in' : 'out';
+                    if (round.isFinals && x.scored !== undefined) x.scored = fin;
+                }));
+            });
+        }
+        window.toggleRole = function(tableId, playerId) {
+            const round = window.getCurrentRound(), game = window.getCurrentGame();
+            const table = game && game.tables.find(t => t.id === tableId);
+            const seat = table && table.seats.find(x => x.playerId === playerId);
+            if (!seat || table.completed) return;
+            const now = roleOf(seat);
+            if (now === null) return;
+            setPlayerRole(round, playerId, !now, window.tournament.currentGame);
+            window.saveTournament(); window.renderAll();
+            const nm = (window.tournament.players.find(p => p.id === playerId) || {}).name || 'Player';
+            window.logEvent(`${nm} moved to ${!now ? (round.isSemis ? 'semi finalists' : 'finalists') : 'consolation'}`, 'SYS');
+            window.showToast(`${nm} is now ${!now ? (round.isSemis ? 'a semi finalist' : 'a finalist') : 'a consolation player'}`, 'info');
+        };
 
         let elimCtx = null;
         function undoElim(table, seat) {
@@ -2609,6 +2670,7 @@
                 ${d.hp === 0 ? '<p class="text-[11px] text-slate-500">0 HP eliminates this player and sets their VPs to 0.</p>' : ''}
                 ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.BONUS_TYPES.map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${d.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}"><input type="checkbox" ${d.bonuses[b.key] ? 'checked' : ''} onchange="window.pmBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
                 ${window.monstersEnabled() ? `<div><span class="${lbl}">Monster</span><button type="button" onclick="window.pmMonster()" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-sm font-bold text-slate-200 flex items-center justify-between cursor-pointer"><span>${m ? escapeHtml(m.name) : 'Choose a monster'}</span><i class="fa-solid fa-chevron-right text-xs text-slate-500"></i></button></div>` : ''}
+                ${d.fin === null ? '' : `<button type="button" onclick="window.pmToggleFin()" class="w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"><i class="fa-solid fa-right-left"></i> ${d.fin ? (window.getCurrentRound().isSemis ? 'Semi finalist: move to consolation' : 'Finalist: move to consolation') : (window.getCurrentRound().isSemis ? 'Consolation: move to semi finalists' : 'Consolation: move to finalists')}</button>`}
                 <button type="button" onclick="window.pmToggleLeft()" class="w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"><i class="fa-solid ${d.left ? 'fa-rotate-left' : 'fa-person-walking-arrow-right'}"></i> ${d.left ? 'Player is back' : 'Player has left'}</button>
                 ${d.left ? '<p class="text-[11px] text-slate-500">Left players are out of this round and are left out of future tables.</p>' : ''}
                 <div class="flex gap-2 pt-1">
@@ -2620,7 +2682,7 @@
             pmCtx = { tableId, playerId };
             const { table, seat, player } = pmFind();
             if (!seat || !player) { pmCtx = null; return; }
-            pmDraft = { name: player.name, vp: parseInt(seat.vp) || 0, hp: parseInt(seat.hp) || 0, bonuses: { ...(seat.bonuses || {}) }, left: !!player.left, rank: Array.isArray(table.manualOrder) ? (parseInt(seat.rank) || 0) : 0 };
+            pmDraft = { name: player.name, vp: parseInt(seat.vp) || 0, hp: parseInt(seat.hp) || 0, bonuses: { ...(seat.bonuses || {}) }, left: !!player.left, rank: Array.isArray(table.manualOrder) ? (parseInt(seat.rank) || 0) : 0, fin: roleOf(seat) };
             renderPlayerModal();
             document.getElementById('player-modal').classList.remove('hidden');
         };
@@ -2632,6 +2694,7 @@
             renderPlayerModal();
         };
         window.pmBonus = function(k, on) { if (pmDraft) { pmDraft.bonuses[k] = !!on; renderPlayerModal(); } };
+        window.pmToggleFin = function() { if (pmDraft && pmDraft.fin !== null) { pmDraft.fin = !pmDraft.fin; renderPlayerModal(); } };
         window.pmToggleLeft = function() { if (pmDraft) { pmDraft.left = !pmDraft.left; renderPlayerModal(); } };
         window.pmMonster = function() { if (pmCtx) window.openMonsterPicker(pmCtx.playerId); };
         window.pmSave = function() {
@@ -2662,10 +2725,11 @@
                     });
                 });
             }
+            if (d.fin !== null && d.fin !== roleOf(seat)) setPlayerRole(window.getCurrentRound(), player.id, d.fin, window.tournament.currentGame);
             if (game.started) {
                 if (d.rank > 0) {
                     rankTable(table);
-                    const ids = [...table.seats].sort((a, b) => a.rank - b.rank).map(x => x.playerId).filter(id => id !== seat.playerId);
+                    const ids = [...table.seats].filter(x => x.rank > 0).sort((a, b) => a.rank - b.rank).map(x => x.playerId).filter(id => id !== seat.playerId);
                     ids.splice(d.rank - 1, 0, seat.playerId);
                     table.manualOrder = ids;
                 } else {
@@ -2800,7 +2864,8 @@
                 }
                 return (a.out - b.out) || (b.sc - a.sc) || (a.i - b.i);
             });
-            items.forEach((o, k) => { o.s.rank = k + 1; });
+            let k = 0;
+            items.forEach(o => { o.s.rank = o.out ? 0 : ++k; });
         }
 
         window.updateSeatScore = function(tableId, playerId, field, value) {
@@ -2840,7 +2905,7 @@
             if (!table) return;
 
             table.completed = !table.completed;
-            if (table.completed) { autoBonuses(table); rankTable(table); table.seats.sort((a, b) => a.rank - b.rank); }
+            if (table.completed) { autoBonuses(table); rankTable(table); table.seats.sort((a, b) => (a.rank || 99) - (b.rank || 99)); }
             window.saveTournament();
             checkAndAutoPauseRound();
             window.renderAll();
@@ -3457,11 +3522,83 @@
             try { localStorage.setItem('kot_theme', next); } catch (e) {}
         };
 
+        // ----- Tournament log (players and tournament events only, not settings) -----
+        const LOG_KEY = 'kot_log';
+        let kotLog = [];
+        try { kotLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); } catch (e) { kotLog = []; }
+        window.logEvent = function(msg, kind) {
+            kotLog.push({ t: Date.now(), m: msg, k: kind || 'INFO' });
+            if (kotLog.length > 500) kotLog.shift();
+            try { localStorage.setItem(LOG_KEY, JSON.stringify(kotLog)); } catch (e) {}
+            const m = document.getElementById('tlog-modal');
+            if (m && !m.classList.contains('hidden')) renderTournamentLog();
+        };
+        const LOG_COLORS = { INFO: '#9fb3c8', OK: '#7ee787', WARN: '#e3b341', KILL: '#ff7b72', SYS: '#79c0ff' };
+        function logText() {
+            return kotLog.map(e => `[${new Date(e.t).toLocaleTimeString('en-GB')}] [${e.k}] ${e.m}`).join('\n');
+        }
+        function renderTournamentLog() {
+            const body = document.getElementById('tlog-body');
+            body.innerHTML = kotLog.length ? kotLog.map(e => `<div><span style="color:#6e7681">[${new Date(e.t).toLocaleTimeString('en-GB')}]</span> <span style="color:${LOG_COLORS[e.k] || '#9fb3c8'}">[${e.k}]</span> <span style="color:#d6e2ee">${escapeHtml(e.m)}</span></div>`).join('') : '<div style="color:#6e7681">-- log is empty --</div>';
+            body.scrollTop = body.scrollHeight;
+        }
+        window.openTournamentLog = function() { renderTournamentLog(); document.getElementById('tlog-modal').classList.remove('hidden'); };
+        window.closeTournamentLog = function() { document.getElementById('tlog-modal').classList.add('hidden'); };
+        window.copyTournamentLog = function() {
+            try { navigator.clipboard.writeText(logText()); window.showToast('Log copied', 'success', { noUndo: true }); } catch (e) { window.showToast('Could not copy the log.', 'error'); }
+        };
+        window.clearTournamentLog = function() { kotLog = []; try { localStorage.removeItem(LOG_KEY); } catch (e) {} renderTournamentLog(); };
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') window.closeTournamentLog(); });
+
+        function wrapLog(name, pre, post) {
+            const o = window[name];
+            if (typeof o !== 'function') return;
+            window[name] = function(...a) {
+                let c = null;
+                try { c = pre ? pre(...a) : null; } catch (e) {}
+                const r = o.apply(this, a);
+                try { if (post) post(c, ...a); } catch (e) {}
+                return r;
+            };
+        }
+        const pname = id => ((window.tournament.players.find(p => p.id === id)) || {}).name || 'Player';
+        const curRoundName = () => { const r = window.getCurrentRound(); return r ? r.name : ''; };
+        const tblOf = id => { const g = window.getCurrentGame(); return g && g.tables.find(t => t.id === id); };
+        const logAdded = (n) => { const d = window.tournament.players.slice(n); if (d.length) window.logEvent(`Added ${d.length} player(s): ${d.map(p => p.name).join(', ')}`, 'SYS'); };
+        wrapLog('handleAddPlayer', () => window.tournament.players.length, logAdded);
+        wrapLog('quickAddSamplePlayers', () => window.tournament.players.length, logAdded);
+        wrapLog('removePlayer', id => pname(id), n => window.logEvent(`Removed player ${n}`, 'WARN'));
+        wrapLog('editPlayer', id => pname(id), (old, id) => { const nn = pname(id); if (nn !== old) window.logEvent(`Renamed ${old} to ${nn}`, 'SYS'); });
+        wrapLog('generateRound1', null, () => { if (window.tournament.rounds.length) window.logEvent(`Tournament generated with ${window.tournament.players.length} players`, 'OK'); });
+        wrapLog('startCurrentGame', null, () => window.logEvent(`${curRoundName()}, game ${window.tournament.currentGame + 1} started`, 'OK'));
+        wrapLog('togglePauseCurrentGame', null, () => window.logEvent(isRoundActive ? 'Game resumed' : 'Game paused', 'INFO'));
+        wrapLog('toggleTableComplete', null, (c, id) => {
+            const t = tblOf(id); if (!t) return;
+            if (t.completed) {
+                const order = [...t.seats].filter(x => x.rank > 0).sort((a, b) => a.rank - b.rank).map(x => `${x.rank}. ${pname(x.playerId)} (${x.vp} VP)`).join('  ');
+                window.logEvent(`${t.tableName} results submitted: ${order || 'no ranked players'}`, 'OK');
+            } else window.logEvent(`${t.tableName} results unlocked`, 'WARN');
+        });
+        wrapLog('toggleTableSkip', null, (c, id) => { const t = tblOf(id); if (t) window.logEvent(`${t.tableName} ${t.skipped ? 'skipped' : 'back in play'}`, 'WARN'); });
+        wrapLog('skipGame', null, () => { const g = window.getCurrentGame(); if (g && g.skipped) window.logEvent(`${curRoundName()}, game ${window.tournament.currentGame + 1} skipped`, 'WARN'); });
+        wrapLog('restoreGame', null, () => window.logEvent(`${curRoundName()}, game ${window.tournament.currentGame + 1} restored`, 'INFO'));
+        wrapLog('pickEliminator', () => elimCtx ? { ...elimCtx } : null, (c, k) => { if (c) window.logEvent(k === 'self' ? `${pname(c.playerId)} eliminated themselves` : `${pname(c.playerId)} was eliminated by ${pname(k)}`, 'KILL'); });
+        wrapLog('updateSeatScore', null, (c, tid, pid, field, v) => { if (field === 'vp' || field === 'hp') window.logEvent(`${pname(pid)} ${field.toUpperCase()} set to ${v}`, 'INFO'); });
+        wrapLog('pickMonster', () => monsterPickerPlayerId, (pid, key) => { const m = monsterByKey(key); if (pid && m) window.logEvent(`${pname(pid)} picked ${m.name}`, 'INFO'); });
+        wrapLog('clearMonster', () => monsterPickerPlayerId, pid => { if (pid) window.logEvent(`${pname(pid)} removed their monster`, 'INFO'); });
+        wrapLog('pmSave', () => pmCtx ? { ...pmCtx } : null, c => { if (c) window.logEvent(`Player settings saved for ${pname(c.playerId)}`, 'SYS'); });
+        wrapLog('generateNextRound', null, () => window.logEvent(`${curRoundName()} generated`, 'OK'));
+        wrapLog('triggerSemis', null, () => window.logEvent('Semi finals generated', 'OK'));
+        wrapLog('triggerGrandFinals', null, () => window.logEvent('Finals generated', 'OK'));
+        wrapLog('crownChampion', null, () => { const w = window.calculateStandings()[0]; if (w) window.logEvent(`${w.name} crowned champion with ${w.pts} pts`, 'OK'); });
+        wrapLog('executeResetTournament', null, () => { kotLog = []; window.logEvent('Tournament reset', 'WARN'); });
+
         // Application Initialization
         window.onload = function() {
             window.applyTheme(document.documentElement.classList.contains('light') ? 'light' : 'dark');
             syncSoundUI();
             window.loadTournament();
+            lastSnap = JSON.stringify(window.tournament); lastKey = snapKey(lastSnap);
             window.syncSettingsUI();
             window.renderAll();
             if (location.hash === '#rules') window.openRulesModal();
