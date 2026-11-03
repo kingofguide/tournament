@@ -267,7 +267,7 @@
                                     <span class="hidden sm:inline">Overview</span>
                                 </button>
                                 <!-- Overview Popup -->
-                                <div class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-950 border border-slate-700 rounded-xl shadow-2xl text-xs text-slate-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all z-50 normal-case tracking-normal font-normal">
+                                <div class="absolute right-0 top-full mt-2 w-80 max-w-[85vw] p-3 bg-slate-950 border border-slate-700 rounded-xl shadow-2xl text-xs text-slate-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all z-50 normal-case tracking-normal font-normal">
                                     <p id="tournament-overview-text" class="leading-relaxed"></p>
                                     <p class="mt-2 text-[10px] text-slate-500 leading-snug">Estimate only. Turn time is the Game Timer shared across about 10 turns per player. Games usually run about 20% over the timer, plus about 5 minutes between games.</p>
                                 </div>
@@ -340,6 +340,17 @@
                         </div>
                         <input type="range" id="setting-round-timer" class="kot-range" min="15" max="60" step="5" value="30" oninput="window.updateSettings()">
                         <div class="relative h-4 mx-[11px] mt-1.5 text-[10px] font-bold text-slate-500"><span class="absolute -translate-x-1/2" style="left:0.00%">15m</span><span class="absolute -translate-x-1/2" style="left:33.33%">30m</span><span class="absolute -translate-x-1/2" style="left:66.67%">45m</span><span class="absolute -translate-x-1/2" style="left:100.00%">60m</span></div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-trophy text-slate-500 mr-1"></i> Tournament Mode</label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" data-mode="points" onclick="window.setMode(false)" class="mode-btn px-2 py-2.5 rounded-xl border text-xs font-extrabold transition-colors cursor-pointer">Highest Points Wins</button>
+                            <button type="button" data-mode="wta" onclick="window.setMode(true)" class="mode-btn px-2 py-2.5 rounded-xl border text-xs font-extrabold transition-colors cursor-pointer">Winner Takes All</button>
+                        </div>
+                        <p id="mode-help" class="text-[10px] text-slate-500 mt-1.5 leading-snug"></p>
                     </div>
 
                     <!-- Options -->
@@ -591,7 +602,7 @@
 
     <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRulesModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-book-open text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Rules &amp; Guidelines</h3><p class="text-xs text-slate-400">Rules, scoring and clarifications</p></div></div><button onclick="window.closeRulesModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4"><span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span><p class="font-bold text-white text-sm">Battle to claim first place podium.</p></div><p><strong class="text-slate-200">Guides:</strong> Find Monster guides at <a href="https://kingofguide.github.io/tokyo" target="_blank" rel="noopener" class="text-amber-400 underline">kingofguide.github.io/tokyo</a></p><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Rules</h4><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Play</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Play each game as per normal rules except the following:</li><li>The Power Up expansion must be used.</li><li>A maximum of 8 dice is allowed per player despite monster abilities.</li><li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Drafting</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Players select one monster from the pool.</li><li>After each round, players may draft a different monster from the pool.</li><li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Rounds</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Set the number of games per round, the recommended is 1-2.</li><li>Set the number of total rounds in the tournament, recommended is 2-3.</li><li>Once a round is complete, the top seed players will move to the same table. This is repeated for the low seed players.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Scoring</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Once a player is about to win, they finish their turn, claim first place and the game is over.</li><li>Second and third places are determined by VPs, highest wins. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>If a player is eliminated (0 HP), their VPs are set to 0 and they finish last.</li><li>All the players places, VPs and HPs should be entered into the Manager App.</li><li><strong class="text-slate-200">Places:</strong> 1st = 3pts, 2nd = 2pts, 3rd = 1pt, 4th-6th = 0pt</li><li><strong class="text-slate-200">Bonuses (optional):</strong> Smasher = 1pt (most kills), Tanker = 1pt (most health), Collector = 1pt (most cards), Harvester = 1pt (most energy)</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Clarifications</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.</li><li><strong class="text-slate-200">Bonuses:</strong> optional points awarded to players at the end of the game.</li><li><strong class="text-slate-200">Smasher:</strong> granted to the player with the most kills, a kill is when an enemy is eliminated, the active player is awarded that kill.</li><li><strong class="text-slate-200">Tanker, Collector, or Harvester:</strong> granted to the player who has the most Health, Power Cards, or Energy, respectively at the end state of the game. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li><strong class="text-slate-200">Expansions:</strong> the Power Up must be used, all other expansions are up to the Tournament Managers.</li><li><strong class="text-slate-200">Cards:</strong> It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">General</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Rules:</strong> players should always follow the rules to their utmost ability.</li><li><strong class="text-slate-200">Missed abilities:</strong> in case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible as a fun atmosphere should be the priority over simply gaining an edge.</li><li><strong class="text-slate-200">Cheating:</strong> in cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.</li><li><strong class="text-slate-200">Tips and Tricks:</strong> Follow the dice, let your first roll guide your turn. Follow your first Power Up, let it guide your play style. Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Disclaimer</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>The Power Tournament format is a work in progress and can be updated at any time, including during live games.</li><li>Decisions will be made by the Tournament Managers and are final.</li><li>Feedback is welcome, please email kingofguide(at)outlook(dot)com.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 <div id="about-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeAboutModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-circle-question text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">About</h3><p class="text-xs text-slate-400">A note from the creator</p></div></div><button onclick="window.closeAboutModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><p class="font-bold text-white text-sm">Welcome fellow Kaiju battler,</p><p>I'm the creator of this Tournament Manager. It's a fun project I've been working on leading up to a tournament with friends.</p><p>While writing scores down on paper and organising brackets in real time is doable. I'd really rather not. Especially if I'm playing, it's the last thing I want to manage.</p><p>Enter this app! Where it does all that for me... and more.</p><p>Thanks to Claude, I vibe coded this sucker in no time. But my brain has got the best of me. "What if I add this? What if I make that?"</p><p>So welcome to my current obsession.</p><p>Just a note on the tournament system as it's a bit of everything. I'm calling it a hybrid tournament as I think it combines elimination-like brackets with swiss-like pairing. The thinking is to keep all players included while still building towards a pressure cooker finals. I love King of Tokyo, but I don't love that elimination games leave people out. So I didn't want a whole tournament isolating players. This is a casual approach to a competitive tournament. I hope it works!</p></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeAboutModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
-<div id="tlog-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeTournamentLog()"><div class="w-full max-w-2xl rounded-xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden" style="background:#0b0f14;border:1px solid #30363d"><div class="flex items-center justify-between px-4 py-2.5" style="background:#161b22;border-bottom:1px solid #30363d"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:#ff5f56"></span><span class="w-3 h-3 rounded-full" style="background:#ffbd2e"></span><span class="w-3 h-3 rounded-full" style="background:#27c93f"></span><span class="ml-2 font-mono text-xs" style="color:#8b949e">kot@tournament: ~/tournament.log</span></div><button onclick="window.closeTournamentLog()" aria-label="Close" class="cursor-pointer" style="color:#8b949e"><i class="fa-solid fa-xmark"></i></button></div><div class="px-4 pt-3 font-mono text-[11px]" style="color:#7ee787">$ tail -f tournament.log</div><div id="tlog-body" class="px-4 py-3 overflow-y-auto font-mono text-[11px] leading-relaxed space-y-0.5 flex-1" style="min-height:12rem"></div><div class="flex items-center justify-end gap-2 px-4 py-2.5 font-mono text-[11px]" style="border-top:1px solid #30363d"><button onclick="window.copyTournamentLog()" class="px-3 py-1.5 rounded cursor-pointer" style="background:#21262d;color:#c9d1d9;border:1px solid #30363d">copy</button><button onclick="window.clearTournamentLog()" class="px-3 py-1.5 rounded cursor-pointer" style="background:#21262d;color:#ff7b72;border:1px solid #30363d">clear</button><button onclick="window.closeTournamentLog()" class="px-3 py-1.5 rounded cursor-pointer" style="background:#21262d;color:#c9d1d9;border:1px solid #30363d">close</button></div></div></div>
+<div id="tlog-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeTournamentLog()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-terminal text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Log</h3><p class="text-xs text-slate-400">Players and tournament events</p></div></div><button onclick="window.closeTournamentLog()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="tlog-body" class="p-4 mx-5 mt-4 overflow-y-auto custom-scrollbar flex-1 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] leading-relaxed space-y-0.5" style="min-height:12rem"></div><div class="p-4 flex items-center justify-end gap-2"><button onclick="window.copyTournamentLog()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 cursor-pointer"><i class="fa-solid fa-copy mr-1"></i> Copy</button><button onclick="window.clearTournamentLog()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-400 text-xs font-bold border border-slate-700 cursor-pointer"><i class="fa-solid fa-trash-can mr-1"></i> Clear</button><button onclick="window.closeTournamentLog()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 
     <!-- Update Log Modal -->
     <div id="log-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeLogModal()">
@@ -730,9 +741,11 @@
         </div>
     </div>
 
-    <div id="player-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4" onclick="if(event.target===this) window.closePlayerMenu()"><div class="bg-slate-900 border border-slate-800 w-full sm:max-w-sm rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar p-4 space-y-4"><div class="flex items-center justify-between"><h3 class="font-extrabold text-white text-sm"><i class="fa-solid fa-gear text-amber-400 mr-1.5"></i>Player Settings</h3><button type="button" onclick="window.closePlayerMenu()" aria-label="Close" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark"></i></button></div><div id="player-modal-body" class="space-y-4"></div></div></div>
+    <div id="player-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closePlayerMenu()"><div class="bg-slate-900 border border-slate-800 w-full sm:max-w-md rounded-2xl shadow-2xl max-h-[88vh] overflow-y-auto custom-scrollbar p-4 space-y-4"><div class="flex items-center justify-between"><h3 class="font-extrabold text-white text-sm"><i class="fa-solid fa-gear text-amber-400 mr-1.5"></i>Player Settings</h3><button type="button" onclick="window.closePlayerMenu()" aria-label="Close" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark"></i></button></div><div id="player-modal-body" class="space-y-4"></div></div></div>
 
     <div id="elim-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4"><div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3"><div><h3 class="font-extrabold text-white text-sm">💥 Who eliminated them?</h3><p id="elim-sub" class="text-[11px] text-slate-400 truncate"></p></div><div id="elim-list" class="space-y-1.5"></div><button type="button" onclick="window.closeElimPicker()" class="w-full h-9 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Not sure, skip</button></div></div>
+
+    <div id="kills-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4"><div class="bg-slate-900 border border-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 space-y-3"><div><h3 class="font-extrabold text-white text-sm">💥 Who did they eliminate?</h3><p id="kills-sub" class="text-[11px] text-slate-400 truncate"></p></div><div id="kills-list" class="space-y-1.5"></div><button type="button" onclick="window.closeKillsPicker()" class="w-full h-9 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400 cursor-pointer">Done</button></div></div>
 
     <!-- Bonus Modal -->
     <div id="bonus-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeBonusModal()">
@@ -791,7 +804,7 @@
         const PP_OFF = PP_BASE + 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed';
         window.skipOrRestore = function() { const g = window.getCurrentGame(); if (g && g.skipped) window.restoreGame(); else window.skipGame(); };
         window.activePlayers = () => window.tournament.players.filter(p => !p.left);
-        function needsSemis() { return window.activePlayers().length >= 3; }
+        function needsSemis() { return window.activePlayers().length >= 2; }
 
         // Header Dropdown Menu Controls
         window.toggleHeaderMenu = function(event) {
@@ -819,8 +832,17 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.39';
+        const APP_VERSION = '2.40';
         const CHANGELOG = [
+            { "version": "2.40", "date": "November 2026", "items": [
+                "2 and 3 player tournaments now go through the Semis: everyone is a semi finalist, then 2 players reach the Finals",
+                "New Tournament Mode setting: Highest Points Wins (default) or Winner Takes All, where the Finals winner takes 1st place on the leaderboard. It is saved with the Custom template",
+                "Overview now covers the Semis, the finalist counts for your roster, scoring and the tournament mode",
+                "Submitted tables show each player's overall tournament points",
+                "The elimination chip is now a button to choose which players a player eliminated",
+                "Player settings redesigned into sections, centred on mobile, with overall score, eliminations and clearer monster options",
+                "Tournament Log restyled to match the app while keeping the terminal font"
+            ]},
             { "version": "2.39", "date": "November 2026", "items": [
                 "Small single-table tournaments now trim the spots instead of the tables: 6 players go 5 semi finalists then 4 finalists, 5 or 4 players go 4 then 3, and 3 players go 3 then 2",
                 "Consolation players keep their stats (VPs, HPs, eliminations, bonuses) on the leaderboard but earn no tournament points",
@@ -1226,7 +1248,8 @@
                     prelimRounds: parseInt(document.getElementById('setting-prelim-rounds').value) || 3,
                     roundTimerMinutes: parseInt(document.getElementById('setting-round-timer').value) || 30,
                     bonusesEnabled: document.getElementById('setting-bonuses').checked,
-                    monstersEnabled: document.getElementById('setting-monsters').checked
+                    monstersEnabled: document.getElementById('setting-monsters').checked,
+                    winnerTakesAll: !!window.tournament.settings.winnerTakesAll
                 },
                 players: [],
                 rounds: [],
@@ -1298,7 +1321,7 @@
 
         // ----- Custom template: the user's own preset, saved on this device (includes the Options toggles) -----
         const CUSTOM_TEMPLATE_KEY = 'kot_custom_template';
-        const DEFAULT_SNAPSHOT = { players: 5, games: 2, rounds: 3, timer: 30, bonuses: true, monsters: true, sfx: true, sfxVoice: '', sfxRate: 1, sfxPitch: 1, sfxVol: 0.8 };
+        const DEFAULT_SNAPSHOT = { players: 5, games: 2, rounds: 3, timer: 30, bonuses: true, monsters: true, mode: 'points', sfx: true, sfxVoice: '', sfxRate: 1, sfxPitch: 1, sfxVol: 0.8 };
 
         function loadCustomTemplate() {
             try {
@@ -1316,12 +1339,12 @@
                 timer: readSetting('setting-round-timer'),
                 bonuses: document.getElementById('setting-bonuses').checked,
                 monsters: document.getElementById('setting-monsters').checked,
-                sfx: soundPrefs.enabled, sfxVoice: soundPrefs.voice || '', sfxRate: soundPrefs.rate, sfxPitch: soundPrefs.pitch, sfxVol: soundPrefs.volume
+                mode: window.tournament.settings.winnerTakesAll ? 'wta' : 'points', sfx: soundPrefs.enabled, sfxVoice: soundPrefs.voice || '', sfxRate: soundPrefs.rate, sfxPitch: soundPrefs.pitch, sfxVol: soundPrefs.volume
             };
         }
 
         function sameSnapshot(a, b) {
-            return ['players', 'games', 'rounds', 'timer', 'bonuses', 'monsters', 'sfx', 'sfxVoice', 'sfxRate', 'sfxPitch', 'sfxVol'].every(k => a[k] === b[k]);
+            return ['players', 'games', 'rounds', 'timer', 'bonuses', 'monsters', 'mode', 'sfx', 'sfxVoice', 'sfxRate', 'sfxPitch', 'sfxVol'].every(k => a[k] === b[k]);
         }
 
         // The save button is only clickable once the settings differ from what is saved (or from the defaults, if nothing is saved yet)
@@ -1354,7 +1377,7 @@
             host.innerHTML = items.map((t, i) => {
                 const empty = t.isCustom && !t.saved;
                 const sameCore = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
-                const active = !empty && sameCore && (!t.isCustom || (t.bonuses === cur.bonuses && t.monsters === cur.monsters && t.sfx === cur.sfx && t.sfxVoice === cur.sfxVoice && t.sfxRate === cur.sfxRate && t.sfxPitch === cur.sfxPitch && t.sfxVol === cur.sfxVol));
+                const active = !empty && sameCore && (!t.isCustom || (t.bonuses === cur.bonuses && t.monsters === cur.monsters && t.mode === cur.mode && t.sfx === cur.sfx && t.sfxVoice === cur.sfxVoice && t.sfxRate === cur.sfxRate && t.sfxPitch === cur.sfxPitch && t.sfxVol === cur.sfxVol));
                 const cls = active
                     ? 'bg-amber-500/15 border-amber-400 text-amber-300'
                     : (empty ? 'bg-slate-950 border-dashed border-slate-700 text-slate-500 hover:border-amber-500/50 hover:text-amber-300'
@@ -1363,7 +1386,7 @@
                 if (empty) {
                     stats = 'Nothing saved yet. Change your settings, then tap the save icon next to Overview to keep them here.';
                 } else {
-                    const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + 1);
+                    const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + Math.min(2, Math.ceil(t.games / 2)) + 1);
                     stats = `${t.players} player tables · ${t.games} game${t.games === 1 ? '' : 's'} per ${t.rounds} rounds · ${t.timer} min games · ~ ${formatDuration(total)}`;
                     if (t.isCustom) stats += ` · Bonuses ${t.bonuses !== false ? 'on' : 'off'}, Monsters ${t.monsters !== false ? 'on' : 'off'}, Sound ${t.sfx !== false ? 'on' : 'off'}`;
                 }
@@ -1382,26 +1405,30 @@
             }).join('');
         }
 
+        function semiGames(gpr) { return Math.min(2, Math.ceil(gpr / 2)); }
         function renderTournamentOverview() {
             const el = document.getElementById('tournament-overview-text');
             if (!el) return;
-            const players = readSetting('setting-table-size');
+            const size = readSetting('setting-table-size');
             const gamesPerRound = readSetting('setting-games-per-round');
             const rounds = readSetting('setting-prelim-rounds');
             const timer = readSetting('setting-round-timer');
-
             const roundGames = gamesPerRound * rounds;
-            const totalGames = roundGames + 1; // plus the finals
-
-            // Seconds per turn: the Game Timer shared across every player's turns
-            const secondsPerTurn = (timer * 60) / (players * TURNS_EACH);
-            const totalMinutes = estimateMinutes(players, timer, totalGames);
-
+            const semis = semiGames(gamesPerRound);
+            const totalGames = roundGames + semis + 1;
+            const secondsPerTurn = (timer * 60) / (size * TURNS_EACH);
+            const totalMinutes = estimateMinutes(size, timer, totalGames);
+            const n = window.tournament.players.length;
+            const wta = !!window.tournament.settings.winnerTakesAll;
             const strong = (t) => `<strong class="text-amber-400">${t}</strong>`;
-            el.innerHTML = `Your tournament will include ${strong(totalGames + ' total games')} ` +
-                `(${roundGames} game${roundGames === 1 ? '' : 's'} in the rounds, plus 1 finals), ` +
-                `taking roughly ${strong(formatDuration(totalMinutes))} in total, ` +
-                `with about ${strong(formatTurnTime(secondsPerTurn))} per turn (around ${TURNS_EACH} turns each).`;
+            const counts = n >= 2
+                ? `With ${strong(n + ' players')} there will be ${strong(semiCount(n) + ' semi finalists')} and ${strong(finalCount(n, size) + ' finalists')}.`
+                : 'Add players to see how many semi finalists and finalists there will be.';
+            el.innerHTML =
+                `<span class="block">Your tournament will have ${strong(totalGames + ' games')}: ${roundGames} in the rounds (${rounds} x ${gamesPerRound}), ${semis} in the semis and 1 final. That is roughly ${strong(formatDuration(totalMinutes))} in total, with about ${strong(formatTurnTime(secondsPerTurn))} per turn (around ${TURNS_EACH} turns each).</span>` +
+                `<span class="block mt-2">Everyone plays every game. After the rounds, players are seeded by standings into the Semis and then the Finals, so nobody sits out. ${counts}</span>` +
+                `<span class="block mt-2">Places score 3, 2 and 1 points by VPs, plus bonuses if enabled. Eliminated players do not rank. Consolation players keep their stats but earn no tournament points.</span>` +
+                `<span class="block mt-2">Mode: ${strong(wta ? 'Winner Takes All' : 'Highest Points Wins')}. ${wta ? 'The Finals winner takes 1st place overall.' : 'The most points after the Finals wins.'}</span>`;
         }
 
         // Keeps slider fill, value badges and the option buttons in step with the inputs
@@ -1421,6 +1448,16 @@
             document.getElementById('badge-prelim-rounds').textContent = prelims + (prelims === 1 ? ' round' : ' rounds');
 
             renderTournamentOverview();
+            (function () {
+                const wta = !!window.tournament.settings.winnerTakesAll;
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    const active = (btn.dataset.mode === 'wta') === wta;
+                    btn.className = 'mode-btn px-2 py-2.5 rounded-xl border text-xs font-extrabold transition-colors cursor-pointer ' +
+                        (active ? 'bg-amber-500/15 border-amber-400 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-amber-500/50 hover:text-amber-300');
+                });
+                const h = document.getElementById('mode-help');
+                if (h) h.textContent = wta ? 'The Finals still score as normal, but whoever wins the Finals game takes 1st place on the leaderboard.' : 'The player with the most tournament points after the Finals wins.';
+            })();
             renderTemplateButtons();
             syncCustomSaveButton();
 
@@ -1575,6 +1612,7 @@
                 document.getElementById('setting-bonuses').checked = saved.bonuses !== false;
                 document.getElementById('setting-monsters').checked = saved.monsters !== false;
                 soundPrefs.enabled = saved.sfx !== false;
+                window.tournament.settings.winnerTakesAll = saved.mode === 'wta';
                 soundPrefs.voice = saved.sfxVoice || ''; soundPrefs.rate = saved.sfxRate || 1; soundPrefs.pitch = saved.sfxPitch || 1; soundPrefs.volume = saved.sfxVol != null ? saved.sfxVol : 0.8;
                 if (typeof populateVoices === 'function') populateVoices();
                 saveSoundPrefs();
@@ -1588,6 +1626,11 @@
         // Games per Round applies live to a not-yet-played round and to every round generated afterwards
         window.setGamesPerRound = function(n) {
             document.getElementById('setting-games-per-round').value = n;
+            window.updateSettings();
+        };
+
+        window.setMode = function(wta) {
+            window.tournament.settings.winnerTakesAll = !!wta;
             window.updateSettings();
         };
 
@@ -2356,13 +2399,31 @@
                 });
             });
 
-            return Object.values(stats).sort((a, b) => {
+            const list = Object.values(stats).sort((a, b) => {
                 if (b.pts !== a.pts) return b.pts - a.pts;
                 if (b.wins !== a.wins) return b.wins - a.wins;
                 if (b.vpTotal !== a.vpTotal) return b.vpTotal - a.vpTotal;
                 return 0;
             });
+            const cid = wtaChampionId();
+            if (cid) { const i = list.findIndex(x => x.id === cid); if (i > 0) list.unshift(list.splice(i, 1)[0]); }
+            return list;
         };
+
+        function wtaChampionId() {
+            if (!window.tournament.settings.winnerTakesAll) return null;
+            const fr = window.tournament.rounds.find(r => r.isFinals);
+            if (!fr) return null;
+            const tbls = fr.games[0].tables.filter(t => t.seats.some(x => x.scored !== false));
+            if (!tbls.length || !tbls.every(t => t.completed || t.skipped)) return null;
+            let best = null;
+            tbls.forEach(t => t.seats.forEach(x => {
+                if (x.scored === false) return;
+                const r = parseInt(x.rank) || 0;
+                if (r > 0 && (!best || r < best.r)) best = { r, id: x.playerId };
+            }));
+            return best && best.id;
+        }
 
         window.renderStandings = function() {
             const standings = window.calculateStandings();
@@ -2370,8 +2431,8 @@
             const bonusesOn = window.bonusesEnabled();
             document.getElementById('th-bonus').classList.toggle('hidden', !bonusesOn);
             document.getElementById('standings-rules-text').textContent = bonusesOn
-                ? 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs as the tiebreaker.'
-                : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs as the tiebreaker.';
+                ? 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd, plus 1pt per bonus earned), then VPs as the tiebreaker.' + (window.tournament.settings.winnerTakesAll ? ' Winner Takes All: the Finals winner takes 1st place overall.' : '')
+                : 'Ranked by Total Tournament Points (3pt 1st, 2pt 2nd, 1pt 3rd), then VPs as the tiebreaker.' + (window.tournament.settings.winnerTakesAll ? ' Winner Takes All: the Finals winner takes 1st place overall.' : '');
 
             if (standings.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="${bonusesOn ? 8 : 7}" class="text-center py-6 text-slate-500">No standings data available yet.</td></tr>`;
@@ -2482,6 +2543,8 @@
         function createTableCard(table, game) {
             const card = document.createElement('div');
             const unstarted = !game.started, locked = !!table.completed;
+            const standMap = {};
+            if (locked) window.calculateStandings().forEach(x => { standMap[x.id] = x; });
             const round = window.getCurrentRound();
             const skipped = !!table.skipped, cons = isConsolationTable(round, table);
             const special = round && (round.isFinals || round.isSemis) && table.isFinalsTable !== false && !cons;
@@ -2525,11 +2588,12 @@
                             ${roleTag}
                             ${left ? '<span class="shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-bold">Left</span>' : (window.monstersEnabled() ? window.monsterTagHTML(seat.playerId, locked) : '')}
                         </div>
-                        <div class="flex items-center gap-1.5" ondragstart="event.stopPropagation()">
+                        <div class="flex flex-wrap items-center gap-1.5" ondragstart="event.stopPropagation()">
                             <button type="button" ${dis} title="Victory Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'vp')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">⭐</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.vp}</span></button>
                             <button type="button" ${dis} title="Health Points" onclick="window.openNumberPicker('${table.id}', '${seat.playerId}', 'hp')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">${(parseInt(seat.hp) || 0) === 0 ? '💀' : '❤️'}</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.hp}</span></button>
                             ${window.bonusesEnabled() ? `<button type="button" ${dis} title="Bonuses" onclick="window.openBonusModal('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">🎖️</span><span class="w-6 text-xs font-bold text-center ${locked ? 'text-amber-300' : (bonusCount > 0 ? 'text-amber-300' : 'text-white')}">${bonusCount}</span></button>` : ''}
-                            <span title="Eliminations" class="flex items-center gap-1 border rounded-lg px-2 py-1 ${locked ? 'bg-amber-500/15 border-amber-400' : 'bg-slate-950 border-slate-700'}"><span class="text-[11px] leading-none">💥</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.elims || 0}</span></span>
+                            <button type="button" ${dis} title="Eliminations: tap to choose who this player eliminated" onclick="window.openKillsPicker('${table.id}', '${seat.playerId}')" class="flex items-center gap-1 border rounded-lg px-2 py-1 transition-colors ${chip}"><span class="text-[11px] leading-none">💥</span><span class="w-6 text-xs font-bold text-center ${val}">${seat.elims || 0}</span></button>
+                            ${locked ? `<span title="Overall tournament points" class="flex items-center gap-1 border rounded-lg px-2 py-1 bg-amber-500/15 border-amber-400"><span class="text-[11px] leading-none">🏆</span><span class="w-6 text-xs font-bold text-center text-amber-300">${(standMap[seat.playerId] || { pts: 0 }).pts}</span></span>` : ''}
                             <button type="button" ${dis} onclick="window.openPlayerMenu('${table.id}', '${seat.playerId}')" title="Player settings" aria-label="Player settings" class="ml-auto border rounded-lg px-2 py-1 transition-colors ${locked ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-950 border-slate-700 hover:border-amber-500/60 text-slate-400 hover:text-amber-300 cursor-pointer'}"><i class="fa-solid fa-gear text-[11px]"></i></button>
                         </div>
                     </div>`;
@@ -2581,13 +2645,10 @@
         };
 
         let elimCtx = null;
-        function undoElim(table, seat) {
-            if (seat.elimBy && seat.elimBy !== seat.playerId) {
-                const k = table.seats.find(x => x.playerId === seat.elimBy);
-                if (k) k.elims = Math.max(0, (k.elims || 0) - 1);
-            }
-            delete seat.elimBy;
+        function recomputeElims(table) {
+            table.seats.forEach(x => { x.elims = table.seats.filter(v => v.playerId !== x.playerId && v.elimBy === x.playerId).length; });
         }
+        function undoElim(table, seat) { delete seat.elimBy; recomputeElims(table); }
         function autoBonuses(table) {
             if (!window.bonusesEnabled()) return;
             const maxE = Math.max(0, ...table.seats.map(x => x.elims || 0));
@@ -2613,7 +2674,7 @@
                 + `<button type="button" onclick="window.pickEliminator('self')" class="${btn}">Themselves</button>`;
             document.getElementById('elim-modal').classList.remove('hidden');
         };
-        window.closeElimPicker = function() { document.getElementById('elim-modal').classList.add('hidden'); elimCtx = null; };
+        window.closeElimPicker = function() { document.getElementById('elim-modal').classList.add('hidden'); elimCtx = null; if (pmCtx) renderPlayerModal(); };
         window.pickEliminator = function(k) {
             if (!elimCtx) return;
             const game = window.getCurrentGame();
@@ -2622,13 +2683,48 @@
             if (victim) {
                 undoElim(table, victim);
                 if (k === 'self') victim.elimBy = victim.playerId;
-                else {
-                    const killer = table.seats.find(x => x.playerId === k);
-                    if (killer) { killer.elims = (killer.elims || 0) + 1; victim.elimBy = k; }
-                }
+                else if (table.seats.some(x => x.playerId === k)) victim.elimBy = k;
+                recomputeElims(table);
             }
             window.closeElimPicker();
             window.saveTournament(); window.renderAll();
+        };
+
+        let killsCtx = null;
+        function renderKillsPicker() {
+            const game = window.getCurrentGame();
+            const table = game && killsCtx && game.tables.find(t => t.id === killsCtx.tableId);
+            const killer = table && table.seats.find(x => x.playerId === killsCtx.playerId);
+            if (!killer) { window.closeKillsPicker(); return; }
+            const nameOf = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
+            document.getElementById('kills-sub').textContent = nameOf(killer.playerId) + ' · ' + (killer.elims || 0) + ' eliminated';
+            document.getElementById('kills-list').innerHTML = table.seats.filter(x => x.playerId !== killer.playerId).map(x => {
+                const on = x.elimBy === killer.playerId;
+                const other = x.elimBy && x.elimBy !== killer.playerId;
+                const mm = window.getPlayerMonster(x.playerId);
+                return `<button type="button" onclick="window.toggleKill('${x.playerId}')" class="w-full px-3 py-2 rounded-xl border text-left text-sm font-bold cursor-pointer transition-colors flex items-center justify-between gap-2 ${on ? 'bg-amber-500/15 border-amber-400 text-amber-300' : 'bg-slate-950 border-slate-700 text-slate-200 hover:border-amber-500/60'}"><span class="truncate">${on ? '<i class="fa-solid fa-check mr-1.5"></i>' : ''}${escapeHtml(nameOf(x.playerId))}${other ? '<span class="ml-1.5 text-[10px] font-semibold text-slate-500">(by ' + escapeHtml(x.elimBy === x.playerId ? 'themselves' : nameOf(x.elimBy)) + ')</span>' : ''}</span>${mm ? monsterBadge(mm) : ''}</button>`;
+            }).join('');
+        }
+        window.openKillsPicker = function(tableId, playerId) {
+            const game = window.getCurrentGame();
+            const table = game && game.tables.find(t => t.id === tableId);
+            if (!table || table.completed) return;
+            killsCtx = { tableId, playerId };
+            renderKillsPicker();
+            document.getElementById('kills-modal').classList.remove('hidden');
+        };
+        window.closeKillsPicker = function() { document.getElementById('kills-modal').classList.add('hidden'); killsCtx = null; if (pmCtx) renderPlayerModal(); };
+        window.toggleKill = function(victimId) {
+            const game = window.getCurrentGame();
+            const table = game && killsCtx && game.tables.find(t => t.id === killsCtx.tableId);
+            const victim = table && table.seats.find(x => x.playerId === victimId);
+            if (!victim) return;
+            if (victim.elimBy === killsCtx.playerId) { delete victim.elimBy; }
+            else { victim.elimBy = killsCtx.playerId; victim.hp = 0; victim.vp = 0; }
+            recomputeElims(table);
+            if (game.started) rankTable(table);
+            window.saveTournament(); window.renderAll();
+            renderKillsPicker();
         };
 
         window.toggleTableSkip = function(tableId) {
@@ -2657,27 +2753,53 @@
             const d = pmDraft;
             const sel = 'w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-amber-500 disabled:opacity-40 disabled:cursor-not-allowed';
             const lbl = 'block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1';
+            const card = 'rounded-xl bg-slate-950 border border-slate-800 p-3 space-y-3';
+            const head = t => `<div class="text-[11px] font-extrabold text-slate-300 uppercase tracking-wider">${t}</div>`;
+            const secBtn = 'w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700';
             const desc = (max, cur, skull) => { let o = ''; for (let n = max; n >= 0; n--) o += `<option value="${n}" ${n === cur ? 'selected' : ''}>${skull && n === 0 ? '💀 0 (eliminated)' : n}</option>`; return o; };
             const rankOpts = '<option value="0"' + (d.rank === 0 ? ' selected' : '') + '>Auto</option>' + Array.from({ length: table.seats.length }, (_, i) => `<option value="${i + 1}" ${d.rank === i + 1 ? 'selected' : ''}>${i + 1}${getOrdinalSuffix(i + 1)}</option>`).join('');
             const m = window.getPlayerMonster(player.id);
+            const st = window.calculateStandings();
+            const pos = st.findIndex(x => x.id === player.id);
+            const me = st[pos] || { pts: 0 };
+            const nameOf = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
+            const by = seat.elimBy ? (seat.elimBy === seat.playerId ? 'themselves' : nameOf(seat.elimBy)) : null;
+            const locked = !!table.completed;
             document.getElementById('player-modal-body').innerHTML = `
-                <div><label class="${lbl}">Name</label><input type="text" value="${escapeHtml(d.name)}" maxlength="40" oninput="pmDraft.name = this.value" class="${sel}"></div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div><label class="${lbl}">Rank</label><select onchange="window.pmSet('rank', this.value)" ${game.started ? '' : 'disabled'} class="${sel}">${rankOpts}</select></div>
-                    <div><label class="${lbl}">⭐ VPs</label><select onchange="window.pmSet('vp', this.value)" ${d.hp === 0 ? 'disabled' : ''} class="${sel}">${desc(20, d.vp, false)}</select></div>
-                    <div><label class="${lbl}">❤️ HPs</label><select onchange="window.pmSet('hp', this.value)" class="${sel}">${desc(12, d.hp, true)}</select></div>
+                <div class="flex items-center justify-between gap-3">
+                    <div class="min-w-0"><div class="font-extrabold text-white text-base truncate">${escapeHtml(player.name)}</div><div class="text-[11px] text-slate-400">${escapeHtml(table.tableName || 'Table')}</div></div>
+                    <div class="shrink-0 text-right"><div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Overall</div><div class="text-sm font-extrabold text-amber-400">🏅 ${me.pts} pts <span class="text-slate-500 font-bold">· ${pos >= 0 ? pos + 1 + getOrdinalSuffix(pos + 1) : '-'}</span></div></div>
                 </div>
-                ${d.hp === 0 ? '<p class="text-[11px] text-slate-500">0 HP eliminates this player and sets their VPs to 0.</p>' : ''}
-                ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.BONUS_TYPES.map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${d.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}"><input type="checkbox" ${d.bonuses[b.key] ? 'checked' : ''} onchange="window.pmBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
-                ${window.monstersEnabled() ? `<div><span class="${lbl}">Monster</span><button type="button" onclick="window.pmMonster()" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 hover:border-amber-500/60 text-sm font-bold text-slate-200 flex items-center justify-between cursor-pointer"><span>${m ? escapeHtml(m.name) : 'Choose a monster'}</span><i class="fa-solid fa-chevron-right text-xs text-slate-500"></i></button></div>` : ''}
-                ${d.fin === null ? '' : `<button type="button" onclick="window.pmToggleFin()" class="w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"><i class="fa-solid fa-right-left"></i> ${d.fin ? (window.getCurrentRound().isSemis ? 'Semi finalist: move to consolation' : 'Finalist: move to consolation') : (window.getCurrentRound().isSemis ? 'Consolation: move to semi finalists' : 'Consolation: move to finalists')}</button>`}
-                <button type="button" onclick="window.pmToggleLeft()" class="w-full h-10 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"><i class="fa-solid ${d.left ? 'fa-rotate-left' : 'fa-person-walking-arrow-right'}"></i> ${d.left ? 'Player is back' : 'Player has left'}</button>
-                ${d.left ? '<p class="text-[11px] text-slate-500">Left players are out of this round and are left out of future tables.</p>' : ''}
-                <div class="flex gap-2 pt-1">
+                ${locked ? '<p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">This table is submitted. Unlock it to change results.</p>' : ''}
+                <div class="${card}">${head('Player')}
+                    <div><label class="${lbl}">Name</label><input type="text" value="${escapeHtml(d.name)}" maxlength="40" oninput="pmDraft.name = this.value" class="${sel}"></div>
+                    ${window.monstersEnabled() ? `<div><label class="${lbl}">Monster <span class="normal-case font-semibold text-slate-500">· saves straight away</span></label><button type="button" onclick="window.pmMonster()" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/60 text-sm font-bold text-slate-200 flex items-center justify-between gap-2 cursor-pointer"><span class="flex items-center gap-2 min-w-0">${m ? monsterBadge(m) : '<i class="fa-solid fa-dragon text-amber-400"></i>'}<span class="truncate">${m ? escapeHtml(m.name) : 'No monster yet'}</span></span><span class="shrink-0 text-xs text-amber-300">${m ? 'Change monster' : 'Choose monster'} <i class="fa-solid fa-chevron-right ml-1"></i></span></button></div>` : ''}
+                </div>
+                <div class="${card}">${head('Game results')}
+                    <div class="grid grid-cols-3 gap-2">
+                        <div><label class="${lbl}">Rank</label><select onchange="window.pmSet('rank', this.value)" ${game.started ? '' : 'disabled'} class="${sel}">${rankOpts}</select></div>
+                        <div><label class="${lbl}">⭐ VPs</label><select onchange="window.pmSet('vp', this.value)" ${d.hp === 0 ? 'disabled' : ''} class="${sel}">${desc(20, d.vp, false)}</select></div>
+                        <div><label class="${lbl}">❤️ HPs</label><select onchange="window.pmSet('hp', this.value)" class="${sel}">${desc(12, d.hp, true)}</select></div>
+                    </div>
+                    ${d.hp === 0 ? '<p class="text-[11px] text-slate-500">0 HP eliminates this player and sets their VPs to 0.</p>' : ''}
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="window.pmKills()" ${locked ? 'disabled' : ''} class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">💥 Eliminated ${seat.elims || 0}</button>
+                        <button type="button" onclick="window.pmElimBy()" ${locked || (parseInt(seat.hp) || 0) > 0 ? 'disabled' : ''} class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">${by ? 'By ' + escapeHtml(by) : '💀 Eliminated by'}</button>
+                    </div>
+                    ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.BONUS_TYPES.map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${d.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-300'}"><input type="checkbox" ${d.bonuses[b.key] ? 'checked' : ''} onchange="window.pmBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
+                </div>
+                <div class="${card}">${head('Status')}
+                    ${d.fin === null ? '' : `<button type="button" onclick="window.pmToggleFin()" class="${secBtn}"><i class="fa-solid fa-right-left"></i> ${d.fin ? (window.getCurrentRound().isSemis ? 'Semi finalist: move to consolation' : 'Finalist: move to consolation') : (window.getCurrentRound().isSemis ? 'Consolation: move to semi finalists' : 'Consolation: move to finalists')}</button>`}
+                    <button type="button" onclick="window.pmToggleLeft()" class="${secBtn}"><i class="fa-solid ${d.left ? 'fa-rotate-left' : 'fa-person-walking-arrow-right'}"></i> ${d.left ? 'Player is back' : 'Player has left'}</button>
+                    ${d.left ? '<p class="text-[11px] text-slate-500">Left players are out of this round and are left out of future tables.</p>' : ''}
+                </div>
+                <div class="flex gap-2 sticky bottom-0 pt-2 bg-slate-900">
                     <button type="button" onclick="window.closePlayerMenu()" class="flex-1 h-10 rounded-xl text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Cancel</button>
                     <button type="button" onclick="window.pmSave()" class="flex-1 h-10 rounded-xl text-sm font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400 cursor-pointer"><i class="fa-solid fa-floppy-disk mr-1"></i> Save changes</button>
                 </div>`;
         }
+        window.pmKills = function() { if (pmCtx) window.openKillsPicker(pmCtx.tableId, pmCtx.playerId); };
+        window.pmElimBy = function() { if (pmCtx) window.openElimPicker(pmCtx.tableId, pmCtx.playerId); };
         window.openPlayerMenu = function(tableId, playerId) {
             pmCtx = { tableId, playerId };
             const { table, seat, player } = pmFind();
@@ -2968,6 +3090,7 @@
         // Overall Render Controller
         window.renderAll = function() {
             window.renderRoster();
+            renderTournamentOverview();
             window.renderRoundsUI();
             window.renderStandings();
         };
@@ -3090,7 +3213,7 @@
             const done = prelims.filter(e => !e.round.games.every(g => g.skipped) && isRoundComplete(e.round)).length;
             const skippedCount = prelims.reduce((n, e) => n + e.round.games.filter(g => g.skipped).length, 0);
             const summary = document.getElementById('timeline-summary');
-            const previewTotal = estimateMinutes(t.settings.tableSize || 5, t.settings.roundTimerMinutes || 30, prelimCount * gamesPerRound + 1);
+            const previewTotal = estimateMinutes(t.settings.tableSize || 5, t.settings.roundTimerMinutes || 30, prelimCount * gamesPerRound + semiGames(gamesPerRound) + 1);
             summary.textContent = t.rounds.length === 0
                 ? `Live preview of your settings · about ${formatDuration(previewTotal)} in total`
                 : finals ? 'Finals in progress' : semis ? 'Semis in progress'
@@ -3533,13 +3656,13 @@
             const m = document.getElementById('tlog-modal');
             if (m && !m.classList.contains('hidden')) renderTournamentLog();
         };
-        const LOG_COLORS = { INFO: '#9fb3c8', OK: '#7ee787', WARN: '#e3b341', KILL: '#ff7b72', SYS: '#79c0ff' };
+        const LOG_COLORS = { INFO: 'text-slate-400', OK: 'text-emerald-400', WARN: 'text-amber-400', KILL: 'text-rose-400', SYS: 'text-blue-400' };
         function logText() {
             return kotLog.map(e => `[${new Date(e.t).toLocaleTimeString('en-GB')}] [${e.k}] ${e.m}`).join('\n');
         }
         function renderTournamentLog() {
             const body = document.getElementById('tlog-body');
-            body.innerHTML = kotLog.length ? kotLog.map(e => `<div><span style="color:#6e7681">[${new Date(e.t).toLocaleTimeString('en-GB')}]</span> <span style="color:${LOG_COLORS[e.k] || '#9fb3c8'}">[${e.k}]</span> <span style="color:#d6e2ee">${escapeHtml(e.m)}</span></div>`).join('') : '<div style="color:#6e7681">-- log is empty --</div>';
+            body.innerHTML = kotLog.length ? kotLog.map(e => `<div><span class="text-slate-500">[${new Date(e.t).toLocaleTimeString('en-GB')}]</span> <span class="${LOG_COLORS[e.k] || 'text-slate-400'} font-bold">[${e.k}]</span> <span class="text-slate-200">${escapeHtml(e.m)}</span></div>`).join('') : '<div class="text-slate-500">-- log is empty --</div>';
             body.scrollTop = body.scrollHeight;
         }
         window.openTournamentLog = function() { renderTournamentLog(); document.getElementById('tlog-modal').classList.remove('hidden'); };
@@ -3591,6 +3714,7 @@
         wrapLog('triggerSemis', null, () => window.logEvent('Semi finals generated', 'OK'));
         wrapLog('triggerGrandFinals', null, () => window.logEvent('Finals generated', 'OK'));
         wrapLog('crownChampion', null, () => { const w = window.calculateStandings()[0]; if (w) window.logEvent(`${w.name} crowned champion with ${w.pts} pts`, 'OK'); });
+        wrapLog('toggleKill', () => killsCtx ? { ...killsCtx } : null, (c, vid) => { if (c) { const g = window.getCurrentGame(); const t = g && g.tables.find(x => x.id === c.tableId); const v = t && t.seats.find(x => x.playerId === vid); if (v) window.logEvent(v.elimBy === c.playerId ? `${pname(c.playerId)} eliminated ${pname(vid)}` : `${pname(c.playerId)} no longer credited with eliminating ${pname(vid)}`, 'KILL'); } });
         wrapLog('executeResetTournament', null, () => { kotLog = []; window.logEvent('Tournament reset', 'WARN'); });
 
         // Application Initialization
