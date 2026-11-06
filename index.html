@@ -161,16 +161,14 @@
         html.light .text-emerald-500{color:rgb(5 150 105)}
         html.light .hover\:text-rose-400:hover{color:rgb(225 29 72)}
     html.light .text-white[class*="from-violet-"], html.light .text-white[class*="from-fuchsia-"] { color: #ffffff; }
-    .opt-check:has(input:checked) { background-color: rgba(245,158,11,.15) !important; border-color: #fbbf24 !important; }
-        .opt-check:has(input:checked) span { color: #fcd34d; }
-        html.light .opt-check:has(input:checked) span { color: rgb(180 83 9); }
+    .opt-check input[type=checkbox]:not(:checked) + span { opacity: .7; }
     html.light .text-violet-300, html.light .text-violet-200 { color: rgb(109 40 217); }
         html.light .text-fuchsia-300, html.light .text-fuchsia-200 { color: rgb(162 28 175); }
         html.light .text-purple-200 { color: rgb(107 33 168); }
     .mon-tag { color: var(--mc); background-color: color-mix(in srgb, var(--mc) 15%, transparent); border-color: color-mix(in srgb, var(--mc) 55%, transparent); }
         button.mon-tag:hover { background-color: color-mix(in srgb, var(--mc) 28%, transparent); }
         html.light .mon-tag { color: color-mix(in srgb, var(--mc) 60%, #000); }
-    .opt-check:has(input:indeterminate) { border-color: rgba(251,191,36,.5) !important; }
+    
     /* ----- Champion certificate (fixed colours so it prints the same in light and dark mode) ----- */
         .cert { position: relative; width: 880px; height: 622px; box-sizing: border-box; background: #fffaf0; color: #1e293b; font-family: Georgia, 'Times New Roman', serif; text-align: center; overflow: hidden; transform-origin: top left; }
         .cert .frame { position: absolute; inset: 14px; border: 3px solid #b45309; }
@@ -197,11 +195,23 @@
         .cert .seal { width: 126px; height: 126px; margin-bottom: -6px; }
         .cert .wink { font-size: 11px; font-style: italic; color: #92400e; margin-top: 18px; }
         @media print {
-            @page { size: landscape; margin: 0; }
-            body * { visibility: hidden !important; }
-            #cert-sheet, #cert-sheet * { visibility: visible !important; }
-            #cert-sheet { position: fixed; left: 0; top: 0; transform: scale(1.275) !important; transform-origin: top left; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            @page { size: A4 landscape; margin: 0; }
+            html, body { height: auto !important; background: #fff !important; }
+            body.printing-cert > *:not(#cert-modal) { display: none !important; }
+            body.printing-cert #cert-modal { position: static !important; display: block !important; background: none !important; padding: 0 !important; backdrop-filter: none !important; }
+            body.printing-cert #cert-modal > div { background: none !important; border: 0 !important; box-shadow: none !important; max-height: none !important; overflow: visible !important; max-width: none !important; }
+            body.printing-cert .cert-chrome { display: none !important; }
+            body.printing-cert #cert-stage { padding: 0 !important; overflow: visible !important; }
+            body.printing-cert { margin: 0 !important; padding: 0 !important; overflow: hidden !important; min-height: 0 !important; }
+            body.printing-cert #cert-fit { width: 297mm !important; height: 208mm !important; margin: 0 !important; overflow: hidden; page-break-after: avoid; break-after: avoid; }
+            body.printing-cert #cert-sheet { transform: scale(1.265) !important; transform-origin: top left; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
+    .tour-ring { position: fixed; z-index: 85; border: 3px solid #f59e0b; border-radius: 16px; box-shadow: 0 0 0 9999px rgba(2,6,23,.6); pointer-events: none; transition: all .25s ease; }
+        html.light .tour-ring { box-shadow: 0 0 0 9999px rgba(15,23,42,.45); }
+    .nudge-pulse { animation: nudgePulse .9s ease-in-out 4; border-color: #f59e0b !important; }
+        @keyframes nudgePulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); } 50% { box-shadow: 0 0 0 6px rgba(245,158,11,.5); } }
+        .nudge-bob { display: inline-block; animation: nudgeBob .8s ease-in-out infinite; }
+        @keyframes nudgeBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
@@ -239,19 +249,20 @@
                     <!-- Dropdown Menu -->
                     <div id="header-dropdown-menu" class="hidden absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 py-1 text-xs divide-y divide-slate-800">
 <div class="py-1"><div class="px-4 pt-1.5 pb-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Tournament</div>
-<div class="flex items-stretch"><button id="menu-undo" disabled onclick="window.undoLast(); window.closeHeaderMenu();" class="flex-1 text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer disabled:cursor-not-allowed"><i class="fa-solid fa-rotate-left text-amber-400 w-4"></i> Undo</button><button id="menu-redo" disabled onclick="window.redoLast(); window.closeHeaderMenu();" class="px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2 transition-colors cursor-pointer disabled:cursor-not-allowed border-l border-slate-800"><i class="fa-solid fa-rotate-right text-amber-400"></i> Redo</button></div>
+<div class="flex items-stretch"><button id="menu-undo" disabled onclick="event.stopPropagation(); window.undoLast();" class="flex-1 text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer disabled:cursor-not-allowed"><i class="fa-solid fa-rotate-left text-amber-400 w-4"></i> Undo</button><button id="menu-redo" disabled onclick="event.stopPropagation(); window.redoLast();" class="px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2 transition-colors cursor-pointer disabled:cursor-not-allowed border-l border-slate-800"><i class="fa-solid fa-rotate-right text-amber-400"></i> Redo</button></div>
 <button  onclick="window.openTournamentLog(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-terminal text-emerald-400 w-4"></i> Tournament Log</button>
 <button  onclick="window.exportTournamentData(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-download text-blue-400 w-4"></i> Export Data</button>
 <button  onclick="document.getElementById('import-file-input').click(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-upload text-emerald-400 w-4"></i> Import Data</button>
 </div>
 <div class="py-1"><div class="px-4 pt-1.5 pb-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Help</div>
-<button  onclick="window.openRulesModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-book-open text-amber-400 w-4"></i> Rules</button>
+<button onclick="window.startTour(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i class="fa-solid fa-rocket text-amber-400 w-4"></i> Get Started</button>
+<button onclick="window.openRulesModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-book-open text-amber-400 w-4"></i> Rules</button>
 <button  onclick="window.openAboutModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-circle-question text-amber-400 w-4"></i> About</button>
 <button onclick="window.openRoadmap(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i class="fa-solid fa-road text-amber-400 w-4"></i> Roadmap</button>
 <button  onclick="window.openLogModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer "><i class="fa-solid fa-clock-rotate-left text-amber-400 w-4"></i> Updates</button>
 </div>
 <div class="py-1"><div class="px-4 pt-1.5 pb-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Display</div>
-<button id="menu-theme-toggle" type="button" onclick="window.toggleTheme(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-400 w-4"></i> <span id="theme-toggle-label">Light Mode</span></button>
+<button id="menu-theme-toggle" type="button" onclick="event.stopPropagation(); window.toggleTheme();" class="w-full text-left px-4 py-2 hover:bg-slate-800 text-slate-200 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-400 w-4"></i> <span id="theme-toggle-label">Light Mode</span></button>
 </div>
 <div class="py-1">
 <button onclick="window.openResetModal(); window.closeHeaderMenu();" class="w-full text-left px-4 py-2 hover:bg-rose-500/10 text-rose-400 font-semibold flex items-center gap-2.5 transition-colors cursor-pointer"><i class="fa-solid fa-trash-can w-4"></i> Reset Tournament</button>
@@ -264,24 +275,50 @@
     </header>
 
     <!-- Main Content Layout -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full flex flex-col gap-6">
 
         <!-- Left Column: Setup & Roster Management (4 Cols) - Mobile order changes dynamically once started -->
-        <section id="sidebar-setup-section" class="lg:col-span-4 flex flex-col gap-6 order-2 lg:order-1">
+        
+
+        <!-- Right Column: Rounds Control & Dynamic Standings (8 Cols) - Mobile order changes dynamically once started -->
+        <section id="main-content-section" class="flex flex-col gap-6">
+
+            <!-- Navigation Tabs for Rounds & Standings -->
+            <div class="flex flex-col border-b border-slate-800 pb-3 gap-3">
+                <div class="flex items-center justify-between min-w-0" id="tab-controls">
+                    <div class="flex gap-2 overflow-x-auto whitespace-nowrap custom-scrollbar pb-1 max-w-full">
+                        
+                        <button onclick="window.switchTab('rounds')" id="tab-btn-rounds" class="shrink-0 shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 transition-all flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-gamepad"></i> Tournament
+                        </button>
+                        <button onclick="window.switchTab('standings')" id="tab-btn-standings" class="shrink-0 shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-list-ol"></i> Leaderboard
+</button><button type="button" disabled title="Coming soon" class="shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-600 border border-dashed border-slate-700 flex items-center gap-2 cursor-not-allowed opacity-70"><i class="fa-solid fa-trophy"></i> Hall of Fame <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">Coming soon</span></button><button type="button" disabled title="Coming soon" class="shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-600 border border-dashed border-slate-700 flex items-center gap-2 cursor-not-allowed opacity-70"><i class="fa-solid fa-chart-simple"></i> Statistics <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">Coming soon</span></button>
+                    </div>
+                    <div id="tab-actions" class="flex items-center gap-2 ml-2 shrink-0"><button id="btn-generate-r1" type="button" onclick="window.requestGenerateTournament()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
+                        <i class="fa-solid fa-play"></i> Generate
+                    </button><button type="button" id="btn-toggle-setup" onclick="window.toggleSetupPanel()" class="shrink-0 h-9 px-3 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"><i id="setup-toggle-icon" class="fa-solid fa-table-columns"></i><span id="setup-toggle-label" class="hidden sm:inline">Hide setup</span></button></div>
+                </div>
+            </div>
+
+            <!-- TAB 1: ROUNDS VIEW -->
+            <div id="view-rounds"><div id="tournament-layout" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"><aside id="setup-panel" class="lg:col-span-4 lg:order-2 min-w-0 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto lg:overflow-x-hidden custom-scrollbar">
+                <div class="w-full space-y-4">
+                    <div id="sidebar-setup-section" class="space-y-4">
+                        <div id="setup-settings-pane">
             
             <!-- Tournament Settings Card -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
                 <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-amber-500"></i> Settings
-                    </h2>
+                    <div class="flex items-center gap-4">
+                        <button type="button" data-pane="settings" onclick="window.setupPane('settings')" class="pane-tab"><i class="fa-solid fa-sliders"></i> Settings</button>
+                        <button type="button" data-pane="roster" onclick="window.setupPane('roster')" class="pane-tab"><i class="fa-solid fa-users"></i> Roster <span class="sub-roster-count text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-extrabold">0</span></button>
+                    </div>
                     <div class="flex items-center gap-1.5 shrink-0">
                     <button id="btn-settings-lock" type="button" onclick="window.toggleSettingsLock()" aria-label="Lock settings" title="Lock settings" class="w-8 h-8 rounded-lg border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-400 flex items-center justify-center transition-colors cursor-pointer shrink-0">
                         <i id="settings-lock-icon" class="fa-solid fa-lock-open text-xs"></i>
                     </button>
-                    <button id="btn-generate-r1" type="button" onclick="window.requestGenerateTournament()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
-                        <i class="fa-solid fa-play"></i> Generate
-                    </button>
+                    
                     </div>
                 </div>
 
@@ -377,13 +414,13 @@
 
                     <div class="border-t border-slate-800"></div>
 
-                    <div>
+                    <div id="win-condition-block">
                         <div class="flex items-center justify-between mb-2">
                             <label class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-trophy text-slate-500 mr-1"></i> Win Condition</label>
                         </div>
                         <div class="grid grid-cols-3 gap-1.5">
-                            <button type="button" data-mode="points" onclick="window.setMode('points')" class="mode-btn"></button>
                             <button type="button" data-mode="wta" onclick="window.setMode('wta')" class="mode-btn"></button>
+                            <button type="button" data-mode="points" onclick="window.setMode('points')" class="mode-btn"></button>
                             <button type="button" data-mode="kills" onclick="window.setMode('kills')" class="mode-btn"></button>
                         </div>
                         <p id="mode-help" class="text-[10px] text-slate-500 mt-1.5 leading-snug"></p>
@@ -439,23 +476,25 @@
                 </fieldset>
             </div>
 
-            <!-- Player Roster Card -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col flex-1">
+            </div>
+                        <div id="setup-roster-pane" class="hidden"><span id="player-count-badge" class="hidden">0</span><!-- Player Roster Card -->
+            <div id="roster-card" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col flex-1">
                 <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                    <h2 class="text-base font-bold text-white flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <i class="fa-solid fa-users text-amber-500"></i> Roster
-                        <span id="player-count-badge" class="text-xs bg-slate-800 text-slate-300 font-extrabold px-2 py-0.5 rounded-full border border-slate-700">0</span>
-                        
-                    </h2>
-<div id="roster-actions" class="flex items-center gap-1.5 shrink-0">
-<button type="submit" form="add-player-form" class="px-3 py-1.5 bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25 font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-plus"></i> Players</button>
-<button type="button" onclick="window.quickAddSamplePlayers()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg border border-slate-700 flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Examples</button>
-</div>
+                    <div class="flex items-center gap-4">
+                        <button type="button" data-pane="settings" onclick="window.setupPane('settings')" class="pane-tab"><i class="fa-solid fa-sliders"></i> Settings</button>
+                        <button type="button" data-pane="roster" onclick="window.setupPane('roster')" class="pane-tab"><i class="fa-solid fa-users"></i> Roster <span class="sub-roster-count text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-extrabold">0</span></button>
+                    </div>
+
 </div>
 <fieldset id="roster-fieldset" class="border-0 p-0 m-0 min-w-0 flex flex-col flex-1">
                 <!-- Add Player Form -->
+                <div id="roster-nudge" class="hidden mb-3 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-2"><span class="nudge-bob">👇</span> Add at least 2 players to generate a tournament</div>
                 <form id="add-player-form" onsubmit="window.handleAddPlayer(event)" class="flex flex-col gap-2 mb-4">
                     <textarea id="player-name-input" rows="2" placeholder="Enter monster name(s)... (comma or new line separated)" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors resize-none"></textarea>
+                    <div id="roster-actions" class="grid grid-cols-2 gap-2">
+                        <button type="submit" class="h-9 px-3 bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-plus"></i> Players</button>
+                        <button type="button" onclick="window.quickAddSamplePlayers()" class="h-9 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Examples</button>
+                    </div>
                     
                 </form>
 
@@ -465,27 +504,14 @@
                 </div>
                 </fieldset>
             </div>
-        </section>
-
-        <!-- Right Column: Rounds Control & Dynamic Standings (8 Cols) - Mobile order changes dynamically once started -->
-        <section id="main-content-section" class="lg:col-span-8 flex flex-col gap-6 order-1 lg:order-2">
-
-            <!-- Navigation Tabs for Rounds & Standings -->
-            <div class="flex flex-col border-b border-slate-800 pb-3 gap-3">
-                <div class="flex items-center justify-between min-w-0" id="tab-controls">
-                    <div class="flex gap-2 overflow-x-auto whitespace-nowrap custom-scrollbar pb-1 max-w-full">
-                        <button onclick="window.switchTab('rounds')" id="tab-btn-rounds" class="shrink-0 shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 transition-all flex items-center gap-2 cursor-pointer">
-                            <i class="fa-solid fa-gamepad"></i> Tournament
-                        </button>
-                        <button onclick="window.switchTab('standings')" id="tab-btn-standings" class="shrink-0 shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer">
-                            <i class="fa-solid fa-list-ol"></i> Leaderboard
-</button><button type="button" disabled title="Coming soon" class="shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-600 border border-dashed border-slate-700 flex items-center gap-2 cursor-not-allowed opacity-70"><i class="fa-solid fa-trophy"></i> Hall of Fame <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">Coming soon</span></button><button type="button" disabled title="Coming soon" class="shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 text-slate-600 border border-dashed border-slate-700 flex items-center gap-2 cursor-not-allowed opacity-70"><i class="fa-solid fa-chart-simple"></i> Statistics <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">Coming soon</span></button>
+        </div>
                     </div>
+                
                 </div>
-            </div>
+            </aside>
 
-            <!-- TAB 1: ROUNDS VIEW -->
-            <div id="view-rounds" class="space-y-6">
+            
+<div id="tournament-main" class="lg:col-span-8 lg:order-1 space-y-6 min-w-0">
 
                 <!-- Timeline -->
                 <div id="timeline-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
@@ -517,8 +543,9 @@
 <button id="btn-time-minus" onclick="window.adjustGameTime(-5)" title="-5 min" class="flex-1 text-[10px] font-extrabold leading-none text-slate-300 hover:bg-slate-700 cursor-pointer transition-colors">-5m</button>
 </div>
 </div>
-<div class="flex items-center gap-1.5">
+<div class="flex flex-wrap justify-end items-center gap-1.5">
 <button id="btn-hide-stats" type="button" onclick="window.toggleAllStats()" title="Hide all player stats" aria-pressed="false" class="h-10 px-3 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center gap-1.5 cursor-pointer transition-colors text-xs font-bold"><i id="hide-stats-icon" class="fa-solid fa-eye text-sm"></i><span id="hide-stats-label" class="hidden sm:inline">Hide stats</span></button>
+<button id="btn-submit-all" type="button" onclick="window.toggleAllTables()" disabled title="Submit all tables" class="h-10 px-3 rounded-xl border bg-slate-800/60 border-slate-800 text-slate-600 flex items-center justify-center gap-1.5 cursor-not-allowed transition-colors text-xs font-bold"><i id="submit-all-icon" class="fa-solid fa-lock-open text-sm"></i><span id="submit-all-label" class="hidden sm:inline">Submit All</span></button>
 <div id="sound-controls" class="flex items-center gap-1.5">
 <button id="btn-mute" type="button" onclick="window.toggleMute()" aria-label="Mute sound" title="Mute" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i id="mute-icon" class="fa-solid fa-volume-high text-sm"></i></button>
 <button id="btn-volume" type="button" onclick="window.toggleVolumePopover()" aria-label="Sound options" title="Sound options" class="w-10 h-10 rounded-xl border bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid fa-sliders text-sm"></i></button>
@@ -557,7 +584,7 @@
                         <!-- Dynamic Tables -->
                     </div>
                 </div>
-            </div>
+            </div></div></div>
 
             <!-- TAB 2: STANDINGS VIEW -->
             <div id="view-standings" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-visible">
@@ -654,13 +681,20 @@
     <!-- Toast Notification Overlay -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRulesModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-book-open text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Rules &amp; Guidelines</h3><p class="text-xs text-slate-400">Rules, scoring and clarifications</p></div></div><button onclick="window.closeRulesModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4"><span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span><p class="font-bold text-white text-sm">Battle to claim first place podium and be crowned Champion of Tokyo.</p></div><p><strong class="text-slate-200">Guides:</strong> Find Monster guides at <a href="https://kingofguide.github.io/tokyo" target="_blank" rel="noopener" class="text-amber-400 underline">kingofguide.github.io/tokyo</a></p><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Rules</h4><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Play</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Play each game as per normal rules except the following:</li><li>The Power Up expansion must be used.</li><li>A maximum of 8 dice is allowed per player despite monster abilities.</li><li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Drafting</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Players select one monster from the pool.</li><li>After each round, players may draft a different monster from the pool.</li><li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>The app greys out monsters that another player has already picked.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Tournament format</h4><p class="mb-2 text-slate-400">This is a hybrid tournament: elimination-style Semis and Finals, with Swiss-style pairing. Everyone plays every game, so nobody is left out.</p><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Rounds</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Set the number of games per round (1-3) and the number of rounds (1-3).</li><li>Round 1 is a random draw. After each round, players are re-seated by standings so the top seeds meet on the same table, and so on down.</li><li>Players stay at the same table for every game in a round.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Semis</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Played after the last round, as 1 game when there is 1-2 games per round, or 2 games when there are 3.</li><li>Every active player is seated on evenly sized tables, with the top seeds first. The top half (rounded up) are tagged Semi Finalists.</li><li>Everyone plays, but consolation players earn no tournament points.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Finals</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>One game. The top of the standings are the finalists, up to one table of players, and they are seated together first.</li><li>Everyone else plays on the remaining seats or tables as consolation players.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Small tournaments</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>6 players: 5 semi finalists, then 4 finalists.</li><li>5 or 4 players: 4 semi finalists, then 3 finalists.</li><li>3 players: 3 semi finalists, then 2 finalists. With 2 players, both play both.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Consolation players</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>They keep their stats (VPs, HPs, eliminations and bonuses are still shown) but earn no points towards the tournament.</li><li>If a consolation player wins the game, they score nothing, and the places below them do not move up for tournament points.</li><li>Tournament Managers can move a player between finalist and consolation from the player settings, and can skip a table made up only of consolation players.</li><li>A player marked as Left is out and is not seated in later rounds.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Scoring</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Once a player is about to win, they finish their turn, claim first place and the game is over.</li><li>Places are decided by VPs among the players still alive. Second and third places go to the highest VPs. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>A player who is eliminated (0 HP) has their VPs set to 0 and does not rank. If one player eliminates everyone else, they are the only one who places.</li><li>Enter each player's VPs and HPs, and who eliminated whom, in the Manager App. Use Submit Results to lock a table and Unlock Results to change it.</li><li><strong class="text-slate-200">Places:</strong> 1st = 3pts, 2nd = 2pts, 3rd = 1pt, 4th-6th = 0pt</li><li><strong class="text-slate-200">Bonuses (optional):</strong> Smasher = 1pt (most kills), Tanker = 1pt (most health), Collector = 1pt (most cards), Harvester = 1pt (most energy). Tournament Managers choose which bonuses are in play.</li></ul><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Win conditions</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Most Points:</strong> the player with the most tournament points after the Finals wins. Ties are broken by wins, then VPs, then eliminations.</li><li><strong class="text-slate-200">Winner Takes All:</strong> scoring is the same, but whoever wins the Finals game is crowned and listed first on the leaderboard, whatever their points.</li><li><strong class="text-slate-200">Most Kills Wins:</strong> points come from eliminations (1 each) plus bonuses. VPs and places do not score, so a player can win a game and earn nothing for the tournament. Ties are broken by eliminations, then wins.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Clarifications</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.</li><li><strong class="text-slate-200">Eliminations:</strong> a kill is when an enemy is eliminated, and the active player is awarded that kill. Eliminating yourself is recorded but does not count as a kill.</li><li><strong class="text-slate-200">Bonuses:</strong> optional points awarded to players at the end of the game.</li><li><strong class="text-slate-200">Smasher:</strong> granted to the player with the most kills. The app awards it automatically from the eliminations you enter.</li><li><strong class="text-slate-200">Tanker:</strong> granted to the player with the most Health at the end of the game, awarded automatically when health differs. Ties are awarded to each tied player. Collector and Harvester (most Power Cards and most Energy) are set by hand.</li><li><strong class="text-slate-200">Adjusting results:</strong> bonuses and any result can be changed by hand from the player settings, even after a table is submitted.</li><li><strong class="text-slate-200">Expansions:</strong> the Power Up must be used, all other expansions are up to the Tournament Managers.</li><li><strong class="text-slate-200">Cards:</strong> It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">General</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Rules:</strong> players should always follow the rules to their utmost ability.</li><li><strong class="text-slate-200">Missed abilities:</strong> in case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible as a fun atmosphere should be the priority over simply gaining an edge.</li><li><strong class="text-slate-200">Cheating:</strong> in cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.</li><li><strong class="text-slate-200">Tips and Tricks:</strong> Follow the dice, let your first roll guide your turn. Follow your first Power Up, let it guide your play style. Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li><li><strong class="text-slate-200">Using the app:</strong> Undo and Redo are in the Menu, and the Tournament Log records what happened. Use Hide stats in the round controls, or the eye on a table, for a cleaner view.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Disclaimer</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>The Power Tournament format is a work in progress and can be updated at any time, including during live games.</li><li>Decisions will be made by the Tournament Managers and are final.</li><li>Feedback is welcome, please email kingofguide(at)outlook(dot)com.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
+    <div id="rules-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRulesModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-book-open text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Rules &amp; Guidelines</h3><p class="text-xs text-slate-400">Rules, scoring and clarifications</p></div></div><button onclick="window.closeRulesModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4"><span class="font-bold uppercase tracking-wider text-amber-400 text-[10px] block">Goal</span><p class="font-bold text-white text-sm">Battle to claim first place podium and be crowned Champion of Tokyo.</p></div><p><strong class="text-slate-200">Guides:</strong> Find Monster guides at <a href="https://kingofguide.github.io/tokyo" target="_blank" rel="noopener" class="text-amber-400 underline">kingofguide.github.io/tokyo</a></p><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Rules</h4><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Play</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Play each game as per normal rules except the following:</li><li>The Power Up expansion must be used.</li><li>A maximum of 8 dice is allowed per player despite monster abilities.</li><li>To determine who goes first, each player rolls 1d6 at the same time. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications. In case of ties, repeat until one player wins.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Drafting</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Players select one monster from the pool.</li><li>After each round, players may draft a different monster from the pool.</li><li>If two or more players ever want the same monster, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>The app greys out monsters that another player has already picked.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Tournament format</h4><p class="mb-2 text-slate-400">This is a hybrid tournament: elimination-style Semis and Finals, with Swiss-style pairing. Everyone plays every game, so nobody is left out.</p><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Rounds</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Set the number of games per round (1-3) and the number of rounds (1-3).</li><li>Round 1 is a random draw. After each round, players are re-seated by standings so the top seeds meet on the same table, and so on down.</li><li>Players stay at the same table for every game in a round.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Semis</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Played after the last round, as 1 game when there is 1-2 games per round, or 2 games when there are 3.</li><li>Every active player is seated on evenly sized tables, with the top seeds first. The top half (rounded up) are tagged Semi Finalists.</li><li>Everyone plays, but consolation players earn no tournament points.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Finals</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>One game. The top of the standings are the finalists, up to one table of players, and they are seated together first.</li><li>Everyone else plays on the remaining seats or tables as consolation players.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Small tournaments</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>6 players: 5 semi finalists, then 4 finalists.</li><li>5 or 4 players: 4 semi finalists, then 3 finalists.</li><li>3 players: 3 semi finalists, then 2 finalists. With 2 players, both play both.</li></ul></div><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Consolation players</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>They keep their stats (VPs, HPs, eliminations and bonuses are still shown) but earn no points towards the tournament.</li><li>If a consolation player wins the game, they score nothing, and the places below them do not move up for tournament points.</li><li>Tournament Managers can move a player between finalist and consolation from the player settings, and can skip a table made up only of consolation players.</li><li>A player marked as Left is out and is not seated in later rounds.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Scoring</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>Once a player is about to win, they finish their turn, claim first place and the game is over.</li><li>Places are decided by VPs among the players still alive. Second and third places go to the highest VPs. In case of ties, they roll 1d6 each. Highest wins, see <strong class="text-slate-200">Faces</strong> under Clarifications.</li><li>A player who is eliminated (0 HP) has their VPs set to 0 and does not rank. If one player eliminates everyone else, they are the only one who places.</li><li>Enter each player's VPs and HPs, and who eliminated whom, in the Manager App. Use Submit Results to lock a table and Unlock Results to change it.</li><li><strong class="text-slate-200">Places:</strong> 1st = 3pts, 2nd = 2pts, 3rd = 1pt, 4th-6th = 0pt</li><li><strong class="text-slate-200">Bonuses (optional):</strong> Smasher = 1pt (most kills), Tanker = 1pt (most health), Collector = 1pt (most cards), Harvester = 1pt (most energy). Tournament Managers choose which bonuses are in play.</li></ul><div class="mb-3"><h5 class="font-bold text-slate-100 mb-1">Win conditions</h5><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Most Points:</strong> the player with the most tournament points after the Finals wins. Ties are broken by wins, then VPs, then eliminations.</li><li><strong class="text-slate-200">Final Stand:</strong> scoring is the same, but whoever wins the Finals game is crowned and listed first on the leaderboard, whatever their points.</li><li><strong class="text-slate-200">Most Kills:</strong> points come from eliminations (1 each) plus bonuses. VPs and places do not score, so a player can win a game and earn nothing for the tournament. Ties are broken by eliminations, then wins.</li></ul></div></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Clarifications</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Faces:</strong> 1, 2, and 3 equal their numbers, Energy is 4, Hearts are 5, and then a Smash equals 6.</li><li><strong class="text-slate-200">Eliminations:</strong> a kill is when an enemy is eliminated, and the active player is awarded that kill. Eliminating yourself is recorded but does not count as a kill.</li><li><strong class="text-slate-200">Bonuses:</strong> optional points awarded to players at the end of the game.</li><li><strong class="text-slate-200">Smasher:</strong> granted to the player with the most kills. The app awards it automatically from the eliminations you enter.</li><li><strong class="text-slate-200">Tanker:</strong> granted to the player with the most Health at the end of the game, awarded automatically when health differs. Ties are awarded to each tied player. Collector and Harvester (most Power Cards and most Energy) are set by hand.</li><li><strong class="text-slate-200">Adjusting results:</strong> bonuses and any result can be changed by hand from the player settings, even after a table is submitted.</li><li><strong class="text-slate-200">Expansions:</strong> the Power Up must be used, all other expansions are up to the Tournament Managers.</li><li><strong class="text-slate-200">Cards:</strong> It's recommended to have an identical deck of Power cards per table. If this isn't possible, simply divide the deck evenly between tables.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">General</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li><strong class="text-slate-200">Rules:</strong> players should always follow the rules to their utmost ability.</li><li><strong class="text-slate-200">Missed abilities:</strong> in case a player forgets to enforce a power or misses something, it's up to the active player, with help from the table, to decide if they can or not. In general, a fair chance should be given where possible as a fun atmosphere should be the priority over simply gaining an edge.</li><li><strong class="text-slate-200">Cheating:</strong> in cases where players are cheating, the table decides their punishment. Anything from missing turns, losing VPs and/or disqualification can be taken, the imagination is endless.</li><li><strong class="text-slate-200">Tips and Tricks:</strong> Follow the dice, let your first roll guide your turn. Follow your first Power Up, let it guide your play style. Go for Power Up cards and Power cards early to build up, but watch what your opponents are doing.</li><li><strong class="text-slate-200">Using the app:</strong> Undo and Redo are in the Menu, and the Tournament Log records what happened. Use Hide stats in the round controls, or the eye on a table, for a cleaner view.</li></ul></div><div><h4 class="text-sm font-extrabold text-white mb-2 uppercase tracking-wider border-b border-slate-800 pb-2">Disclaimer</h4><ul class="list-disc list-inside space-y-1 text-slate-400 pl-2"><li>The Power Tournament format is a work in progress and can be updated at any time, including during live games.</li><li>Decisions will be made by the Tournament Managers and are final.</li><li>Feedback is welcome, please email kingofguide(at)outlook(dot)com.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRulesModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 <div id="about-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeAboutModal()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-circle-question text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">About</h3><p class="text-xs text-slate-400">A note from the creator</p></div></div><button onclick="window.closeAboutModal()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-slate-300 text-xs leading-relaxed"><p class="font-bold text-white text-sm">Welcome fellow Kaiju battler,</p><p>I'm the creator of this Tournament Manager. It's a fun project I've been working on leading up to a tournament with friends.</p><p>While writing scores down on paper and organising brackets in real time is doable. I'd really rather not. Especially if I'm playing, it's the last thing I want to manage.</p><p>Enter this app! Where it does all that for me... and more.</p><p>Thanks to Claude, I vibe coded this sucker in no time. But my brain has got the best of me. "What if I add this? What if I make that?"</p><p>So welcome to my current obsession.</p><p>Just a note on the tournament system as it's a bit of everything. I'm calling it a hybrid tournament as I think it combines elimination-like brackets with swiss-like pairing. The thinking is to keep all players included while still building towards a pressure cooker finals. I love King of Tokyo, but I don't love that elimination games leave people out. So I didn't want a whole tournament isolating players. This is a casual approach to a competitive tournament. I hope it works!</p></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeAboutModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 <div id="tlog-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeTournamentLog()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-terminal text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Tournament Log</h3><p class="text-xs text-slate-400">Players and tournament events</p></div></div><button onclick="window.closeTournamentLog()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="tlog-body" class="p-4 mx-5 mt-4 overflow-y-auto custom-scrollbar flex-1 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] leading-relaxed space-y-0.5" style="min-height:12rem"></div><div class="p-4 flex items-center justify-end gap-2"><button onclick="window.copyTournamentLog()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 cursor-pointer"><i class="fa-solid fa-copy mr-1"></i> Copy</button><button onclick="window.clearTournamentLog()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-400 text-xs font-bold border border-slate-700 cursor-pointer"><i class="fa-solid fa-trash-can mr-1"></i> Clear</button><button onclick="window.closeTournamentLog()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 
-    <div id="roadmap-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRoadmap()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-road text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Roadmap</h3><p class="text-xs text-slate-400">Where the Tournament Manager has been and where it is heading</p></div></div><button onclick="window.closeRoadmap()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-4 text-slate-300 text-xs leading-relaxed"><div class="rounded-xl bg-slate-950 border border-slate-800 p-4"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">Version 1</span><span class="font-extrabold text-white text-sm">The concept</span><span class="ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-slate-800 text-slate-400 border-slate-700">Done</span></div><ul class="list-disc list-inside space-y-1 text-slate-400"><li>A fun project built ahead of a tournament with friends.</li><li>Stop scoring on paper and building brackets by hand, especially when the organiser is playing.</li><li>A hybrid format: elimination-style finals with Swiss-style pairing, so nobody is left out.</li></ul></div><div class="rounded-xl bg-slate-950 border border-slate-800 p-4"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">Version 2</span><span class="font-extrabold text-white text-sm">The current functionality</span><span class="ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-amber-500/10 text-amber-400 border-amber-500/30">You are here</span></div><ul class="list-disc list-inside space-y-1 text-slate-400"><li>Roster, settings, quick start templates and a saved Custom template.</li><li>Random then seeded rounds, Semis and Finals with finalist and consolation tags.</li><li>Three win conditions: Most Points, Winner Takes All and Most Kills Wins.</li><li>VPs, HPs, eliminations and selectable bonuses, with a Simple View.</li><li>Monster tags, spoken timer call-outs, undo and redo, tournament log, export and import.</li><li>A Champion of Tokyo certificate for the winner.</li></ul></div><div class="rounded-xl bg-slate-950 border border-slate-800 p-4"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">Version 3</span><span class="font-extrabold text-white text-sm">What is coming</span><span class="ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-slate-800 text-slate-400 border-slate-700">Coming soon</span></div><ul class="list-disc list-inside space-y-1 text-slate-400"><li>Live tournaments: share a link so several people, such as a host at each table, can enter results into the same tournament at the same time.</li><li>Hall of Fame: past champions and tournament records.</li><li>Statistics: player and monster stats across tournaments.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRoadmap()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
+    <div id="roadmap-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeRoadmap()"><div class="bg-slate-900 border border-slate-800 max-w-2xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"><div class="flex items-center justify-between p-5 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-road text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Roadmap</h3><p class="text-xs text-slate-400">Where the Tournament Manager has been and where it is heading</p></div></div><button onclick="window.closeRoadmap()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div class="p-6 overflow-y-auto custom-scrollbar space-y-4 text-slate-300 text-xs leading-relaxed"><div class="rounded-xl bg-slate-950 border border-slate-800 p-4"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">Version 1</span><span class="font-extrabold text-white text-sm">The concept</span><span class="ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-slate-800 text-slate-400 border-slate-700">Done</span></div><ul class="list-disc list-inside space-y-1 text-slate-400"><li>A fun project built ahead of a tournament with friends.</li><li>Stop scoring on paper and building brackets by hand, especially when the organiser is playing.</li><li>A hybrid format: elimination-style finals with Swiss-style pairing, so nobody is left out.</li></ul></div><div class="rounded-xl bg-slate-950 border border-slate-800 p-4"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">Version 2</span><span class="font-extrabold text-white text-sm">The current functionality</span><span class="ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-amber-500/10 text-amber-400 border-amber-500/30">You are here</span></div><ul class="list-disc list-inside space-y-1 text-slate-400"><li>Roster, settings, quick start templates and a saved Custom template.</li><li>Random then seeded rounds, Semis and Finals with finalist and consolation tags.</li><li>Three win conditions: Most Points, Final Stand and Most Kills.</li><li>VPs, HPs, eliminations and selectable bonuses, with a Simple View.</li><li>Monster tags, spoken timer call-outs, undo and redo, tournament log, export and import.</li><li>A Champion of Tokyo certificate for the winner.</li></ul></div><div class="rounded-xl bg-slate-950 border border-slate-800 p-4"><div class="flex items-center gap-2 mb-2"><span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">Version 3</span><span class="font-extrabold text-white text-sm">What is coming</span><span class="ml-auto text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-slate-800 text-slate-400 border-slate-700">Coming soon</span></div><ul class="list-disc list-inside space-y-1 text-slate-400"><li>Live tournaments: share a link so several people, such as a host at each table, can enter results into the same tournament at the same time.</li><li>Hall of Fame: past champions and tournament records.</li><li>Statistics: player and monster stats across tournaments.</li></ul></div></div><div class="p-4 border-t border-slate-800 flex justify-end"><button onclick="window.closeRoadmap()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer">Close</button></div></div></div>
 
-    <div id="cert-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-3" onclick="if(event.target===this) window.closeCertificate()"><div class="bg-slate-900 border border-slate-800 max-w-4xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden"><div class="flex items-center justify-between p-4 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-award text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Champion Certificate</h3><p class="text-xs text-slate-400">Print it or save it as a PDF, then get it signed</p></div></div><button onclick="window.closeCertificate()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="cert-stage" class="p-4 overflow-auto custom-scrollbar flex-1"><div id="cert-fit" style="margin:0 auto"><div id="cert-sheet" class="cert"></div></div></div><div class="p-4 border-t border-slate-800 flex justify-end gap-2"><button onclick="window.closeCertificate()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 cursor-pointer">Close</button><button onclick="window.printCertificate()" class="px-4 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-xs font-bold border border-amber-400 cursor-pointer"><i class="fa-solid fa-print mr-1"></i> Print / Save PDF</button></div></div></div>
+    <div id="cert-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-3" onclick="if(event.target===this) window.closeCertificate()"><div class="bg-slate-900 border border-slate-800 max-w-4xl w-full rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden"><div class="cert-chrome flex items-center justify-between p-4 border-b border-slate-800"><div class="flex items-center gap-3"><div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400"><i class="fa-solid fa-award text-xl"></i></div><div><h3 class="font-extrabold text-white text-base">Champion Certificate</h3><p class="text-xs text-slate-400">Print it or save it as a PDF, then get it signed</p></div></div><button onclick="window.closeCertificate()" aria-label="Close" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="cert-stage" class="p-4 overflow-auto custom-scrollbar flex-1"><div id="cert-fit" style="margin:0 auto"><div id="cert-sheet" class="cert"></div></div></div><div class="cert-chrome p-4 border-t border-slate-800 flex justify-end gap-2"><button onclick="window.closeCertificate()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 cursor-pointer">Close</button><button onclick="window.printCertificate()" class="px-4 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-xs font-bold border border-amber-400 cursor-pointer"><i class="fa-solid fa-print mr-1"></i> Print / Save PDF</button></div></div></div>
+
+    <div id="tour-ring" class="tour-ring hidden"></div>
+    <div id="tour-card" class="hidden fixed z-[90] left-1/2 -translate-x-1/2 w-[min(94vw,440px)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-4 space-y-3" style="bottom:1rem"></div>
+    <div id="tour-hint" class="hidden fixed z-[80] bottom-4 right-4 w-72 max-w-[calc(100vw-2rem)] bg-slate-900 border border-amber-500/40 rounded-2xl shadow-2xl p-4 space-y-3">
+        <div class="flex items-start gap-3"><div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0"><i class="fa-solid fa-rocket"></i></div><div><div class="font-extrabold text-white text-sm">New here?</div><p class="text-xs text-slate-400 mt-0.5">Take the 1 minute Get Started tour to set up and run your first tournament.</p></div></div>
+        <div class="flex gap-2"><button type="button" onclick="window.dismissTourHint(); window.startTour()" class="flex-1 h-9 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400 cursor-pointer">Get Started</button><button type="button" onclick="window.dismissTourHint()" class="px-3 h-9 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Not now</button></div>
+    </div>
 
     <!-- Update Log Modal -->
     <div id="log-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4" onclick="if(event.target===this) window.closeLogModal()">
@@ -753,6 +787,7 @@
                     <input id="monster-search" type="search" autocomplete="off" placeholder="Search name or code" oninput="window.filterMonsters(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors">
                 </div>
             </div>
+            <div class="px-3 pt-2 flex items-center justify-between gap-2"><label class="shrink-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-xs font-bold text-slate-300 cursor-pointer hover:bg-slate-700 transition-colors"><input type="checkbox" id="swap-toggle" onchange="window.setSwapMode(this.checked)" class="w-4 h-4 accent-amber-500"><i class="fa-solid fa-right-left text-amber-400"></i> Swap</label><button id="swap-confirm" type="button" onclick="window.confirmSwap()" disabled class="hidden"></button></div>
             <div id="monster-list" class="p-3 space-y-1.5 overflow-y-auto custom-scrollbar min-h-0 flex-1"></div>
             <div class="p-3 border-t border-slate-800 flex justify-end">
                 <button id="monster-clear" type="button" onclick="window.clearMonster()" class="hidden px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors cursor-pointer">Remove monster</button>
@@ -871,6 +906,30 @@
             tableStatsOverride[id] = !window.tableStatsHidden(id);
             window.renderRoundsUI();
         };
+        function allTablesState() {
+            const g = window.getCurrentGame();
+            if (!g || !g.started || g.skipped) return { mode: 'none', list: [] };
+            const live = g.tables.filter(t => !t.skipped);
+            const pending = live.filter(t => !t.completed);
+            return pending.length ? { mode: 'submit', list: pending } : { mode: 'unlock', list: live };
+        }
+        function syncSubmitAllButton() {
+            const b = document.getElementById('btn-submit-all');
+            if (!b) return;
+            const st = allTablesState();
+            const base = 'h-10 px-3 rounded-xl border flex items-center justify-center gap-1.5 transition-colors text-xs font-bold ';
+            document.getElementById('submit-all-label').textContent = st.mode === 'unlock' ? 'Unlock All' : 'Submit All';
+            document.getElementById('submit-all-icon').className = 'fa-solid text-sm ' + (st.mode === 'unlock' ? 'fa-lock' : 'fa-lock-open');
+            b.disabled = st.mode === 'none';
+            b.title = st.mode === 'none' ? 'Start the game first' : (st.mode === 'unlock' ? 'Unlock every table' : 'Submit results for every table');
+            b.className = base + (st.mode === 'none' ? 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed' : (st.mode === 'submit' ? 'bg-amber-500/15 border-amber-400 text-amber-300 hover:bg-amber-500/25 cursor-pointer' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 cursor-pointer'));
+        }
+        window.toggleAllTables = function() {
+            const st = allTablesState();
+            if (st.mode === 'none') return;
+            st.list.forEach(t => window.toggleTableComplete(t.id));
+            window.logEvent(st.mode === 'submit' ? 'All tables submitted' : 'All tables unlocked', st.mode === 'submit' ? 'OK' : 'WARN');
+        };
         function syncStatsButton() {
             const i = document.getElementById('hide-stats-icon'), l = document.getElementById('hide-stats-label'), b = document.getElementById('btn-hide-stats');
             if (!i) return;
@@ -915,8 +974,30 @@
 
         // ----- Update Log -----
         // Add a new entry at the top of this list with every update (month and year only, no dates).
-        const APP_VERSION = '2.43';
+        const APP_VERSION = '2.46';
         const CHANGELOG = [
+            { "version": "2.46", "date": "November 2026", "items": [
+                "Settings and Roster panel now sits on the right on desktop",
+                "Roster buttons (Players and Examples) now sit under the name box, so the panel no longer scrolls sideways",
+                "Generate moved up beside Hide setup / Show setup",
+                "Full pre-launch sweep of every function"
+            ]},
+            { "version": "2.45", "date": "November 2026", "items": [
+                "Settings and Roster are back beside the tournament, switched from the panel header (Settings | Roster)",
+                "Hide setup / Show setup button above the tournament to use the full width, remembered on this device",
+                "Pressing Generate with fewer than 2 players opens the Roster, pulses the add box and points at it",
+                "Generate is now a full-width button at the bottom of the setup panel, and the panel hides itself on small screens once a tournament is generated"
+            ]},
+            { "version": "2.44", "date": "November 2026", "items": [
+                "New layout: Setup is now a tab, with Settings and Roster as sub tabs, so the roster is visible and the Tournament and Leaderboard get the full width",
+                "Monster picker: Take a monster from another player, and Swap two players' monsters",
+                "Submit All / Unlock All button next to Hide stats",
+                "Option and bonus checkboxes are more subtle when checked",
+                "Final Stand now comes first in the win conditions, and Melee, Clash and Brawl set Final Stand, Most Points and Most Kills",
+                "Undo, Redo and the light/dark toggle keep the Menu open",
+                "New Get Started walkthrough in the Help menu, with a first-visit prompt, that can be cancelled at any step",
+                "Certificate prints as a single page, uses the Tokyo Tower in the seal, new wording and today's date"
+            ]},
             { "version": "2.43", "date": "November 2026", "items": [
                 "Rules page rewritten to match the app: hybrid format, Semis and Finals, finalist counts, consolation players, eliminations, bonuses and the three win conditions",
                 "New Hide stats button in the round controls hides or shows every player's stats on the tables, and replaces the Simple View option",
@@ -942,13 +1023,13 @@
                 "Every seat shows a live points chip: points for this game, with the tournament total in brackets",
                 "Player settings cog moved into the name row as a plain icon, and it stays usable on submitted tables for last-minute changes",
                 "Submitted tables grey out their stats instead of turning orange",
-                "New Most Kills Wins mode: 1 point per elimination plus bonuses, VPs and places do not score",
-                "Winner Takes All now works as a crown on the Finals winner, with scoring unchanged; the crowned player shows 👑",
+                "New Most Kills mode: 1 point per elimination plus bonuses, VPs and places do not score",
+                "Final Stand now works as a crown on the Finals winner, with scoring unchanged; the crowned player shows 👑",
                 "Elimination pickers show the player's monster tag next to their name"
             ]},
             { "version": "2.40", "date": "November 2026", "items": [
                 "2 and 3 player tournaments now go through the Semis: everyone is a semi finalist, then 2 players reach the Finals",
-                "New Tournament Mode setting: Most Points (default) or Winner Takes All, where the Finals winner takes 1st place on the leaderboard. It is saved with the Custom template",
+                "New Tournament Mode setting: Most Points (default) or Final Stand, where the Finals winner takes 1st place on the leaderboard. It is saved with the Custom template",
                 "Overview now covers the Semis, the finalist counts for your roster, scoring and the tournament mode",
                 "Submitted tables show each player's overall tournament points",
                 "The elimination chip is now a button to choose which players a player eliminated",
@@ -1440,10 +1521,11 @@
         }
 
         // Quick start templates: from a short 4 player tournament up to a long 6 player one
+        const MODE_LABELS = { points: 'Most Points', wta: 'Final Stand', kills: 'Most Kills' };
         const TEMPLATES = [
-            { key: 'melee', name: 'Melee', icon: 'fa-hand-fist', players: 4, games: 1, rounds: 1, timer: 40 },
-            { key: 'clash', name: 'Clash', icon: 'fa-fire',      players: 5, games: 2, rounds: 2, timer: 45 },
-            { key: 'brawl', name: 'Brawl', icon: 'fa-user-ninja',      players: 6, games: 3, rounds: 2, timer: 50 }
+            { key: 'melee', name: 'Melee', icon: 'fa-hand-fist', players: 4, games: 1, rounds: 1, timer: 40, mode: 'wta' },
+            { key: 'clash', name: 'Clash', icon: 'fa-fire',      players: 5, games: 2, rounds: 2, timer: 45, mode: 'points' },
+            { key: 'brawl', name: 'Brawl', icon: 'fa-user-ninja',      players: 6, games: 3, rounds: 2, timer: 50, mode: 'kills' }
         ];
 
         // ----- Custom template: the user's own preset, saved on this device (includes the Options toggles) -----
@@ -1503,7 +1585,7 @@
 
             host.innerHTML = items.map((t, i) => {
                 const empty = t.isCustom && !t.saved;
-                const sameCore = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer;
+                const sameCore = t.players === cur.players && t.games === cur.games && t.rounds === cur.rounds && t.timer === cur.timer && (t.mode || 'points') === cur.mode;
                 const active = !empty && sameCore && (!t.isCustom || (t.bonuses === cur.bonuses && t.monsters === cur.monsters && t.mode === cur.mode && t.elims === cur.elims && t.bonusSet === cur.bonusSet && t.sfx === cur.sfx && t.sfxVoice === cur.sfxVoice && t.sfxRate === cur.sfxRate && t.sfxPitch === cur.sfxPitch && t.sfxVol === cur.sfxVol));
                 const cls = active
                     ? 'bg-amber-500/15 border-amber-400 text-amber-300'
@@ -1514,7 +1596,7 @@
                     stats = 'Nothing saved yet. Change your settings, then tap the save icon next to Overview to keep them here.';
                 } else {
                     const total = estimateMinutes(t.players, t.timer, t.games * t.rounds + Math.min(2, Math.ceil(t.games / 2)) + 1);
-                    stats = `${t.players} player tables · ${t.games} game${t.games === 1 ? '' : 's'} per ${t.rounds} rounds · ${t.timer} min games · ~ ${formatDuration(total)}`;
+                    stats = `${t.players} player tables · ${t.games} game${t.games === 1 ? '' : 's'} per ${t.rounds} rounds · ${t.timer} min games · ~ ${formatDuration(total)} · Win condition: ${MODE_LABELS[t.mode || 'points']}`;
                     if (t.isCustom) stats += ` · Bonuses ${t.bonuses !== false ? 'on' : 'off'}, Monsters ${t.monsters !== false ? 'on' : 'off'}, Sound ${t.sfx !== false ? 'on' : 'off'}`;
                 }
                 // Tooltip lines up with the left edge, centre or right edge so it never spills out of the card
@@ -1577,7 +1659,7 @@
                 `<span class="block">Your tournament will have ${strong(totalGames + ' games')}: ${roundGames} in the rounds (${rounds} x ${gamesPerRound}), ${semis} in the semis and 1 final. That is roughly ${strong(formatDuration(totalMinutes))} in total, with about ${strong(formatTurnTime(secondsPerTurn))} per turn (around ${TURNS_EACH} turns each).</span>` +
                 `<span class="block mt-2">Everyone plays every game. After the rounds, players are seeded by standings into the Semis and then the Finals, so nobody sits out. ${counts}</span>` +
                 `<span class="block mt-2">${mode === 'kills' ? 'Points come from eliminations (1 each), plus bonuses if enabled. VPs and places do not score.' : 'Places score 3, 2 and 1 points by VPs, plus bonuses if enabled.'} Eliminated players do not rank. Consolation players keep their stats but earn no tournament points.</span>` +
-                `<span class="block mt-2">Win condition: ${strong({ points: 'Most Points', wta: 'Winner Takes All', kills: 'Most Kills Wins' }[mode])}. ${{ points: 'The most points after the Finals wins.', wta: 'Scoring is unchanged, but the Finals winner takes the crown and 1st place overall.', kills: 'The most eliminations (plus bonuses) wins.' }[mode]}</span>`;
+                `<span class="block mt-2">Win condition: ${strong({ points: 'Most Points', wta: 'Final Stand', kills: 'Most Kills' }[mode])}. ${{ points: 'The most points after the Finals wins.', wta: 'Scoring is unchanged, but the Finals winner takes the crown and 1st place overall.', kills: 'The most eliminations (plus bonuses) wins.' }[mode]}</span>`;
         }
 
         // Keeps slider fill, value badges and the option buttons in step with the inputs
@@ -1600,7 +1682,7 @@
             updateBonusMaster();
             (function () {
                 const mode = window.getMode();
-                const labels = { points: 'Most Points', wta: 'Winner Takes All', kills: 'Most Kills Wins' };
+                const labels = { points: 'Most Points', wta: 'Final Stand', kills: 'Most Kills' };
                 document.querySelectorAll('.mode-btn').forEach(btn => {
                     const active = btn.dataset.mode === mode;
                     btn.innerHTML = '<span class="block text-base leading-none mb-0.5">' + ({ points: '🏆', wta: '👑', kills: '💥' })[btn.dataset.mode] + '</span>' + labels[btn.dataset.mode];
@@ -1778,6 +1860,10 @@
                 saveSoundPrefs();
                 syncSoundUI();
             }
+            if (!saved && tpl.mode) {
+                window.tournament.settings.mode = tpl.mode; window.tournament.settings.winnerTakesAll = tpl.mode === 'wta';
+                if (tpl.mode === 'kills') document.getElementById('setting-elims').checked = true;
+            }
             clearTimeout(settingsToastTimer);
             window.updateSettings(true);
             window.showToast(`${name} template applied`, "success");
@@ -1790,7 +1876,7 @@
         };
 
         window.setMode = function(mode) {
-            if (mode === 'kills' && !window.elimsEnabled()) { window.showToast('Turn on Eliminations to use Most Kills Wins.', 'error'); return; }
+            if (mode === 'kills' && !window.elimsEnabled()) { window.showToast('Turn on Eliminations to use Most Kills.', 'error'); return; }
             window.tournament.settings.mode = mode;
             window.tournament.settings.winnerTakesAll = mode === 'wta';
             window.updateSettings();
@@ -1970,6 +2056,7 @@
 
         let monsterPickerPlayerId = null;
 
+        let monsterSwapMode = false, swapSel = [];
         function renderMonsterList(query) {
             const round = window.getCurrentRound();
             const picks = (round && round.monsters) || {};
@@ -1977,30 +2064,95 @@
             const current = picks[monsterPickerPlayerId];
             const holders = {};
             Object.keys(picks).forEach(pid => {
-                if (pid === monsterPickerPlayerId) return;
                 const pl = window.tournament.players.find(p => p.id === pid);
-                if (pl) (holders[picks[pid]] = holders[picks[pid]] || []).push(pl.name);
+                if (pl) (holders[picks[pid]] = holders[picks[pid]] || []).push({ id: pid, name: pl.name });
             });
             const rows = [...MONSTERS]
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .filter(m => !q || searchText(m.name).includes(q) || searchText(m.code).includes(q) || searchText(m.group).includes(q))
+                .filter(m => !monsterSwapMode || (holders[m.key] || []).length)
                 .map(m => {
-                    const selected = m.key === current;
-                    const taken = holders[m.key];
-                    const blocked = taken && !selected;
-                    const cls = selected ? 'bg-amber-500/15 border-amber-500/50 cursor-pointer' : (blocked ? 'bg-slate-900 border-slate-800 opacity-40 cursor-not-allowed' : 'bg-slate-950 border-slate-800 hover:border-amber-500/40 cursor-pointer');
-                    return `<button type="button" ${blocked ? 'disabled' : ''} onclick="window.pickMonster('${m.key}')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl border text-left transition-colors ${cls}">
+                    const hs = holders[m.key] || [];
+                    const mine = m.key === current;
+                    const others = hs.filter(h => h.id !== monsterPickerPlayerId);
+                    const who = hs.map(h => h.id === monsterPickerPlayerId ? 'You' : escapeHtml(h.name)).join(', ');
+                    if (monsterSwapMode) {
+                        const on = swapSel.includes(m.key);
+                        const full = !on && swapSel.length >= 2;
+                        return `<label class="w-full flex items-center gap-3 px-3 py-2 rounded-xl border transition-colors bg-slate-950 border-slate-800 ${full ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:border-amber-500/40'}">
+                            <input type="checkbox" ${on ? 'checked' : ''} ${full ? 'disabled' : ''} onchange="window.toggleSwapPick('${m.key}')" class="w-4 h-4 accent-amber-500 shrink-0">
+                            ${monsterBadge(m, 'w-14 text-center')}
+                            <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-slate-100 truncate">${escapeHtml(m.name)}</span><span class="block text-[10px] text-slate-500 truncate">Held by ${who}</span></span>
+                        </label>`;
+                    }
+                    if (others.length && !mine) {
+                        return `<div class="w-full flex items-center gap-3 px-3 py-2 rounded-xl border bg-slate-900 border-slate-800">
+                            <span class="opacity-50">${monsterBadge(m, 'w-14 text-center')}</span>
+                            <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-slate-400 truncate">${escapeHtml(m.name)}</span><span class="inline-flex items-center gap-1 mt-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300"><i class="fa-solid fa-user"></i> In use by ${others.map(h => escapeHtml(h.name)).join(', ')}</span></span>
+                            <button type="button" onclick="window.takeMonster('${m.key}')" class="shrink-0 px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25 text-[11px] font-extrabold cursor-pointer"><i class="fa-solid fa-hand mr-1"></i>Take</button>
+                        </div>`;
+                    }
+                    const cls = mine ? 'bg-amber-500/15 border-amber-500/50' : 'bg-slate-950 border-slate-800 hover:border-amber-500/40';
+                    return `<button type="button" onclick="window.pickMonster('${m.key}')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl border text-left transition-colors cursor-pointer ${cls}">
                         ${monsterBadge(m, 'w-14 text-center')}
-                        <span class="min-w-0 flex-1">
-                            <span class="block text-sm font-bold text-slate-100 truncate">${escapeHtml(m.name)}</span>
-                            <span class="block text-[10px] text-slate-500 truncate">${m.group}${taken ? ' · picked by ' + escapeHtml(taken.join(', ')) : ''}</span>
-                        </span>
-                        ${selected ? '<i class="fa-solid fa-check text-amber-400 text-xs shrink-0"></i>' : (blocked ? '<i class="fa-solid fa-ban text-slate-600 text-xs shrink-0"></i>' : '')}
+                        <span class="min-w-0 flex-1"><span class="block text-sm font-bold text-slate-100 truncate">${escapeHtml(m.name)}</span><span class="block text-[10px] text-slate-500 truncate">${m.group}${mine ? ' · yours' : ''}</span></span>
+                        ${mine ? '<i class="fa-solid fa-check text-amber-400 text-xs shrink-0"></i>' : ''}
                     </button>`;
                 }).join('');
-            document.getElementById('monster-list').innerHTML = rows || '<p class="text-center text-xs text-slate-500 py-8">No monsters match that search.</p>';
-            document.getElementById('monster-clear').classList.toggle('hidden', !current);
+            document.getElementById('monster-list').innerHTML = rows || '<p class="text-center text-xs text-slate-500 py-8">' + (monsterSwapMode ? 'No monsters are in use yet.' : 'No monsters match that search.') + '</p>';
+            document.getElementById('monster-clear').classList.toggle('hidden', !current || monsterSwapMode);
+            const conf = document.getElementById('swap-confirm');
+            if (conf) {
+                conf.classList.toggle('hidden', !monsterSwapMode);
+                const ready = swapSel.length === 2;
+                conf.disabled = !ready;
+                const nm = k => (monsterByKey(k) || {}).name || '';
+                conf.innerHTML = ready ? `<i class="fa-solid fa-right-left mr-1"></i>Swap ${escapeHtml(nm(swapSel[0]))} and ${escapeHtml(nm(swapSel[1]))}` : 'Tick two monsters';
+                conf.className = 'min-w-0 truncate px-3 py-1.5 rounded-lg border text-xs font-bold ' + (ready ? 'bg-amber-500/15 border-amber-400 text-amber-300 hover:bg-amber-500/25 cursor-pointer' : 'bg-slate-800/60 border-slate-800 text-slate-600 cursor-not-allowed') + (monsterSwapMode ? '' : ' hidden');
+            }
         }
+        window.setSwapMode = function(on) {
+            monsterSwapMode = !!on;
+            const round = window.getCurrentRound();
+            const own = round && round.monsters && round.monsters[monsterPickerPlayerId];
+            swapSel = on && own ? [own] : [];
+            renderMonsterList(document.getElementById('monster-search').value);
+        };
+        window.toggleSwapPick = function(key) {
+            swapSel = swapSel.includes(key) ? swapSel.filter(k => k !== key) : (swapSel.length < 2 ? [...swapSel, key] : swapSel);
+            renderMonsterList(document.getElementById('monster-search').value);
+        };
+        function finishMonsterChange() {
+            window.closeMonsterPicker();
+            window.saveTournament();
+            window.renderAll();
+            if (pmCtx) renderPlayerModal();
+        }
+        window.takeMonster = function(key) {
+            const round = window.getCurrentRound(), m = monsterByKey(key);
+            if (!round || !m || !monsterPickerPlayerId) return;
+            const nm = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
+            const holders = Object.keys(round.monsters || {}).filter(pid => pid !== monsterPickerPlayerId && round.monsters[pid] === key);
+            holders.forEach(pid => { delete round.monsters[pid]; });
+            const me = monsterPickerPlayerId;
+            round.monsters[me] = key;
+            window.logEvent(`${nm(me)} took ${m.name} from ${holders.map(nm).join(', ')}`, 'SYS');
+            finishMonsterChange();
+            window.showToast(`${nm(me)} took ${m.name} from ${holders.map(nm).join(', ')}. They need to pick another monster.`, 'info');
+        };
+        window.confirmSwap = function() {
+            const round = window.getCurrentRound();
+            if (!round || swapSel.length !== 2) return;
+            const [ka, kb] = swapSel;
+            const ha = Object.keys(round.monsters || {}).find(pid => round.monsters[pid] === ka);
+            const hb = Object.keys(round.monsters || {}).find(pid => round.monsters[pid] === kb);
+            if (!ha || !hb || ha === hb) { window.showToast('Pick two monsters held by two different players.', 'error'); return; }
+            round.monsters[ha] = kb; round.monsters[hb] = ka;
+            const nm = id => (window.tournament.players.find(p => p.id === id) || {}).name || 'Player';
+            window.logEvent(`${nm(ha)} and ${nm(hb)} swapped monsters (${monsterByKey(kb).name} / ${monsterByKey(ka).name})`, 'SYS');
+            finishMonsterChange();
+            window.showToast(`${nm(ha)} and ${nm(hb)} swapped monsters.`, 'success');
+        };
 
         function fitMonsterModal() {
             const m = document.getElementById('monster-modal'), vv = window.visualViewport;
@@ -2029,6 +2181,8 @@
             document.getElementById('monster-modal').classList.add('hidden');
             const mm = document.getElementById('monster-modal'); mm.style.top = ''; mm.style.bottom = ''; mm.style.height = '';
             monsterPickerPlayerId = null;
+            monsterSwapMode = false; swapSel = [];
+            const sw = document.getElementById('swap-toggle'); if (sw) sw.checked = false;
         };
 
         window.pickMonster = function(key) {
@@ -2094,6 +2248,7 @@
             const container = document.getElementById('roster-list-container');
             const badge = document.getElementById('player-count-badge');
             badge.innerText = window.tournament.players.length;
+            document.querySelectorAll('.sub-roster-count').forEach(e => { e.textContent = window.tournament.players.length; });
 
             if (window.tournament.players.length === 0) {
                 container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">No players added yet. Add players above.</div>`;
@@ -2117,6 +2272,8 @@
             if (total === 0) return [];
 
             let numTables = Math.ceil(total / targetSize);
+            // Never leave a player alone on a table: use fewer, slightly bigger tables instead
+            if (numTables > 1 && Math.floor(total / numTables) < 2) numTables = Math.max(1, Math.floor(total / 2));
             let tables = Array.from({ length: numTables }, () => []);
 
             const baseSize = Math.floor(total / numTables);
@@ -2189,8 +2346,8 @@
             return buildRound("Round 1", templates, gamesPerRound, false);
         }
 
-        const GENERATE_BTN_PRIMARY = "px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
-        const GENERATE_BTN_SUBTLE = "px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
+        const GENERATE_BTN_PRIMARY = "h-9 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
+        const GENERATE_BTN_SUBTLE = "h-9 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0";
 
         // Bright green call-to-action before a tournament exists, subtle once one is underway
         function updateGenerateButtonStyle() {
@@ -2223,10 +2380,7 @@
         });
 
         window.generateRound1 = function() {
-            if (window.tournament.players.length < 2) {
-                window.showToast("You need at least 2 players to generate a tournament!", "error");
-                return;
-            }
+            if (window.tournament.players.length < 2) { window.nudgeRoster(); return; }
 
             // Stop any active timer from a previous tournament run
             if (globalTimerInterval) {
@@ -2245,6 +2399,8 @@
             window.tournament.startedAt = Date.now();
             window.saveTournament();
             window.renderAll();
+            window.switchTab('rounds');
+            if (window.innerWidth < 1024) window.setSetupOpen(false);
             window.showToast(`New tournament generated! Round 1 has ${gamesPerRound} game${gamesPerRound === 1 ? '' : 's'}.`, "success");
         };
 
@@ -2476,7 +2632,7 @@
             document.getElementById('bonus-modal-list').innerHTML = window.activeBonusTypes().map(b => {
                 const checked = seat.bonuses && seat.bonuses[b.key];
                 return `
-                    <label class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${checked ? 'bg-amber-500/10 border-amber-500/40' : 'bg-slate-950 border-slate-800 hover:border-slate-700'}">
+                    <label class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors bg-slate-950 border-slate-800 hover:border-slate-700">
                         <input type="checkbox" ${checked ? 'checked' : ''} onchange="window.toggleBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500 cursor-pointer shrink-0">
                         <span class="text-lg leading-none shrink-0">${b.emoji}</span>
                         <span class="flex-1 min-w-0">
@@ -2588,7 +2744,7 @@
             const mode = window.getMode(), st = window.tournament.settings || {};
             const li = t => `<span class="block mt-1.5">${t}</span>`;
             const act = window.activeBonusTypes().map(b => b.label).join(', ');
-            let h = `<span class="block font-bold text-white">${{ points: '🏆 Most Points', wta: '👑 Winner Takes All', kills: '💥 Most Kills Wins' }[mode]}</span>`;
+            let h = `<span class="block font-bold text-white">${{ points: '🏆 Most Points', wta: '👑 Final Stand', kills: '💥 Most Kills' }[mode]}</span>`;
             if (mode === 'kills') h += li('Points come from eliminations: <strong class="text-amber-400">1 point each</strong>. VPs and places do not score.');
             else h += li('Places by VPs: <strong class="text-amber-400">1st 3 pts, 2nd 2 pts, 3rd 1 pt</strong>, everyone else 0.');
             h += li(act ? `Bonuses, +1 each: ${act}.` : 'Bonuses are off.');
@@ -2786,7 +2942,7 @@
                     <div class="flex items-center gap-1.5 shrink-0">
                         <button type="button" onclick="window.toggleTableStats('${table.id}')" title="${statsHidden ? 'Show stats for this table' : 'Hide stats for this table'}" aria-label="${statsHidden ? 'Show stats for this table' : 'Hide stats for this table'}" class="h-8 w-8 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 flex items-center justify-center cursor-pointer transition-colors"><i class="fa-solid ${statsHidden ? 'fa-eye-slash' : 'fa-eye'} text-xs"></i></button>
                         ${cons && !locked ? `<button onclick="window.toggleTableSkip('${table.id}')" class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors ${skipped ? 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'}"><i class="fa-solid ${skipped ? 'fa-rotate-left' : 'fa-forward'}"></i> ${skipped ? 'Unskip' : 'Skip'}</button>` : ''}
-                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700' : 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25'}"><i class="fa-solid ${locked ? 'fa-lock' : 'fa-lock-open'}"></i> ${locked ? 'Unlock Results' : 'Submit Results'}</button>`}
+                        ${skipped ? '' : `<button onclick="window.toggleTableComplete('${table.id}')" ${unstarted ? 'disabled' : ''} class="h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${locked ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700' : 'bg-amber-500/15 border border-amber-400 text-amber-300 hover:bg-amber-500/25'}"><i class="fa-solid ${locked ? 'fa-lock' : 'fa-lock-open'}"></i> ${locked ? 'Unlock' : 'Submit'}</button>`}
                     </div>
                 </div>
                 ${skipped ? `<div class="rounded-xl border border-dashed border-slate-700 py-4 px-3 text-center text-xs text-slate-500"><i class="fa-solid fa-forward mr-1"></i> Table skipped, not played<div class="mt-1 text-[11px] text-slate-600 truncate">${table.seats.map(x => escapeHtml((window.tournament.players.find(p => p.id === x.playerId) || {}).name || "")).join(", ")}</div></div>` : `<div class="space-y-1.5">${seatsHTML}</div>`}`;
@@ -2969,7 +3125,7 @@
                         <button type="button" onclick="window.pmKills()" class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">💥 Eliminated ${seat.elims || 0}</button>
                         <button type="button" onclick="window.pmElimBy()" ${(parseInt(seat.hp) || 0) > 0 ? 'disabled' : ''} class="${secBtn} disabled:opacity-40 disabled:cursor-not-allowed">${by ? 'By ' + escapeHtml(by) : '💀 Eliminated by'}</button>
                     </div>` : ''}
-                    ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.activeBonusTypes().map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold ${d.bonuses[b.key] ? 'bg-amber-500/10 border-amber-500/40 text-amber-300' : 'bg-slate-900 border-slate-800 text-slate-300'}"><input type="checkbox" ${d.bonuses[b.key] ? 'checked' : ''} onchange="window.pmBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
+                    ${window.bonusesEnabled() ? `<div><span class="${lbl}">Bonuses</span><div class="grid grid-cols-2 gap-1.5">${window.activeBonusTypes().map(b => `<label class="flex items-center gap-2 px-2.5 py-2 rounded-lg border cursor-pointer text-xs font-bold bg-slate-900 border-slate-800 ${d.bonuses[b.key] ? 'text-slate-100' : 'text-slate-400'}"><input type="checkbox" ${d.bonuses[b.key] ? 'checked' : ''} onchange="window.pmBonus('${b.key}', this.checked)" class="w-4 h-4 accent-amber-500">${b.emoji} ${b.label}</label>`).join('')}</div></div>` : ''}
                 </div>
                 <div class="${card}">${head('Status')}
                     ${d.fin === null ? '' : `<button type="button" onclick="window.pmToggleFin()" class="${secBtn}"><i class="fa-solid fa-right-left"></i> ${d.fin ? (window.getCurrentRound().isSemis ? 'Semi finalist: move to consolation' : 'Finalist: move to consolation') : (window.getCurrentRound().isSemis ? 'Consolation: move to semi finalists' : 'Consolation: move to finalists')}</button>`}
@@ -3251,29 +3407,63 @@
         };
 
         // Navigation Tabs Switcher
+        const TAB_BASE = 'shrink-0 px-4 py-2 text-sm font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer ';
+        const TAB_ON = 'bg-amber-500/15 border border-amber-400 text-amber-300';
+        const TAB_OFF = 'bg-slate-800 border border-transparent text-slate-400 hover:text-white';
+        let setupOpen = true;
+        try { const v = localStorage.getItem('kot_setup_open'); if (v !== null) setupOpen = v === '1'; } catch (e) {}
+        function applySetupOpen() {
+            const panel = document.getElementById('setup-panel'), main = document.getElementById('tournament-main');
+            if (!panel || !main) return;
+            panel.classList.toggle('hidden', !setupOpen);
+            main.classList.toggle('lg:col-span-8', setupOpen);
+            main.classList.toggle('lg:col-span-12', !setupOpen);
+            const b = document.getElementById('btn-toggle-setup');
+            document.getElementById('setup-toggle-label').textContent = setupOpen ? 'Hide setup' : 'Show setup';
+            b.title = setupOpen ? 'Hide the Settings and Roster panel' : 'Show the Settings and Roster panel';
+            b.setAttribute('aria-expanded', setupOpen ? 'true' : 'false');
+            b.className = 'shrink-0 h-9 px-3 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors ' + (setupOpen ? 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700' : 'bg-amber-500/15 border-amber-400 text-amber-300 hover:bg-amber-500/25');
+        }
+        window.setSetupOpen = function(v) {
+            setupOpen = !!v;
+            try { localStorage.setItem('kot_setup_open', setupOpen ? '1' : '0'); } catch (e) {}
+            applySetupOpen();
+        };
+        window.toggleSetupPanel = function() { window.setSetupOpen(!setupOpen); };
         window.switchTab = function(tab) {
-            const roundsView = document.getElementById('view-rounds');
-            const standingsView = document.getElementById('view-standings');
-            const tabBtnRounds = document.getElementById('tab-btn-rounds');
-            const tabBtnStandings = document.getElementById('tab-btn-standings');
-
-            if (tab === 'rounds') {
-                roundsView.classList.remove('hidden');
-                standingsView.classList.add('hidden');
-                tabBtnRounds.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 transition-all flex items-center gap-2 cursor-pointer";
-                tabBtnStandings.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
-            } else {
-                roundsView.classList.add('hidden');
-                standingsView.classList.remove('hidden');
-                tabBtnRounds.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-slate-800 border border-transparent text-slate-400 hover:text-white transition-all flex items-center gap-2 cursor-pointer";
-                tabBtnStandings.className = "shrink-0 px-4 py-2 text-sm font-bold rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 transition-all flex items-center gap-2 cursor-pointer";
-                window.renderStandings();
-            }
+            if (tab === 'setup') { tab = 'rounds'; window.setSetupOpen(true); }
+            const views = { rounds: 'view-rounds', standings: 'view-standings' };
+            Object.keys(views).forEach(k => {
+                document.getElementById(views[k]).classList.toggle('hidden', k !== tab);
+                document.getElementById('tab-btn-' + k).className = TAB_BASE + (k === tab ? TAB_ON : TAB_OFF);
+            });
+            document.getElementById('tab-actions').classList.toggle('hidden', tab !== 'rounds');
+            if (tab === 'standings') window.renderStandings();
+        };
+        window.setupPane = function(p) {
+            document.getElementById('setup-settings-pane').classList.toggle('hidden', p !== 'settings');
+            document.getElementById('setup-roster-pane').classList.toggle('hidden', p !== 'roster');
+            document.querySelectorAll('.pane-tab').forEach(b => {
+                b.className = 'pane-tab text-base font-bold flex items-center gap-2 pb-1 border-b-2 cursor-pointer transition-colors ' + (b.dataset.pane === p ? 'text-white border-amber-500' : 'text-slate-500 border-transparent hover:text-slate-300');
+            });
+        };
+        window.nudgeRoster = function() {
+            window.setSetupOpen(true);
+            window.setupPane('roster');
+            const inp = document.getElementById('player-name-input'), card = document.getElementById('roster-card'), msg = document.getElementById('roster-nudge');
+            msg.classList.remove('hidden');
+            [inp, card].forEach(e => { e.classList.remove('nudge-pulse'); void e.offsetWidth; e.classList.add('nudge-pulse'); });
+            const panel = document.getElementById('setup-panel');
+            if (panel) panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            try { inp.focus({ preventScroll: true }); } catch (e) {}
+            window.showToast('Add at least 2 players to generate a tournament.', 'info', { noUndo: true });
+            clearTimeout(window.__nudgeTimer);
+            window.__nudgeTimer = setTimeout(() => { msg.classList.add('hidden'); [inp, card].forEach(e => e.classList.remove('nudge-pulse')); }, 6000);
         };
 
         // Overall Render Controller
         window.renderAll = function() {
-            try { syncCertButton(); syncStatsButton(); } catch (e) {}
+            try { syncCertButton(); syncStatsButton(); syncSubmitAllButton(); } catch (e) {}
             window.renderRoster();
             renderTournamentOverview();
             window.renderRoundsUI();
@@ -3433,7 +3623,7 @@
                 container.innerHTML = `<div class="col-span-2 text-center py-16 text-slate-500 bg-slate-900/40 rounded-2xl border border-slate-800 border-dashed">
                     <i class="fa-solid fa-dice-d6 text-4xl mb-3 opacity-40 text-amber-500"></i>
                     <p class="text-base font-bold text-slate-300">No rounds generated yet.</p>
-                    <p class="text-xs text-slate-500 mt-1">The timeline above updates live as you change settings. Add your players and click <strong>Generate</strong> to seat them.</p>
+                    <p class="text-xs text-slate-500 mt-1">The timeline above updates live as you change settings. Add your players in the Roster panel, then press <strong>Generate</strong> to seat them.</p><button type="button" onclick="window.switchTab('setup')" class="mt-4 px-4 py-2 rounded-xl bg-amber-500/15 border border-amber-400 text-amber-300 text-xs font-bold cursor-pointer hover:bg-amber-500/25"><i class="fa-solid fa-table-columns mr-1"></i> Open setup panel</button>
                 </div>`;
                 return;
             }
@@ -3900,7 +4090,7 @@
         wrapLog('triggerGrandFinals', null, () => window.logEvent('Finals generated', 'OK'));
         wrapLog('crownChampion', null, () => { const w = window.calculateStandings()[0]; if (w) window.logEvent(`${w.name} crowned champion with ${w.pts} pts`, 'OK'); });
         wrapLog('toggleKill', () => killsCtx ? { ...killsCtx } : null, (c, vid) => { if (c) { const g = window.getCurrentGame(); const t = g && g.tables.find(x => x.id === c.tableId); const v = t && t.seats.find(x => x.playerId === vid); if (v) window.logEvent(v.elimBy === c.playerId ? `${pname(c.playerId)} eliminated ${pname(vid)}` : `${pname(c.playerId)} no longer credited with eliminating ${pname(vid)}`, 'KILL'); } });
-        wrapLog('executeResetTournament', null, () => { kotLog = []; window.logEvent('Tournament reset', 'WARN'); });
+        wrapLog('executeResetTournament', null, () => { window.switchTab('setup'); window.setupPane('roster'); kotLog = []; window.logEvent('Tournament reset', 'WARN'); });
 
         // ----- Roadmap and Champion certificate -----
         window.openRoadmap = function() { document.getElementById('roadmap-modal').classList.remove('hidden'); };
@@ -3941,7 +4131,7 @@
             const fr = window.tournament.rounds.find(r => r.isFinals);
             const keyOf = (fr && fr.monsters && fr.monsters[champ.id]) || null;
             const m = keyOf ? monsterByKey(keyOf) : null;
-            const when = new Date(window.tournament.startedAt || Date.now()).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+            const when = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
             const stat = (v, l) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`;
             const elimOn = window.elimsEnabled();
             const skyline = '<svg class="skyline" viewBox="0 0 880 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" fill="#b45309"><rect x="20" y="30" width="30" height="40"/><rect x="60" y="14" width="24" height="56"/><rect x="92" y="38" width="36" height="32"/><rect x="140" y="22" width="28" height="48"/><rect x="176" y="40" width="40" height="30"/><rect x="560" y="36" width="34" height="34"/><rect x="602" y="18" width="26" height="52"/><rect x="636" y="30" width="38" height="40"/><rect x="684" y="10" width="22" height="60"/><rect x="714" y="34" width="34" height="36"/><rect x="756" y="24" width="30" height="46"/><rect x="794" y="38" width="40" height="32"/><rect x="840" y="28" width="26" height="42"/></svg>';
@@ -3954,13 +4144,13 @@
                     <div class="rule"></div>
                     <div class="small">This certifies that the one and only</div>
                     <div class="name">${escapeHtml(champ.name)}</div>
-                    <div class="monster">${m ? `emerged victorious as <b>${m.emoji} ${escapeHtml(m.name)}</b> and ` : ''}claimed the crown of Tokyo</div>
+                    <div class="monster">${m ? `claimed the crown as <b>${m.emoji} ${escapeHtml(m.name)}</b>.` : 'claimed the crown of Tokyo.'}</div>
                     <div class="stats">${stat(champ.pts, 'Points')}${stat(champ.wins, 'Wins')}${stat(champ.vpTotal, 'Victory pts')}${elimOn ? stat(champ.elimTotal || 0, 'Eliminations') : ''}${stat(champ.gamesPlayed, 'Games')}</div>
                     <div class="wink">Certified by the Tournament Managers.</div>
                     <div class="foot">
                         <div class="sig"><div class="line"></div>Tournament Manager</div>
-                        ${certSealSVG(m ? m.emoji : '🦖')}
-                        <div class="sig"><div class="line" style="display:flex;align-items:flex-end;justify-content:center"><span class="val" style="margin:0 0 3px">${escapeHtml(when)}</span></div>Date of tournament</div>
+                        ${certSealSVG('🗼')}
+                        <div class="sig"><div class="line" style="display:flex;align-items:flex-end;justify-content:center"><span class="val" style="margin:0 0 3px">${escapeHtml(when)}</span></div>Date</div>
                     </div>
                 </div>`;
             document.getElementById('cert-modal').classList.remove('hidden');
@@ -3968,7 +4158,98 @@
             window.logEvent(`Certificate generated for ${champ.name}`, 'OK');
         };
         window.closeCertificate = function() { document.getElementById('cert-modal').classList.add('hidden'); };
-        window.printCertificate = function() { document.getElementById('cert-sheet').style.transform = ''; window.print(); setTimeout(fitCertificate, 300); };
+        window.printCertificate = function() {
+            document.body.classList.add('printing-cert');
+            const done = () => { document.body.classList.remove('printing-cert'); fitCertificate(); window.removeEventListener('afterprint', done); };
+            window.addEventListener('afterprint', done);
+            window.print();
+        };
+
+        // ----- Get Started walkthrough -----
+        const TOUR_STEPS = [
+            { title: 'Welcome to the Tournament Manager', text: 'This quick tour shows you how to set up and run a tournament in a few steps. You can stop at any time with Skip tour or Esc.', tab: 'setup', pane: 'settings' },
+            { title: '1. Add your players', text: 'Open the Roster tab and type each player or monster name, separated by commas or new lines, then press Players. Examples adds sample names. You need at least 2 players.', tab: 'setup', pane: 'roster', target: ['#roster-card'] },
+            { title: '2. Pick a quick start', text: 'Melee, Clash and Brawl are ready-made setups. Hover one to see its games, timer and win condition. You can then fine tune the sliders below.', tab: 'setup', pane: 'settings', target: ['#template-buttons'] },
+            { title: '3. Choose how to win', text: 'Final Stand crowns the winner of the Finals game. Most Points is the highest total score. Most Kills scores eliminations only.', tab: 'setup', pane: 'settings', target: ['#win-condition-block'] },
+            { title: '4. Generate the tournament', text: 'Press Generate to seat everyone for Round 1. Settings lock once play starts, and the lock button unlocks them again.', tab: 'setup', pane: 'settings', target: ['#btn-generate-r1'] },
+            { title: '5. Run the games', text: 'On the Tournament tab, press Start to run the game timer. The timeline shows every round, the Semis and the Finals.', tab: 'rounds', target: ['#round-header', '#timeline-card'] },
+            { title: '6. Enter the results', text: 'Tap a player\'s VPs, HPs and eliminations (the cog holds everything). Set 0 HP to eliminate someone. When a table is done press Submit Results, or Submit All for every table.', tab: 'rounds', target: ['#tables-container', '#timeline-card'] },
+            { title: '7. Move to the next stage', text: 'Use Next Game, Next Round, Semis and Finals when they light up. After the Finals, Champion crowns the winner.', tab: 'rounds', target: ['#round-header', '#timeline-card'] },
+            { title: '8. Check the leaderboard', text: 'The Leaderboard shows points, wins and stats. The Scoring button explains how points work, and Generate Certificate appears once the Finals are submitted.', tab: 'standings', target: ['#view-standings'] },
+            { title: 'You are ready', text: 'That is everything you need. Reopen this guide any time from Menu, Help, Get Started.', tab: 'setup', pane: 'settings' }
+        ];
+        let tourIdx = -1;
+        function tourEl(list) {
+            for (const sel of (list || [])) { const e = document.querySelector(sel); if (e && e.getBoundingClientRect().height > 0 && e.offsetParent !== null) return e; }
+            return null;
+        }
+        function positionTour() {
+            if (tourIdx < 0) return;
+            const ring = document.getElementById('tour-ring'), card = document.getElementById('tour-card');
+            const el = tourEl(TOUR_STEPS[tourIdx].target);
+            if (!el) { ring.classList.add('hidden'); card.style.top = ''; card.style.bottom = '1rem'; return; }
+            const r = el.getBoundingClientRect(), pad = 6;
+            ring.classList.remove('hidden');
+            ring.style.left = (r.left - pad) + 'px'; ring.style.top = (r.top - pad) + 'px';
+            ring.style.width = (r.width + pad * 2) + 'px'; ring.style.height = Math.min(r.height + pad * 2, window.innerHeight - 8) + 'px';
+            if (r.top + r.height / 2 > window.innerHeight * 0.5) { card.style.top = '1rem'; card.style.bottom = ''; } else { card.style.top = ''; card.style.bottom = '1rem'; }
+        }
+        function renderTourCard() {
+            const st = TOUR_STEPS[tourIdx], last = tourIdx === TOUR_STEPS.length - 1;
+            const dots = TOUR_STEPS.map((_, i) => `<span class="w-1.5 h-1.5 rounded-full ${i === tourIdx ? 'bg-amber-400' : 'bg-slate-700'}"></span>`).join('');
+            document.getElementById('tour-card').innerHTML = `
+                <div class="flex items-start justify-between gap-3">
+                    <div><div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400">Step ${tourIdx + 1} of ${TOUR_STEPS.length}</div><div class="font-extrabold text-white text-base leading-tight mt-0.5">${escapeHtml(st.title)}</div></div>
+                    <button type="button" onclick="window.closeTour()" aria-label="Close tour" class="w-8 h-8 shrink-0 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">${escapeHtml(st.text)}</p>
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-1">${dots}</div>
+                    <div class="flex items-center gap-2">
+                        ${last ? '' : '<button type="button" onclick="window.closeTour()" class="px-2 text-[11px] font-bold text-slate-500 hover:text-slate-300 cursor-pointer">Skip tour</button>'}
+                        ${tourIdx > 0 ? '<button type="button" onclick="window.tourStep(-1)" class="px-3 h-9 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Back</button>' : ''}
+                        <button type="button" onclick="window.tourStep(1)" class="px-4 h-9 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-400 cursor-pointer">${last ? 'Finish' : 'Next'}</button>
+                    </div>
+                </div>`;
+        }
+        function showTourStep() {
+            const st = TOUR_STEPS[tourIdx];
+            if (st.tab) window.switchTab(st.tab);
+            if (st.pane) window.setupPane(st.pane);
+            renderTourCard();
+            document.getElementById('tour-card').classList.remove('hidden');
+            setTimeout(() => {
+                const el = tourEl(st.target);
+                if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                positionTour();
+                setTimeout(positionTour, 400);
+            }, 60);
+        }
+        window.startTour = function() { window.dismissTourHint(); tourIdx = 0; showTourStep(); };
+        window.tourStep = function(d) {
+            const n = tourIdx + d;
+            if (n >= TOUR_STEPS.length) { window.closeTour(); return; }
+            if (n < 0) return;
+            tourIdx = n; showTourStep();
+        };
+        window.closeTour = function() {
+            tourIdx = -1;
+            document.getElementById('tour-card').classList.add('hidden');
+            document.getElementById('tour-ring').classList.add('hidden');
+            try { localStorage.setItem('kot_tour_seen', '1'); } catch (e) {}
+        };
+        window.dismissTourHint = function() {
+            document.getElementById('tour-hint').classList.add('hidden');
+            try { localStorage.setItem('kot_tour_seen', '1'); } catch (e) {}
+        };
+        function maybeShowTourHint() {
+            let seen = false;
+            try { seen = localStorage.getItem('kot_tour_seen') === '1'; } catch (e) {}
+            if (!seen && window.tournament.rounds.length === 0 && window.tournament.players.length === 0) setTimeout(() => document.getElementById('tour-hint').classList.remove('hidden'), 900);
+        }
+        window.addEventListener('resize', positionTour);
+        window.addEventListener('scroll', positionTour, true);
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && tourIdx >= 0) window.closeTour(); });
 
         // Application Initialization
         window.onload = function() {
@@ -3978,7 +4259,11 @@
             lastSnap = JSON.stringify(window.tournament); lastKey = snapKey(lastSnap);
             window.syncSettingsUI();
             window.renderAll();
+            applySetupOpen();
+            if (window.tournament.rounds.length > 0) window.switchTab('rounds');
+            else { window.switchTab('setup'); window.setupPane(window.tournament.players.length < 2 ? 'roster' : 'settings'); }
             if (location.hash === '#rules') window.openRulesModal();
+            maybeShowTourHint();
         };
     </script>
 </body>
